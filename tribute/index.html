@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spark of Brilliance ✨ — 庆祝你的闪光时刻</title>
+  <style>
+    /* ─── Variables ─────────────────────────────────── */
+    :root {
+      --orange:   #FF6B35;
+      --amber:    #F7931E;
+      --gold:     #FFD700;
+      --rose:     #FF4757;
+      --dark:     #1A1A2E;
+      --darker:   #0D0D1A;
+      --card-bg:  rgba(255,255,255,0.05);
+      --card-border: rgba(255,160,50,0.25);
+      --text:     #F5E6D0;
+      --muted:    rgba(245,230,208,0.65);
+      --radius:   16px;
+      --transition: 0.4s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ─── Reset ─────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--darker);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.75;
+    }
+    ::selection { background: var(--gold); color: #000; }
+
+    /* ─── Scrollbar ──────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--darker); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+    /* ─── Canvas Particles ───────────────────────────── */
+    #particles-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+
+    /* ─── Music Player ───────────────────────────────── */
+    #music-player {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 1000;
+      background: rgba(26,26,46,0.92);
+      border: 1px solid var(--card-border);
+      border-radius: 56px;
+      padding: 10px 20px 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    #music-player:hover { transform: scale(1.04); }
+    #music-btn {
+      width: 36px; height: 36px;
+      border: none;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    #music-btn svg { width: 16px; height: 16px; fill: #fff; }
+    #music-info { display: flex; flex-direction: column; }
+    #music-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: .5px; }
+    #music-artist { font-size: 11px; color: var(--muted); }
+    .music-bars {
+      display: flex; align-items: flex-end; gap: 2px; height: 18px;
+    }
+    .music-bars span {
+      width: 3px; background: var(--orange); border-radius: 2px;
+      animation: bar-dance 0.8s ease-in-out infinite alternate;
+    }
+    .music-bars span:nth-child(1) { height: 6px;  animation-delay: 0s;   }
+    .music-bars span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+    .music-bars span:nth-child(3) { height: 10px; animation-delay: 0.3s;  }
+    .music-bars span:nth-child(4) { height: 18px; animation-delay: 0.1s;  }
+    .music-bars.paused span { animation-play-state: paused; }
+    @keyframes bar-dance {
+      from { transform: scaleY(0.4); }
+      to   { transform: scaleY(1);   }
+    }
+
+    /* ─── Section Base ───────────────────────────────── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ─── Fade-in Animation ──────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       1. HERO
+    ═══════════════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%,
+        rgba(255,107,53,0.28) 0%,
+        rgba(247,147,30,0.12) 50%,
+        transparent 100%);
+      padding-top: 0;
+    }
+    .hero-inner { max-width: 780px; }
+    .hero-sparkle {
+      font-size: 64px;
+      animation: float 3s ease-in-out infinite;
+      display: block;
+      margin-bottom: 16px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50%       { transform: translateY(-16px) rotate(4deg); }
+    }
+    .hero-subtitle {
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #fff 30%, var(--gold) 60%, var(--orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 28px;
+    }
+    .hero-lead {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 44px;
+    }
+    .hero-divider {
+      width: 80px; height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--gold));
+      margin: 0 auto 44px;
+      border-radius: 2px;
+    }
+    .scroll-hint {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: pulse-hint 2s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 2; }
+    @keyframes pulse-hint {
+      0%, 100% { opacity: 0.5; }
+      50%       { opacity: 1;   }
+    }
+
+    /* ─── Section Headings ───────────────────────────── */
+    .section-eyebrow {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 40%, var(--amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin-bottom: 56px;
+    }
+    .section-divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--gold));
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       2A. WORD CLOUD
+    ═══════════════════════════════════════════════════ */
+    #leader { background: transparent; }
+    .word-cloud {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      height: 360px;
+      margin: 0 auto 64px;
+    }
+    .word-cloud span {
+      position: absolute;
+      font-weight: 700;
+      cursor: default;
+      transition: transform 0.3s ease, color 0.3s ease;
+      transform-origin: center;
+      white-space: nowrap;
+    }
+    .word-cloud span:hover {
+      transform: scale(1.25) !important;
+      color: var(--gold) !important;
+    }
+
+    /* Quote cards */
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .quote-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      backdrop-filter: blur(8px);
+      transition: var(--transition);
+    }
+    .quote-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--orange);
+      box-shadow: 0 16px 40px rgba(255,107,53,0.15);
+    }
+    .quote-card::before {
+      content: '"';
+      position: absolute;
+      top: 12px; left: 20px;
+      font-size: 72px;
+      line-height: 1;
+      color: var(--orange);
+      opacity: 0.25;
+      font-family: Georgia, serif;
+    }
+    .quote-card p {
+      font-size: 1rem;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 16px;
+    }
+    .quote-author {
+      font-size: 13px;
+      color: var(--gold);
+      font-style: italic;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 48px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       2B. JOY MULTIPLIER
+    ═══════════════════════════════════════════════════ */
+    #joy {
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(255,107,53,0.05) 50%,
+        transparent 100%);
+    }
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .memory-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      transition: var(--transition);
+      cursor: default;
+    }
+    .memory-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 20px 48px rgba(255,215,0,0.12);
+    }
+    .memory-emoji {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 16px;
+      animation: float 3s ease-in-out infinite;
+    }
+    .memory-card:nth-child(2) .memory-emoji { animation-delay: -1s; }
+    .memory-card:nth-child(3) .memory-emoji { animation-delay: -2s; }
+    .memory-card h3 {
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .memory-card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       2C. FUTURE VISION / LIGHTHOUSE
+    ═══════════════════════════════════════════════════ */
+    #future {
+      text-align: center;
+    }
+    .lighthouse-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+    }
+    .lighthouse-svg-container {
+      position: relative;
+      width: 200px;
+    }
+    .lighthouse-beam {
+      position: absolute;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 90px solid transparent;
+      border-right: 90px solid transparent;
+      border-bottom: 240px solid rgba(255,215,0,0.06);
+      border-radius: 50%;
+      animation: beam-sweep 4s ease-in-out infinite alternate;
+      transform-origin: top center;
+    }
+    @keyframes beam-sweep {
+      from { transform: translateX(-50%) rotate(-20deg); }
+      to   { transform: translateX(-50%) rotate(20deg);  }
+    }
+    .wish-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .wish-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      backdrop-filter: blur(8px);
+      transition: var(--transition);
+    }
+    .wish-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: 0 16px 40px rgba(255,215,0,0.1);
+    }
+    .wish-num {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--orange), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .wish-card h4 { color: var(--gold); margin-bottom: 8px; font-size: 0.95rem; letter-spacing: 1px; }
+    .wish-card p  { color: var(--muted); font-size: 0.9rem; }
+
+    /* ═══════════════════════════════════════════════════
+       3. PHOTO GALLERY
+    ═══════════════════════════════════════════════════ */
+    #gallery {
+      background: transparent;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .photo-slot {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+    .photo-slot img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .photo-slot:hover { border-color: var(--orange); }
+    .photo-slot:hover img { transform: scale(1.06); }
+    .photo-slot .placeholder-text {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 16px;
+    }
+    .photo-slot .placeholder-text svg {
+      width: 32px; height: 32px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 1.5;
+      display: block;
+      margin: 0 auto 8px;
+    }
+    .photo-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .photo-slot:hover .photo-overlay { opacity: 1; }
+    .photo-overlay span {
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 0 80px rgba(255,107,53,0.3);
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 24px; right: 32px;
+      font-size: 36px;
+      color: #fff;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    #lightbox-close:hover { opacity: 1; }
+
+    /* ═══════════════════════════════════════════════════
+       4. MESSAGE BOARD
+    ═══════════════════════════════════════════════════ */
+    #messages {
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(255,107,53,0.04) 50%,
+        transparent 100%);
+    }
+    .message-form {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 36px;
+      backdrop-filter: blur(8px);
+      margin-bottom: 48px;
+    }
+    .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 13px; letter-spacing: 1px; color: var(--gold); }
+    input, textarea, select {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+      outline: none;
+      width: 100%;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--orange);
+    }
+    textarea { resize: vertical; min-height: 120px; }
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 36px;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 8px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,53,0.4); }
+    .btn-submit svg { width: 18px; height: 18px; fill: #fff; }
+
+    /* Message Wall */
+    .msg-wall {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .msg-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(8px);
+      transition: var(--transition);
+      animation: pop-in 0.4s ease;
+    }
+    @keyframes pop-in {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .msg-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--orange);
+    }
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .msg-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .msg-name { font-weight: 700; color: var(--gold); font-size: 0.95rem; }
+    .msg-date { font-size: 11px; color: var(--muted); }
+    .msg-text { font-size: 0.92rem; color: var(--text); line-height: 1.6; }
+    .msg-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--muted);
+      padding: 40px;
+      font-style: italic;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       5. PERSONAL CLOSING
+    ═══════════════════════════════════════════════════ */
+    #closing {
+      text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 50%,
+        rgba(255,107,53,0.12) 0%,
+        transparent 100%);
+    }
+    .closing-quote {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      max-width: 720px;
+      margin: 0 auto 40px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+    .closing-sig {
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1rem;
+    }
+    .hearts {
+      font-size: 32px;
+      display: block;
+      margin: 32px auto;
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    /* ─── Footer ─────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── Responsive ─────────────────────────────────── */
+    @media (max-width: 600px) {
+      section { padding: 72px 16px; }
+      .hero-title { font-size: 2rem; }
+      .form-row { flex-direction: column; }
+      #music-player { bottom: 16px; right: 16px; }
+    }
+
+    /* ─── Separator ──────────────────────────────────── */
+    .flame-sep {
+      text-align: center;
+      font-size: 28px;
+      padding: 8px;
+      opacity: 0.4;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Particle Canvas -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ══════════════════════════════════════════════════
+     MUSIC PLAYER
+══════════════════════════════════════════════════ -->
+<div id="music-player" title="Have You Ever Seen the Rain — CCR">
+  <button id="music-btn" aria-label="Play / Pause">
+    <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pause-icon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </button>
+  <div class="music-info">
+    <span id="music-title">Have You Ever Seen the Rain</span>
+    <span id="music-artist">Creedence Clearwater Revival</span>
+  </div>
+  <div class="music-bars paused" id="music-bars">
+    <span></span><span></span><span></span><span></span>
+  </div>
+</div>
+<audio id="bg-audio" loop>
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
+
+<!-- ══════════════════════════════════════════════════
+     1. HERO
+══════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-inner fade-in visible">
+    <span class="hero-sparkle">✨</span>
+    <p class="hero-subtitle">Spark of Brilliance</p>
+    <h1 class="hero-title">
+      你留下的不仅是业绩，<br>更是点亮我们的火花
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-lead">
+      在我们的职场旅途中，有些人的存在本身就是一种动力。你不仅是那个解决问题的分析师，更是那个带给我们笑声、在逃脱游戏里并肩作战、用卓越领导力引领大家的人。这份空间，是为了记录下那些关于你的、不可替代的瞬间。
+    </p>
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+      SCROLL TO EXPLORE
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     2A. LEADER SPIRIT
+══════════════════════════════════════════════════ -->
+<section id="leader">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-eyebrow">Section A</p>
+      <h2 class="section-title">The "Leader" Spirit</h2>
+      <div class="section-divider"></div>
+      <p class="section-lead">
+        这就是大家眼中的你——不仅稳健，而且总能在混乱中清晰地找到方向。
+      </p>
+      <div class="badge">核心驱动力</div>
+    </div>
+
+    <!-- Word Cloud -->
+    <div class="fade-in">
+      <div class="word-cloud" id="word-cloud" aria-label="Best qualities word cloud"></div>
+    </div>
+
+    <!-- Quote Cards -->
+    <div class="quote-grid fade-in">
+      <div class="quote-card">
+        <p>你的领导力不是命令，而是启发。每次你进来跟我们讲解一个问题，大家都会突然觉得："哦，原来这就是我们要做的。"</p>
+        <span class="quote-author">— 同事感言</span>
+      </div>
+      <div class="quote-card">
+        <p>卓越的组织能力，总能在项目乱成一锅粥的时候站出来说"我们这样拆解一下"，然后一切就清晰了。</p>
+        <span class="quote-author">— 同事感言</span>
+      </div>
+      <div class="quote-card">
+        <p>你把"专业"和"热情"这两件很难共存的事，硬是做到了。这是我见过最厉害的事之一。</p>
+        <span class="quote-author">— 同事感言</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flame-sep">🔥 · 🔥 · 🔥</div>
+
+<!-- ══════════════════════════════════════════════════
+     2B. JOY MULTIPLIER
+══════════════════════════════════════════════════ -->
+<section id="joy">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-eyebrow">Section B</p>
+      <h2 class="section-title">The "Joy" Multiplier</h2>
+      <div class="section-divider"></div>
+      <p class="section-lead">
+        这是属于我们的黄金记忆。正是因为有你在，这些琐碎的日常才闪闪发光。
+      </p>
+    </div>
+
+    <div class="memory-grid fade-in">
+      <div class="memory-card">
+        <span class="memory-emoji">🍱</span>
+        <h3>午餐时光</h3>
+        <p>那些一起吃饭的中午，聊天气、聊八卦、聊工作——有你在，午饭都多了几分期待。</p>
+      </div>
+      <div class="memory-card">
+        <span class="memory-emoji">⛷️</span>
+        <h3>滑雪冒险</h3>
+        <p>在雪坡上的那份无所畏惧，和你一起摔跤又爬起来，笑到肚子疼——这些画面永远不会忘。</p>
+      </div>
+      <div class="memory-card">
+        <span class="memory-emoji">🔐</span>
+        <h3>逃脱游戏</h3>
+        <p>并肩破解谜题，那份紧张又刺激的默契配合，证明了我们是最佳拍档——工作之外也一样。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flame-sep">✦ · ✦ · ✦</div>
+
+<!-- ══════════════════════════════════════════════════
+     2C. FUTURE VISION
+══════════════════════════════════════════════════ -->
+<section id="future">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-eyebrow">Section C</p>
+      <h2 class="section-title">The Future Vision</h2>
+      <div class="section-divider"></div>
+      <p class="section-lead">
+        灯塔不问归处，只负责发光。这些祝愿，是我们送给你的光。
+      </p>
+    </div>
+
+    <div class="lighthouse-wrap fade-in">
+      <!-- Lighthouse SVG -->
+      <div class="lighthouse-svg-container">
+        <div class="lighthouse-beam"></div>
+        <svg viewBox="0 0 120 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:160px;position:relative;z-index:1;">
+          <!-- Light glow -->
+          <circle cx="60" cy="36" r="18" fill="#FFD700" opacity="0.2"/>
+          <circle cx="60" cy="36" r="10" fill="#FFD700" opacity="0.6"/>
+          <circle cx="60" cy="36" r="5"  fill="#FFD700"/>
+          <!-- Lantern room -->
+          <rect x="44" y="28" width="32" height="22" rx="4" fill="#FF6B35" opacity="0.9"/>
+          <!-- Tower body -->
+          <path d="M50 50 L38 180 H82 L70 50 Z" fill="#F7931E" opacity="0.85"/>
+          <!-- Stripes -->
+          <rect x="38" y="90"  width="44" height="12" fill="rgba(255,255,255,0.2)" rx="2"/>
+          <rect x="38" y="130" width="44" height="12" fill="rgba(255,255,255,0.2)" rx="2"/>
+          <!-- Base -->
+          <rect x="28" y="180" width="64" height="18" rx="4" fill="#FF4757" opacity="0.8"/>
+          <!-- Door -->
+          <rect x="52" y="155" width="16" height="25" rx="4" fill="rgba(0,0,0,0.4)"/>
+        </svg>
+      </div>
+
+      <div class="wish-grid">
+        <div class="wish-card">
+          <span class="wish-num">01</span>
+          <h4>无限可能</h4>
+          <p>愿你下一站，比这里更大、更亮、更精彩。你的才华值得更广阔的舞台。</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-num">02</span>
+          <h4>持续发光</h4>
+          <p>不管在哪里，希望你永远保持这份热情——那才是你最动人的地方。</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-num">03</span>
+          <h4>勇敢前行</h4>
+          <p>每一次新开始都是一次重新定义自己的机会，而你，绝对有这个实力。</p>
+        </div>
+        <div class="wish-card">
+          <span class="wish-num">04</span>
+          <h4>随时回来</h4>
+          <p>这里的人，始终记得你。无论何时，我们都是朋友——这一点，永远不变。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flame-sep">📸 · 📸 · 📸</div>
+
+<!-- ══════════════════════════════════════════════════
+     3. PHOTO GALLERY
+══════════════════════════════════════════════════ -->
+<section id="gallery">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-eyebrow">Our Memories</p>
+      <h2 class="section-title">那些我们一起的瞬间</h2>
+      <div class="section-divider"></div>
+      <p class="section-lead">每一张照片，都是一个不想忘记的理由。点击照片查看大图，或将图片文件放入 <code>photos/</code> 文件夹替换占位符。</p>
+    </div>
+
+    <div class="photo-grid fade-in" id="photo-grid">
+      <!-- Photos will be rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <span id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<div class="flame-sep">💬 · 💬 · 💬</div>
+
+<!-- ══════════════════════════════════════════════════
+     4. MESSAGE BOARD
+══════════════════════════════════════════════════ -->
+<section id="messages">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-eyebrow">Leave a Message</p>
+      <h2 class="section-title">写下你想说的话</h2>
+      <div class="section-divider"></div>
+      <p class="section-lead">每一条留言，都会永久保存在这个页面上。让她知道，你记得。</p>
+    </div>
+
+    <div class="message-form fade-in">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="msg-name">你的名字</label>
+          <input type="text" id="msg-name" placeholder="输入你的名字" maxlength="30" />
+        </div>
+        <div class="form-group">
+          <label for="msg-emoji">选一个表情</label>
+          <select id="msg-emoji">
+            <option value="🌟">🌟 星光</option>
+            <option value="🔥">🔥 热情</option>
+            <option value="💛">💛 温暖</option>
+            <option value="🎉">🎉 庆祝</option>
+            <option value="🌸">🌸 绽放</option>
+            <option value="🚀">🚀 出发</option>
+            <option value="💪">💪 加油</option>
+            <option value="🎯">🎯 目标</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="msg-text">你的留言</label>
+        <textarea id="msg-text" placeholder="写下你想对她说的话……" maxlength="500"></textarea>
+      </div>
+      <button class="btn-submit" id="submit-msg">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        发送留言
+      </button>
+    </div>
+
+    <div class="msg-wall" id="msg-wall">
+      <!-- Messages rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<div class="flame-sep">🌟 · 🌟 · 🌟</div>
+
+<!-- ══════════════════════════════════════════════════
+     5. CLOSING
+══════════════════════════════════════════════════ -->
+<section id="closing">
+  <div class="container fade-in">
+    <span class="hearts">❤️‍🔥</span>
+    <blockquote class="closing-quote">
+      "在这个追求高效的职场中，你用行动证明了'热情'与'专业'是可以共存的。无论你未来走向哪里，请记住这些文字——它们是你留下的独特烙印，也是我们对你最深的记忆。"
+    </blockquote>
+    <p class="closing-sig">— 永远为你骄傲的同事们</p>
+    <span class="hearts" style="font-size:20px;margin-top:24px;">✨ · ✨ · ✨</span>
+  </div>
+</section>
+
+<footer>
+  <p>Made with ❤️ &amp; fire · Have You Ever Seen the Rain 🌧️☀️</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════════ -->
+<script>
+/* ─── 1. PARTICLES ───────────────────────────────── */
+(function () {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles;
+
+  const COLORS = ['#FF6B35','#F7931E','#FFD700','#FF4757','#fff'];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function makeParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 2.2 + 0.4,
+      dx: (Math.random() - 0.5) * 0.35,
+      dy: -(Math.random() * 0.5 + 0.1),
+      alpha: Math.random() * 0.6 + 0.2,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      life: Math.random(),
+      maxLife: Math.random() * 0.02 + 0.003,
+    };
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({length: 120}, makeParticle);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach((p, i) => {
+      p.x += p.dx;
+      p.y += p.dy;
+      p.life += p.maxLife;
+      const fade = Math.sin(p.life * Math.PI);
+      ctx.save();
+      ctx.globalAlpha = p.alpha * fade;
+      ctx.fillStyle   = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      if (p.y < -10 || p.life >= 1) particles[i] = makeParticle();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  draw();
+})();
+
+/* ─── 2. SCROLL FADE-IN ──────────────────────────── */
+(function () {
+  const els = document.querySelectorAll('.fade-in:not(.visible)');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => obs.observe(el));
+})();
+
+/* ─── 3. WORD CLOUD ──────────────────────────────── */
+(function () {
+  const words = [
+    { text: '卓越领导力',   size: 32, color: '#FFD700'  },
+    { text: 'Analytical',   size: 22, color: '#FF6B35'  },
+    { text: '充满热情',     size: 28, color: '#F7931E'  },
+    { text: 'Problem Solver', size: 20, color: '#fff'   },
+    { text: '激励人心',     size: 24, color: '#FFD700'  },
+    { text: 'Strategic',    size: 20, color: '#FF6B35'  },
+    { text: '细心',         size: 18, color: '#F7931E'  },
+    { text: 'Creative',     size: 22, color: '#fff'     },
+    { text: '有担当',       size: 26, color: '#FF6B35'  },
+    { text: 'Team Player',  size: 20, color: '#FFD700'  },
+    { text: '专注',         size: 18, color: '#fff'     },
+    { text: 'Inspiring',    size: 24, color: '#F7931E'  },
+    { text: '高效',         size: 20, color: '#FF6B35'  },
+    { text: 'Resilient',    size: 18, color: '#FFD700'  },
+    { text: '温暖',         size: 22, color: '#fff'     },
+  ];
+
+  const container = document.getElementById('word-cloud');
+  const W = container.offsetWidth || 660;
+  const H = 360;
+  const placed = [];
+
+  function overlaps(x, y, w, h) {
+    for (const p of placed) {
+      if (x < p.x + p.w + 12 && x + w + 12 > p.x &&
+          y < p.y + p.h + 8  && y + h + 8  > p.y) return true;
+    }
+    return false;
+  }
+
+  words.forEach(word => {
+    const span = document.createElement('span');
+    span.textContent = word.text;
+    span.style.cssText = `
+      font-size:${word.size}px;
+      color:${word.color};
+      position:absolute;
+      opacity:0;
+      transition:opacity 0.6s ease, transform 0.3s ease;
+      transform:rotate(${(Math.random()-0.5)*16}deg);
+    `;
+    container.appendChild(span);
+
+    const sW = span.offsetWidth  || word.text.length * word.size * 0.6;
+    const sH = span.offsetHeight || word.size * 1.4;
+
+    let attempts = 0, placed_ok = false;
+    while (attempts < 200 && !placed_ok) {
+      const x = Math.random() * Math.max(W - sW - 20, 10) + 10;
+      const y = Math.random() * Math.max(H - sH - 10, 10) + 5;
+      if (!overlaps(x, y, sW, sH)) {
+        span.style.left = x + 'px';
+        span.style.top  = y + 'px';
+        placed.push({ x, y, w: sW, h: sH });
+        placed_ok = true;
+      }
+      attempts++;
+    }
+    if (!placed_ok) {
+      span.style.left = Math.random() * 80 + '%';
+      span.style.top  = Math.random() * 80 + '%';
+    }
+    setTimeout(() => { span.style.opacity = '1'; }, Math.random() * 800 + 200);
+  });
+})();
+
+/* ─── 4. PHOTO GALLERY ───────────────────────────── */
+(function () {
+  const photoPaths = [
+    'photos/1.jpg','photos/2.jpg','photos/3.jpg',
+    'photos/4.jpg','photos/5.jpg','photos/6.jpg',
+    'photos/7.jpg','photos/8.jpg',
+  ];
+  const captions = [
+    '一起的瞬间','笑声满满','难忘时光','并肩作战',
+    '冬日记忆','午餐时光','逃脱游戏','我们都在',
+  ];
+
+  const grid     = document.getElementById('photo-grid');
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lightbox-img');
+  const lbClose  = document.getElementById('lightbox-close');
+
+  photoPaths.forEach((src, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'photo-slot';
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = captions[i];
+
+    const overlay = document.createElement('div');
+    overlay.className = 'photo-overlay';
+    overlay.innerHTML = `<span>${captions[i]}</span>`;
+
+    // Fallback placeholder if image not found
+    img.onerror = function () {
+      slot.innerHTML = `
+        <div class="placeholder-text">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          照片 ${i + 1}<br>
+          <small>放入 photos/ 文件夹</small>
+        </div>`;
+    };
+
+    slot.appendChild(img);
+    slot.appendChild(overlay);
+    grid.appendChild(slot);
+
+    slot.addEventListener('click', () => {
+      if (img.naturalWidth) {
+        lbImg.src = src;
+        lightbox.classList.add('open');
+      }
+    });
+  });
+
+  lbClose.addEventListener('click', () => lightbox.classList.remove('open'));
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) lightbox.classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+  });
+})();
+
+/* ─── 5. MESSAGE BOARD ───────────────────────────── */
+(function () {
+  const STORAGE_KEY = 'tribute_messages_v1';
+  const wall   = document.getElementById('msg-wall');
+  const submit = document.getElementById('submit-msg');
+
+  function loadMessages() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveMessages(msgs) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs));
+  }
+
+  function renderMessages() {
+    const msgs = loadMessages();
+    wall.innerHTML = '';
+    if (msgs.length === 0) {
+      wall.innerHTML = '<p class="msg-empty">还没有留言，成为第一个留言的人吧！✨</p>';
+      return;
+    }
+    msgs.slice().reverse().forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'msg-card';
+      card.innerHTML = `
+        <div class="msg-header">
+          <div class="msg-avatar">${m.emoji || '✨'}</div>
+          <div>
+            <div class="msg-name">${escapeHtml(m.name)}</div>
+            <div class="msg-date">${m.date}</div>
+          </div>
+        </div>
+        <p class="msg-text">${escapeHtml(m.text)}</p>`;
+      wall.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  submit.addEventListener('click', () => {
+    const name  = document.getElementById('msg-name').value.trim();
+    const text  = document.getElementById('msg-text').value.trim();
+    const emoji = document.getElementById('msg-emoji').value;
+    if (!name || !text) {
+      alert('请填写你的名字和留言内容 😊');
+      return;
+    }
+    const msgs = loadMessages();
+    msgs.push({
+      name,
+      text,
+      emoji,
+      date: new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' }),
+    });
+    saveMessages(msgs);
+    document.getElementById('msg-name').value = '';
+    document.getElementById('msg-text').value = '';
+    renderMessages();
+    wall.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+
+  // Seed a few sample messages so it doesn't look empty
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    const seed = [
+      { name:'同事 A', emoji:'🌟', text:'认识你真的很幸运。你的热情和领导力，让整个团队都更有动力了。祝你一切都好！', date:'2024年12月' },
+      { name:'同事 B', emoji:'🔥', text:'滑雪那次摔得多惨，你还是一直笑，那个画面我永远不会忘哈哈哈。去下一站继续发光吧！', date:'2024年12月' },
+      { name:'同事 C', emoji:'💛', text:'逃脱游戏的时候你那股子冷静分析的样子，真的太帅了。无论去哪都会想起你的。', date:'2024年12月' },
+    ];
+    saveMessages(seed);
+  }
+
+  renderMessages();
+})();
+
+/* ─── 6. MUSIC PLAYER ────────────────────────────── */
+(function () {
+  const audio  = document.getElementById('bg-audio');
+  const btn    = document.getElementById('music-btn');
+  const play   = document.getElementById('play-icon');
+  const pause  = document.getElementById('pause-icon');
+  const bars   = document.getElementById('music-bars');
+  let playing  = false;
+
+  function setPlaying(val) {
+    playing = val;
+    play.style.display  = val ? 'none'  : 'block';
+    pause.style.display = val ? 'block' : 'none';
+    bars.classList.toggle('paused', !val);
+  }
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (playing) { audio.pause(); setPlaying(false); }
+    else         { audio.play().catch(() => {}); setPlaying(true); }
+  });
+
+  document.getElementById('music-player').addEventListener('click', () => {
+    if (playing) { audio.pause(); setPlaying(false); }
+    else         { audio.play().catch(() => {}); setPlaying(true); }
+  });
+
+  audio.addEventListener('ended', () => setPlaying(false));
+
+  // Try autoplay on first user interaction
+  document.addEventListener('click', function autoplay() {
+    if (!playing && audio.paused) {
+      audio.play().then(() => setPlaying(true)).catch(() => {});
+    }
+    document.removeEventListener('click', autoplay);
+  }, { once: true });
+})();
+</script>
+</body>
+</html>
