@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · v8</title>
+<title>宝盒 · v9</title>
 <style>
-/* ── 蓝色系 Design Tokens ── */
+/* ── 蓝色系 · Zen Tokens ── */
 :root{
   --bg:#eef1fb; --bg-card:#ffffff; --bg-dark:#1a2f6e;
   --accent:#4a6cf7; --accent-2:#7c5af0; --amber:#e8923a;
   --text:#0f1733; --ts:#5a6690; --txs:#9ba5c0;
-  --bd:#dce1f5; --bds:rgba(15,23,51,.06);
+  --bd:#e3e7f6; --bds:rgba(15,23,51,.05);
   --warn:#e05252;
-  --tint:rgba(74,108,247,.06);
+  --tint:rgba(74,108,247,.055);
   --ai-c:#7c5af0; --ai-g:#19c37d; --ai-gem:#4285f4; --ai-w:#e66c2c;
-  --sh:0 2px 12px rgba(74,108,247,.07);
-  --sh-md:0 8px 28px rgba(74,108,247,.14);
+  --sh:0 2px 14px rgba(74,108,247,.06);
+  --sh-md:0 10px 34px rgba(74,108,247,.13);
 }
 html.dark{
   --bg:#0d1026; --bg-card:#151b3a; --bg-dark:#0a1845;
   --text:#e8ecff; --ts:#8a93b8; --txs:#5a6080;
-  --bd:#252d5a; --bds:rgba(232,236,255,.06);
+  --bd:#222a52; --bds:rgba(232,236,255,.05);
   --tint:rgba(74,108,247,.12);
-  --sh:0 2px 12px rgba(0,0,0,.3);
-  --sh-md:0 8px 28px rgba(0,0,0,.4);
+  --sh:0 2px 14px rgba(0,0,0,.3);
+  --sh-md:0 10px 34px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{min-height:100vh;display:flex;align-items:center;justify-content:center;
@@ -36,7 +36,7 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;
 .scr{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg)}
 .scr.on{display:flex}
 
-/* ════ ONBOARDING ════ */
+/* ════ ONBOARDING (2 步) ════ */
 .obs{display:none;flex:1;flex-direction:column}
 .obs.on{display:flex}
 #ob1{align-items:center;justify-content:center;padding:60px 40px 48px}
@@ -52,8 +52,7 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;
 .ob-dots{display:flex;gap:6px;margin-top:28px;justify-content:center}
 .ob-dot{width:6px;height:6px;border-radius:3px;background:var(--bd);transition:width .2s}
 .ob-dot.on{width:18px;background:var(--accent)}
-#ob2{padding:56px 28px 40px;justify-content:center}
-#ob3{padding:48px 28px 32px;justify-content:center}
+#ob2{padding:60px 28px 40px;justify-content:center}
 .ob-h{font-size:22px;font-weight:700;margin-bottom:6px}
 .ob-sub{font-size:14px;color:var(--ts);margin-bottom:24px;line-height:1.5}
 .tones{display:flex;flex-direction:column;gap:10px}
@@ -70,80 +69,82 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;
 .tc-chk{width:20px;height:20px;border-radius:50%;border:2px solid var(--bd);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all .15s}
 .tc.on .tc-chk{background:var(--accent);border-color:var(--accent);color:#fff}
-.conn-cat{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txs);margin:12px 0 7px}
-.conn-rows{display:flex;flex-direction:column;gap:6px}
-.conn-row{display:flex;align-items:center;gap:11px;padding:11px 13px;
-  background:var(--bg-card);border:1.5px solid var(--bd);border-radius:13px;cursor:pointer}
-.conn-row.on{border-color:var(--accent);background:var(--tint)}
-.conn-ico{font-size:20px}
-.conn-info{flex:1}
-.conn-name{font-size:14px;font-weight:600}
-.conn-desc{font-size:11px;color:var(--txs);margin-top:1px}
-.conn-st{font-size:11px;font-weight:700;color:var(--txs)}
-.conn-row.on .conn-st{color:var(--accent)}
-.ob-skip{font-size:13px;color:var(--ts);text-align:center;cursor:pointer;margin-top:10px}
 
-/* ════ HOME TOPBAR ════ */
-.topbar{padding:50px 22px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.av-btn{width:38px;height:38px;border-radius:50%;background:var(--bg-dark);
-  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
-.top-r{display:flex;align-items:center;gap:9px}
-.top-r-txt{text-align:right}
-.clk{font-size:20px;font-weight:300;color:var(--text);letter-spacing:-.5px;line-height:1.1}
-.wthr{font-size:11px;color:var(--ts);margin-top:1px}
+/* ════ HOME TOPBAR (头像+问候融合，去空白) ════ */
+.topbar{flex-direction:column;padding:50px 22px 0;flex-shrink:0;display:flex}
+.tb-row{display:flex;align-items:center;gap:12px}
+.av-btn{width:46px;height:46px;border-radius:50%;background:var(--bg-dark);background-size:cover;
+  background-position:center;border:none;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;position:relative}
+.av-cam{position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);font-size:8px;color:#fff;
+  display:flex;align-items:center;justify-content:center}
+.tb-greet{flex:1;min-width:0}
+.tb-name{font-size:21px;font-weight:800;letter-spacing:-.3px;line-height:1.1}
+.tb-time{text-align:right;flex-shrink:0}
+.clk{font-size:19px;font-weight:300;letter-spacing:-.5px;line-height:1.1}
+.wthr{font-size:11px;color:var(--ts);margin-top:2px}
+.tb-quote{font-size:12px;color:var(--ts);font-style:italic;line-height:1.5;margin-top:9px}
+.tb-quote span{color:var(--txs);font-style:normal}
 
-.home-body{flex:1;overflow-y:auto;padding:0 22px 100px;scrollbar-width:none}
+.home-body{flex:1;overflow-y:auto;padding:16px 22px 100px;scrollbar-width:none}
 .home-body::-webkit-scrollbar{display:none}
 
-/* Greeting */
-.greeting-zone{padding:14px 0 14px}
-.gz-name{font-size:23px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.3px}
-.gz-quote{font-size:12px;color:var(--ts);line-height:1.5;font-style:italic}
-.gz-quote span{color:var(--txs);font-style:normal}
-
-/* Merged reminder bar (合并提醒，放上面) */
-.remind-bar{display:flex;align-items:center;gap:9px;padding:12px 14px;margin-bottom:18px;
+/* Merged reminder bar */
+.remind-bar{display:flex;align-items:center;gap:9px;padding:13px 15px;margin-bottom:22px;
   background:var(--bg-card);border:1px solid var(--bd);border-left:3px solid var(--warn);
-  border-radius:12px;cursor:pointer;box-shadow:var(--sh)}
+  border-radius:13px;cursor:pointer;box-shadow:var(--sh)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .rb-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);flex-shrink:0;animation:pulse 2s infinite}
 .rb-main{flex:1;font-size:13px;color:var(--text);font-weight:500}
 .rb-main b{color:var(--warn)}
 .rb-arr{font-size:12px;color:var(--ts);font-weight:600;white-space:nowrap}
 
-/* Editorial countdown (保留) */
-.count-hero{padding:0 0 18px;border-bottom:1px solid var(--bd);margin-bottom:18px}
+/* Countdown — 横向，右侧填充"接下来"列表（消除空白） */
+.count-hero{display:flex;gap:18px;align-items:center;padding:4px 0 20px;
+  border-bottom:1px solid var(--bd);margin-bottom:22px}
+.ch-left{flex:0 0 auto}
 .ch-cap{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txs);margin-bottom:6px}
-.ch-main{display:flex;align-items:baseline;gap:5px;margin-bottom:2px}
-.ch-num{font-size:74px;font-weight:900;color:var(--amber);line-height:.95;letter-spacing:-3px}
-.ch-unit{font-size:23px;font-weight:700;color:var(--ts)}
-.ch-label{font-size:21px;font-weight:800;color:var(--text);margin-bottom:8px}
-.ch-sample{display:inline-block;font-size:10px;font-weight:600;color:var(--txs);
-  background:rgba(155,165,192,.15);padding:2px 9px;border-radius:6px}
+.ch-main{display:flex;align-items:baseline;gap:5px}
+.ch-num{font-size:66px;font-weight:900;color:var(--amber);line-height:.9;letter-spacing:-3px}
+.ch-unit{font-size:21px;font-weight:700;color:var(--ts)}
+.ch-label{font-size:19px;font-weight:800;color:var(--text);margin:4px 0 7px}
+.ch-sample{display:inline-block;font-size:9px;font-weight:600;color:var(--txs);
+  background:rgba(155,165,192,.15);padding:2px 8px;border-radius:6px}
+.ch-right{flex:1;border-left:1px solid var(--bd);padding-left:16px;align-self:stretch;
+  display:flex;flex-direction:column;justify-content:center}
+.ch-r-cap{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--txs);margin-bottom:6px}
+.ch-r-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bds)}
+.ch-r-item:last-child{border-bottom:none}
+.ch-r-name{font-size:12px;color:var(--ts)}
+.ch-r-day{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap}
 
 /* Section label */
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txs);margin-bottom:12px}
 
-/* ── Harmonized card family ── */
-/* Action card = hero (tinted) */
-.action-card{display:flex;align-items:stretch;background:var(--tint);
-  border:1.5px solid rgba(74,108,247,.22);border-radius:18px;overflow:hidden;
-  margin-bottom:20px;cursor:pointer;box-shadow:var(--sh)}
+/* Action card — hero, 明确去智友 */
+.action-card{background:var(--tint);border:1.5px solid rgba(74,108,247,.2);
+  border-radius:18px;overflow:hidden;margin-bottom:22px;cursor:pointer;box-shadow:var(--sh)}
+.ac-top{display:flex;align-items:stretch}
 .ac-bar{width:4px;background:linear-gradient(180deg,var(--accent),var(--accent-2));flex-shrink:0}
-.ac-content{flex:1;padding:15px 12px 15px 16px}
+.ac-content{flex:1;padding:15px 16px 13px}
 .ac-tag{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
   color:var(--accent);margin-bottom:7px;display:flex;align-items:center;gap:5px}
 .ac-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
 .ac-text{font-size:14px;color:var(--text);line-height:1.6}
 .ac-text em{color:var(--accent);font-style:normal;font-weight:700}
-.ac-arr{padding:0 14px;display:flex;align-items:center;color:var(--txs);font-size:22px;flex-shrink:0}
+.ac-foot{display:flex;align-items:center;gap:7px;margin:0 16px;padding:11px 0;
+  border-top:1px solid rgba(74,108,247,.14)}
+.ac-spark{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ac-foot-txt{font-size:13px;font-weight:700;color:var(--accent);flex:1}
+.ac-foot-arr{font-size:14px;color:var(--accent);font-weight:700}
 
-/* Tool widget cards — light, harmonized, demo data */
+/* Tool widget cards */
 .tool-card{background:var(--bg-card);border:1.5px solid var(--bd);border-radius:18px;
   padding:16px;margin-bottom:12px;cursor:pointer;box-shadow:var(--sh)}
 .tk-top{display:flex;align-items:center;gap:9px;margin-bottom:12px}
-.tk-ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;
-  justify-content:center;font-size:16px;flex-shrink:0}
+.tk-ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .tk-ico.blue{background:rgba(74,108,247,.12)}
 .tk-ico.amber{background:rgba(232,146,58,.14)}
 .tk-name{flex:1;font-size:13px;font-weight:700;color:var(--text)}
@@ -160,24 +161,20 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;
 .tk-ai{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--accent);
   background:var(--tint);padding:7px 11px;border-radius:9px;margin-bottom:13px;line-height:1.4}
 .tk-acts{display:flex;gap:8px}
-.tk-bp{flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:11px;
-  font-size:13px;font-weight:700;cursor:pointer}
-.tk-bs{padding:10px 18px;background:transparent;color:var(--accent);border:1.5px solid var(--bd);
-  border-radius:11px;font-size:13px;font-weight:600;cursor:pointer}
+.tk-bp{flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer}
+.tk-bs{padding:10px 18px;background:transparent;color:var(--accent);border:1.5px solid var(--bd);border-radius:11px;font-size:13px;font-weight:600;cursor:pointer}
 
 /* ── 3-Tab Bottom Nav ── */
 .bnav{position:absolute;bottom:0;left:0;right:0;height:82px;display:flex;align-items:flex-start;
   padding-top:10px;background:rgba(238,241,251,.94);backdrop-filter:blur(20px);
   border-top:1px solid var(--bd);z-index:50}
 html.dark .bnav{background:rgba(13,16,38,.94)}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  border:none;background:none;cursor:pointer;padding:5px 0}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;padding:5px 0}
 .nb .ni{font-size:21px;color:var(--txs);transition:color .15s}
 .nb .nl{font-size:10px;color:var(--txs);transition:color .15s}
 .nb.on .ni,.nb.on .nl{color:var(--accent)}
 .nb.on .nl{font-weight:700}
-.nb-ai{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  border:none;background:none;cursor:pointer;padding:4px 0}
+.nb-ai{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;padding:4px 0}
 .nb-ai-ico{width:46px;height:46px;border-radius:23px;background:var(--accent);margin-top:-15px;
   display:flex;align-items:center;justify-content:center;font-size:21px;color:#fff;
   box-shadow:0 4px 18px rgba(74,108,247,.42);transition:background .15s}
@@ -204,6 +201,16 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .sh-body{overflow-y:auto;padding:4px 20px 24px;scrollbar-width:none}
 .sh-body::-webkit-scrollbar{display:none}
 
+/* Quick launcher sheet */
+.lq-row{display:flex;align-items:center;gap:13px;padding:13px 6px;border-bottom:1px solid var(--bds);cursor:pointer}
+.lq-row:last-child{border-bottom:none}
+.lq-ico{width:38px;height:38px;border-radius:11px;background:var(--tint);display:flex;
+  align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lq-info{flex:1}
+.lq-name{font-size:15px;font-weight:600}
+.lq-desc{font-size:11px;color:var(--txs);margin-top:1px}
+.lq-arr{color:var(--txs);font-size:15px}
+
 /* Reminder sheet */
 .rg-lbl{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txs);margin:14px 0 8px}
 .rg-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bds)}
@@ -225,28 +232,43 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .ai-msgs::-webkit-scrollbar{display:none}
 .ai-route{text-align:center;font-size:10px;color:var(--txs);margin:2px 0 10px}
 .bbl-out{display:flex;justify-content:flex-end;margin-bottom:12px}
-.bbl-out>div{background:var(--accent);color:#fff;padding:10px 14px;border-radius:18px 18px 4px 18px;
-  font-size:13px;max-width:78%;line-height:1.45}
+.bbl-out>div{background:var(--accent);color:#fff;padding:10px 14px;border-radius:18px 18px 4px 18px;font-size:13px;max-width:80%;line-height:1.45}
+.bbl-out .mention{color:#dfe6ff;font-weight:700}
 .bbl-in{display:flex;gap:8px;align-items:flex-start;margin-bottom:12px}
 .ai-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:800;color:#fff;flex-shrink:0;margin-top:1px}
-.bbl-body{background:var(--bg-card);border:1px solid var(--bd);padding:10px 14px;
-  border-radius:4px 18px 18px 18px;font-size:13px;line-height:1.55;max-width:82%}
-.ai-attach{display:none;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px 16px 4px;flex-shrink:0}
+.bbl-body{background:var(--bg-card);border:1px solid var(--bd);padding:10px 14px;border-radius:4px 18px 18px 18px;font-size:13px;line-height:1.55;max-width:82%}
+.bbl-body b{color:var(--accent)}
+.savechip{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:11px;font-weight:700;
+  color:var(--ai-g);background:rgba(25,195,125,.1);padding:3px 9px;border-radius:7px}
+
+/* @mention picker */
+.ai-mention{display:none;flex-direction:column;margin:0 16px 4px;background:var(--bg-card);
+  border:1px solid var(--bd);border-radius:14px;overflow:hidden;box-shadow:var(--sh-md);flex-shrink:0}
+.ai-mention.on{display:flex}
+.mrow{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--bds)}
+.mrow:last-child{border-bottom:none}
+.mrow:active{background:var(--tint)}
+.m-at{font-size:13px;font-weight:800;color:var(--accent);width:62px}
+.m-desc{font-size:12px;color:var(--ts)}
+
+.ai-attach{display:none;grid-template-columns:repeat(5,1fr);gap:6px;padding:8px 16px 4px;flex-shrink:0}
 .ai-attach.on{display:grid}
 .att{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;
   background:var(--bg-card);border:1px solid var(--bd);border-radius:12px;cursor:pointer}
 .att span{font-size:19px}
 .att small{font-size:9px;color:var(--ts)}
-.chat-bar{display:flex;gap:8px;align-items:center;padding:8px 16px 10px;flex-shrink:0}
+.chat-hint{font-size:10px;color:var(--txs);text-align:center;padding:2px 22px 4px;flex-shrink:0}
+.chat-bar{display:flex;gap:8px;align-items:center;padding:4px 16px 10px;flex-shrink:0}
 .cb-ico{width:36px;height:36px;border-radius:50%;background:var(--bg-card);border:1px solid var(--bd);
-  font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ts);flex-shrink:0}
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ts);flex-shrink:0}
+.cb-at{font-weight:800;color:var(--accent)}
 .chat-inp{flex:1;background:var(--bg-card);border:1px solid var(--bd);border-radius:22px;
   padding:10px 16px;font-size:14px;color:var(--text);outline:none}
 .chat-send{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;color:#fff;
   font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
-/* Conversation list (WeChat-like) */
+/* Conversation list */
 .cv-search{display:flex;align-items:center;gap:8px;margin:0 22px 6px;padding:9px 13px;
   background:var(--bg-card);border:1px solid var(--bd);border-radius:11px;flex-shrink:0}
 .cv-search input{flex:1;border:none;background:transparent;font-size:14px;color:var(--text);outline:none}
@@ -254,38 +276,43 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .cv-list::-webkit-scrollbar{display:none}
 .cv-row{display:flex;align-items:center;gap:12px;padding:11px 22px;cursor:pointer}
 .cv-row:active{background:var(--tint)}
-.cv-av{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-  font-size:20px;color:#fff;flex-shrink:0;position:relative}
+.cv-av{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0}
 .cv-mid{flex:1;min-width:0}
 .cv-name{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
 .cv-tag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:5px;background:var(--tint);color:var(--accent)}
 .cv-prev{font-size:12px;color:var(--ts);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cv-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
 .cv-time{font-size:10px;color:var(--txs)}
-.cv-unread{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--warn);
-  color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cv-unread{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--warn);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
 
-/* ════ TOOLBOX ════ */
-.scr-hd{padding:50px 22px 14px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+/* ════ 工具箱 = 发现 / 展示 ════ */
+.scr-hd{padding:50px 22px 4px;display:flex;align-items:center;gap:12px;flex-shrink:0}
 .bk{width:32px;height:32px;border-radius:50%;background:var(--bg-card);border:1px solid var(--bd);
   display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer}
-.scr-title{font-size:20px;font-weight:700}
-.scr-body{flex:1;overflow-y:auto;padding:0 22px 100px;scrollbar-width:none}
+.scr-title{font-size:22px;font-weight:800}
+.scr-sub{font-size:12px;color:var(--ts);padding:0 22px 4px;flex-shrink:0}
+.scr-body{flex:1;overflow-y:auto;padding:8px 22px 100px;scrollbar-width:none}
 .scr-body::-webkit-scrollbar{display:none}
-.cat-lbl{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txs);margin:18px 0 10px}
-.box-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.box-item{aspect-ratio:1;background:var(--bg-card);border-radius:16px;border:1.5px solid var(--bd);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer}
-.box-item.act{border-color:var(--accent);background:var(--tint)}
-.box-ico{font-size:26px}
-.box-lbl{font-size:11px;font-weight:600;color:var(--ts);text-align:center}
-.box-item.act .box-lbl{color:var(--accent);font-weight:700}
-.pkg{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg-card);
-  border-radius:14px;border:1px solid var(--bd);margin-bottom:8px;cursor:pointer}
-.pkg-ico{font-size:22px}
-.pkg-info{flex:1}
-.pkg-name{font-size:14px;font-weight:700}
-.pkg-desc{font-size:11px;color:var(--txs);margin-top:2px}
+.disc-hero{border-radius:20px;padding:20px;margin-bottom:18px;color:#fff;
+  background:linear-gradient(135deg,#4a6cf7 0%,#7c5af0 100%);box-shadow:var(--sh-md);cursor:pointer}
+.dh-ey{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px}
+.dh-title{font-size:20px;font-weight:800;margin-bottom:6px}
+.dh-sub{font-size:12px;color:rgba(255,255,255,.78);line-height:1.5;margin-bottom:14px}
+.dh-meta{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:11px;color:rgba(255,255,255,.78)}
+.dh-btn{display:inline-block;padding:9px 20px;background:#fff;color:var(--accent);border:none;
+  border-radius:11px;font-size:13px;font-weight:700;cursor:pointer}
+.cat-lbl{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--ts);margin:18px 0 11px;display:flex;align-items:center;gap:6px}
+.disc-card{display:flex;align-items:center;gap:13px;padding:14px;background:var(--bg-card);
+  border:1px solid var(--bd);border-radius:16px;margin-bottom:10px;box-shadow:var(--sh)}
+.dc-ico{width:46px;height:46px;border-radius:13px;background:var(--tint);display:flex;
+  align-items:center;justify-content:center;font-size:23px;flex-shrink:0}
+.dc-mid{flex:1;min-width:0}
+.dc-name{font-size:15px;font-weight:700}
+.dc-desc{font-size:11px;color:var(--ts);margin-top:2px;line-height:1.4}
+.dc-meta{font-size:10px;color:var(--txs);margin-top:4px}
+.dc-btn{padding:7px 15px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;border:none}
+.dc-btn.add{background:var(--accent);color:#fff}
+.dc-btn.owned{background:transparent;color:var(--ts);border:1.5px solid var(--bd)}
 
 /* ════ INVENTORY ════ */
 .inv-hd{padding:50px 22px 10px;display:flex;align-items:center;gap:12px;flex-shrink:0}
@@ -321,13 +348,16 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .cfg-body{flex:1;overflow-y:auto;padding:0 22px 40px;scrollbar-width:none}
 .cfg-body::-webkit-scrollbar{display:none}
 .cfg-prof{display:flex;flex-direction:column;align-items:center;padding:20px 0 28px;gap:8px}
-.cfg-av{width:72px;height:72px;border-radius:36px;background:var(--bg-dark);
-  display:flex;align-items:center;justify-content:center;font-size:34px}
+.cfg-av{width:80px;height:80px;border-radius:40px;background:var(--bg-dark);background-size:cover;
+  background-position:center;display:flex;align-items:center;justify-content:center;font-size:36px;
+  position:relative;cursor:pointer}
+.cfg-cam{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;
+  background:var(--accent);border:3px solid var(--bg);font-size:11px;color:#fff;
+  display:flex;align-items:center;justify-content:center}
 .cfg-name{font-size:18px;font-weight:700}
 .cfg-mail{font-size:12px;color:var(--txs)}
 .c-chips{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
-.c-chip{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--tint);
-  border-radius:12px;border:1px solid rgba(74,108,247,.18)}
+.c-chip{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--tint);border-radius:12px;border:1px solid rgba(74,108,247,.18)}
 .c-ico{font-size:18px}
 .c-name{flex:1;font-size:13px;font-weight:700}
 .c-st{font-size:11px;font-weight:700;color:var(--accent)}
@@ -347,7 +377,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 <body>
 <div class="phone" ondblclick="toggleDark()">
 
-<!-- ════ ONBOARDING ════ -->
+<!-- ════ ONBOARDING (2 步) ════ -->
 <div id="scr-ob" class="scr on">
   <div id="ob1" class="obs on">
     <div class="ob-logo">🪷</div>
@@ -356,12 +386,12 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <input class="ob-inp" id="inp-name" placeholder="你叫什么名字？" type="text">
     <div class="ob-note">不需要注册 · 稍后随时连接账号</div>
     <button class="ob-btn" onclick="obGo(2)">下一步 →</button>
-    <div class="ob-dots"><div class="ob-dot on"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+    <div class="ob-dots"><div class="ob-dot on"></div><div class="ob-dot"></div></div>
   </div>
 
   <div id="ob2" class="obs">
     <div class="ob-h">选择你的风格</div>
-    <div class="ob-sub">宝盒根据偏好调整 AI 助理的沟通方式与首页展示</div>
+    <div class="ob-sub">宝盒据此调整 AI 的沟通方式与首页展示，随时可改</div>
     <div class="tones">
       <div class="tc on" id="tc-simple" onclick="pickTone('simple')">
         <span class="tc-ico">🪷</span>
@@ -379,75 +409,64 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <div class="tc-chk">✓</div>
       </div>
     </div>
-    <button class="ob-btn" style="margin-top:20px" onclick="obGo(3)">下一步 →</button>
-    <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot on"></div><div class="ob-dot"></div></div>
-  </div>
-
-  <div id="ob3" class="obs">
-    <div class="ob-h">连接你的工具</div>
-    <div class="ob-sub">宝盒作为统一入口聚合你在用的服务，随时可在设置修改</div>
-    <div class="conn-cat">✦ AI 助理</div>
-    <div class="conn-rows">
-      <div class="conn-row" id="cr-claude" onclick="togConn('claude')"><span class="conn-ico">✦</span><div class="conn-info"><div class="conn-name">Claude</div><div class="conn-desc">智友核心 AI</div></div><span class="conn-st" id="cs-claude">连接</span></div>
-      <div class="conn-row" id="cr-gpt" onclick="togConn('gpt')"><span class="conn-ico">⚙</span><div class="conn-info"><div class="conn-name">ChatGPT</div><div class="conn-desc">智友备用 AI</div></div><span class="conn-st" id="cs-gpt">连接</span></div>
-    </div>
-    <div class="conn-cat">📝 笔记工具（汇入智友）</div>
-    <div class="conn-rows">
-      <div class="conn-row" id="cr-flomo" onclick="togConn('flomo')"><span class="conn-ico">🌊</span><div class="conn-info"><div class="conn-name">Flomo</div><div class="conn-desc">快速卡片笔记</div></div><span class="conn-st" id="cs-flomo">连接</span></div>
-      <div class="conn-row" id="cr-notion" onclick="togConn('notion')"><span class="conn-ico">◻</span><div class="conn-info"><div class="conn-name">Notion</div><div class="conn-desc">结构化知识库</div></div><span class="conn-st" id="cs-notion">连接</span></div>
-    </div>
-    <button class="ob-btn" style="margin-top:16px" onclick="enterApp()">进入宝盒 →</button>
-    <div class="ob-skip" onclick="enterApp()">跳过，稍后设置</div>
-    <div class="ob-dots" style="margin-top:16px"><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot on"></div></div>
+    <button class="ob-btn" onclick="enterApp()">进入宝盒 →</button>
+    <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot on"></div></div>
   </div>
 </div>
 
-<!-- ════ HOME (工作台 / 已购买工具) ════ -->
+<!-- ════ HOME ════ -->
 <div id="scr-home" class="scr">
   <div class="topbar">
-    <button class="av-btn" onclick="go('cfg','home')">🌿</button>
-    <div class="top-r">
-      <div class="top-r-txt">
-        <div class="clk" id="clock">09:41</div>
-        <div class="wthr">🌤 北京 · 24°C 多云</div>
-      </div>
+    <div class="tb-row">
+      <button class="av-btn" id="home-av" onclick="go('cfg','home')">🌿<span class="av-cam">📷</span></button>
+      <div class="tb-greet"><div class="tb-name" id="gz-name">早安，小汉</div></div>
+      <div class="tb-time"><div class="clk" id="clock">09:41</div><div class="wthr">🌤 北京 · 24°C</div></div>
     </div>
+    <div class="tb-quote" id="gz-quote">"简单是终极的复杂" <span>— 达芬奇</span></div>
   </div>
 
   <div class="home-body">
-    <div class="greeting-zone">
-      <div class="gz-name" id="gz-name">早安，小汉</div>
-      <div class="gz-quote" id="gz-quote">"简单是终极的复杂" <span>— 达芬奇</span></div>
-    </div>
-
-    <!-- 合并后的提醒栏（放上面） -->
+    <!-- 合并提醒栏 -->
     <div class="remind-bar" onclick="openSheet('remind')">
       <div class="rb-dot"></div>
       <span class="rb-main">3 项待处理 · <b>1 紧急</b> · 2 件过期预警</span>
       <span class="rb-arr">查看 ›</span>
     </div>
 
-    <!-- 编辑风倒计时（保留） -->
+    <!-- 倒计时 + 接下来（填充右侧空白） -->
     <div class="count-hero">
-      <div class="ch-cap">最近重要日期</div>
-      <div class="ch-main"><span class="ch-num" id="ch-num">5</span><span class="ch-unit">天</span></div>
-      <div class="ch-label" id="ch-label">妈妈生日</div>
-      <span class="ch-sample">示例数据 · 连接日历后个性化</span>
-    </div>
-
-    <!-- 行动建议（突出，hero） -->
-    <div class="action-card" onclick="navTo('ai')">
-      <div class="ac-bar"></div>
-      <div class="ac-content">
-        <div class="ac-tag"><div class="ac-dot"></div>AI 行动建议</div>
-        <div class="ac-text" id="ac-text">今日内下单礼品（预算 ¥300）。最优方案：<em>护肤套装</em>或<em>定制相册</em>，确保 5 天内到货。</div>
+      <div class="ch-left">
+        <div class="ch-cap">最近重要日期</div>
+        <div class="ch-main"><span class="ch-num" id="ch-num">5</span><span class="ch-unit">天</span></div>
+        <div class="ch-label" id="ch-label">妈妈生日</div>
+        <span class="ch-sample">示例 · 连接日历后个性化</span>
       </div>
-      <div class="ac-arr">›</div>
+      <div class="ch-right">
+        <div class="ch-r-cap">接下来</div>
+        <div class="ch-r-item"><span class="ch-r-name">项目截止</span><span class="ch-r-day">12 天</span></div>
+        <div class="ch-r-item"><span class="ch-r-name">季度汇报</span><span class="ch-r-day">18 天</span></div>
+        <div class="ch-r-item"><span class="ch-r-name">结婚纪念</span><span class="ch-r-day">34 天</span></div>
+      </div>
     </div>
 
-    <!-- 已购买工具（demo 数据卡片，颜色统一） -->
-    <div class="sec-lbl">我的工具</div>
+    <!-- 行动建议（明确去智友） -->
+    <div class="action-card" onclick="navTo('ai')">
+      <div class="ac-top">
+        <div class="ac-bar"></div>
+        <div class="ac-content">
+          <div class="ac-tag"><div class="ac-dot"></div>AI 行动建议</div>
+          <div class="ac-text" id="ac-text">今日内下单礼品（预算 ¥300）。最优方案：<em>护肤套装</em>或<em>定制相册</em>，确保 5 天内到货。</div>
+        </div>
+      </div>
+      <div class="ac-foot">
+        <span class="ac-spark">✦</span>
+        <span class="ac-foot-txt">在智友里继续这个话题</span>
+        <span class="ac-foot-arr">→</span>
+      </div>
+    </div>
 
+    <!-- 我的工具 -->
+    <div class="sec-lbl">我的工具</div>
     <div class="tool-card" onclick="go('inv','home')">
       <div class="tk-top">
         <div class="tk-ico blue">📦</div>
@@ -463,7 +482,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="tk-ai">⚡ AI 已为你整理出本周补货清单</div>
       <div class="tk-acts">
         <button class="tk-bp" onclick="event.stopPropagation();quickRecord()">＋ 记录物品</button>
-        <button class="tk-bs" onclick="event.stopPropagation();navTo('inv')">查看全部</button>
+        <button class="tk-bs" onclick="event.stopPropagation();go('inv','home')">查看全部</button>
       </div>
     </div>
 
@@ -487,9 +506,9 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     </div>
   </div>
 
-  <!-- 3-Tab Nav -->
+  <!-- Nav: 我的(launcher) | 智友 | 工具箱 -->
   <div class="bnav">
-    <button class="nb on" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">工作台</span></button>
+    <button class="nb on" onclick="leftTab()"><span class="ni">▦</span><span class="nl">我的</span></button>
     <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -497,6 +516,21 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   <div class="tip" id="tip">✦ 一个入口，问所有 AI</div>
 
   <div class="overlay" id="home-ov" onclick="closeHomeSheet()"></div>
+
+  <!-- 快捷启动 launcher -->
+  <div class="sheet" id="launch-sh" style="max-height:60%">
+    <div class="sh-handle"></div>
+    <div class="sh-title">快捷启动 · 我的工具</div>
+    <div class="sh-body">
+      <div class="lq-row" onclick="closeHomeSheet()"><div class="lq-ico">🏠</div><div class="lq-info"><div class="lq-name">回到首页</div><div class="lq-desc">工作台总览</div></div><span class="lq-arr">›</span></div>
+      <div class="lq-row" onclick="closeHomeSheet();go('inv','home')"><div class="lq-ico">📦</div><div class="lq-info"><div class="lq-name">物品库</div><div class="lq-desc">3 件即将到期</div></div><span class="lq-arr">›</span></div>
+      <div class="lq-row" onclick="closeHomeSheet()"><div class="lq-ico">💰</div><div class="lq-info"><div class="lq-name">支出记录</div><div class="lq-desc">本周 ¥949</div></div><span class="lq-arr">›</span></div>
+      <div class="lq-row" onclick="closeHomeSheet()"><div class="lq-ico">✅</div><div class="lq-info"><div class="lq-name">待办清单</div><div class="lq-desc">3 项待处理</div></div><span class="lq-arr">›</span></div>
+      <div class="lq-row" onclick="closeHomeSheet();navTo('tools')"><div class="lq-ico">＋</div><div class="lq-info"><div class="lq-name">添加更多工具</div><div class="lq-desc">去工具箱发现</div></div><span class="lq-arr">›</span></div>
+    </div>
+  </div>
+
+  <!-- 提醒 sheet -->
   <div class="sheet" id="remind-sh" style="max-height:72%">
     <div class="sh-handle"></div>
     <div class="sh-title">提醒</div>
@@ -518,14 +552,12 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 
 <!-- ════ 智友 ════ -->
 <div id="scr-ai" class="scr">
-
-  <!-- 统一智能对话 -->
   <div id="ai-unified" class="ai-view on">
     <div class="ai-hd">
       <span class="ai-title">智友</span>
       <button class="ai-icobtn" onclick="showAIList()">💬</button>
     </div>
-    <div class="ai-mode">🧠 智能模式 · 自动调度最合适的 AI 与工具</div>
+    <div class="ai-mode">🧠 智能模式 · 一个输入框，后台自动调度 AI 与工具</div>
     <div class="ai-msgs">
       <div class="bbl-out"><div>帮我想个送妈妈的生日礼物，预算 300</div></div>
       <div class="ai-route">已综合 Claude · ChatGPT 的回答</div>
@@ -533,12 +565,28 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <div class="ai-av" style="background:var(--accent)">智</div>
         <div class="bbl-body" id="ai-reply">综合建议：<b>定制相册</b>（¥150-200）配手写卡片最暖心；想更实用可选<b>护肤礼盒</b>（¥280-320）。要我帮你比价下单吗？</div>
       </div>
-      <div class="bbl-out"><div>把"周五前买好牛奶"记一下</div></div>
+      <div class="bbl-out"><div><span class="mention">@Flomo</span> 周五前买好牛奶</div></div>
       <div class="bbl-in">
-        <div class="ai-av" style="background:var(--ai-g)">记</div>
-        <div class="bbl-body">已存入随手记 📝，并设了周五提醒。物品库里牛奶后天到期，要顺便加入购物清单吗？</div>
+        <div class="ai-av" style="background:var(--ai-w)">🌊</div>
+        <div class="bbl-body">收到～<div class="savechip">✓ 已记入 Flomo 笔记序列</div></div>
+      </div>
+      <div class="bbl-out"><div><span class="mention">@Gemini</span> 你怎么看这个礼物预算？</div></div>
+      <div class="bbl-in">
+        <div class="ai-av" style="background:var(--ai-gem)">G</div>
+        <div class="bbl-body">300 元做定制相册很充裕，建议留 50 元加急运费，确保 5 天内到。</div>
       </div>
     </div>
+
+    <!-- @mention picker -->
+    <div class="ai-mention" id="ai-mention">
+      <div class="mrow" onclick="pickMention('@Claude ')"><span class="m-at">@Claude</span><span class="m-desc">单独问 Claude，它会加入对话</span></div>
+      <div class="mrow" onclick="pickMention('@ChatGPT ')"><span class="m-at">@ChatGPT</span><span class="m-desc">单独问 ChatGPT</span></div>
+      <div class="mrow" onclick="pickMention('@Gemini ')"><span class="m-at">@Gemini</span><span class="m-desc">单独问 Gemini</span></div>
+      <div class="mrow" onclick="pickMention('@Flomo ')"><span class="m-at">@Flomo</span><span class="m-desc">这条消息自动记入笔记序列</span></div>
+      <div class="mrow" onclick="pickMention('@物品库 ')"><span class="m-at">@物品库</span><span class="m-desc">记一个物品 / 查到期</span></div>
+      <div class="mrow" onclick="pickMention('@待办 ')"><span class="m-at">@待办</span><span class="m-desc">加一条待办事项</span></div>
+    </div>
+
     <div class="ai-attach" id="ai-attach">
       <div class="att"><span>📷</span><small>图片</small></div>
       <div class="att"><span>📎</span><small>文件</small></div>
@@ -546,15 +594,17 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="att"><span>📞</span><small>实时</small></div>
       <div class="att"><span>📝</span><small>笔记</small></div>
     </div>
+
+    <div class="chat-hint">输入框搞定一切：<b>@AI</b> 拉它进来 · <b>@Flomo</b> 存笔记 · <b>@物品库</b> 记物品</div>
     <div class="chat-bar">
       <button class="cb-ico" onclick="toggleAttach()">＋</button>
-      <input class="chat-inp" placeholder="发消息给智友…">
+      <button class="cb-ico cb-at" onclick="toggleMention()">@</button>
+      <input class="chat-inp" id="chat-inp" placeholder="发消息给智友…">
       <button class="cb-ico">🎙</button>
       <button class="chat-send">↑</button>
     </div>
   </div>
 
-  <!-- 对话列表（像微信） -->
   <div id="ai-list" class="ai-view">
     <div class="ai-hd">
       <button class="bk" onclick="showAIChat()">←</button>
@@ -563,77 +613,74 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     </div>
     <div class="cv-search"><span class="inv-s-ico">🔍</span><input placeholder="搜索对话、AI、工具 agent…"></div>
     <div class="cv-list">
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:var(--accent)">🧠</div>
-        <div class="cv-mid"><div class="cv-name">智友 <span class="cv-tag">智能调度</span></div><div class="cv-prev">综合建议：定制相册配手写卡片最暖心…</div></div>
-        <div class="cv-right"><span class="cv-time">11:20</span><span class="cv-unread">2</span></div>
-      </div>
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:linear-gradient(135deg,#7c5af0,#19c37d)">👥</div>
-        <div class="cv-mid"><div class="cv-name">产品脑暴群 <span class="cv-tag">群聊</span></div><div class="cv-prev">Claude、ChatGPT、Gemini：3 个 AI 正在讨论方案…</div></div>
-        <div class="cv-right"><span class="cv-time">10:05</span></div>
-      </div>
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:#7c5af0">✦</div>
-        <div class="cv-mid"><div class="cv-name">Claude</div><div class="cv-prev">可以考虑定制相册，附上手写信，300 元内…</div></div>
-        <div class="cv-right"><span class="cv-time">昨天</span></div>
-      </div>
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:#19c37d">⚙</div>
-        <div class="cv-mid"><div class="cv-name">ChatGPT</div><div class="cv-prev">护肤礼盒很受欢迎，兰蔻套装 300 元左右…</div></div>
-        <div class="cv-right"><span class="cv-time">昨天</span></div>
-      </div>
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:#4a6cf7">📦</div>
-        <div class="cv-mid"><div class="cv-name">物品库 Agent <span class="cv-tag">工具</span></div><div class="cv-prev">牛奶后天到期，需要我加入购物清单吗？</div></div>
-        <div class="cv-right"><span class="cv-time">08:00</span><span class="cv-unread">1</span></div>
-      </div>
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:#e8923a">📝</div>
-        <div class="cv-mid"><div class="cv-name">随手记 <span class="cv-tag">笔记</span></div><div class="cv-prev">周五前买好牛奶 · 还书 · 给妈妈打电话</div></div>
-        <div class="cv-right"><span class="cv-time">昨天</span></div>
-      </div>
-      <div class="cv-row" onclick="showAIChat()">
-        <div class="cv-av" style="background:#06a">🌊</div>
-        <div class="cv-mid"><div class="cv-name">Flomo 助手 <span class="cv-tag">跨平台</span></div><div class="cv-prev">已同步今日 3 条卡片笔记到宝盒</div></div>
-        <div class="cv-right"><span class="cv-time">周一</span></div>
-      </div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:var(--accent)">🧠</div><div class="cv-mid"><div class="cv-name">智友 <span class="cv-tag">智能调度</span></div><div class="cv-prev">综合建议：定制相册配手写卡片最暖心…</div></div><div class="cv-right"><span class="cv-time">11:20</span><span class="cv-unread">2</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,#7c5af0,#19c37d)">👥</div><div class="cv-mid"><div class="cv-name">产品脑暴群 <span class="cv-tag">群聊</span></div><div class="cv-prev">Claude、ChatGPT、Gemini：3 个 AI 正在讨论方案…</div></div><div class="cv-right"><span class="cv-time">10:05</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#7c5af0">✦</div><div class="cv-mid"><div class="cv-name">Claude</div><div class="cv-prev">可以考虑定制相册，附上手写信，300 元内…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#19c37d">⚙</div><div class="cv-mid"><div class="cv-name">ChatGPT</div><div class="cv-prev">护肤礼盒很受欢迎，兰蔻套装 300 元左右…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#4a6cf7">📦</div><div class="cv-mid"><div class="cv-name">物品库 Agent <span class="cv-tag">工具</span></div><div class="cv-prev">牛奶后天到期，需要我加入购物清单吗？</div></div><div class="cv-right"><span class="cv-time">08:00</span><span class="cv-unread">1</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#e8923a">📝</div><div class="cv-mid"><div class="cv-name">随手记 <span class="cv-tag">笔记</span></div><div class="cv-prev">周五前买好牛奶 · 还书 · 给妈妈打电话</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#0a6">🌊</div><div class="cv-mid"><div class="cv-name">Flomo 助手 <span class="cv-tag">跨平台</span></div><div class="cv-prev">已同步今日 3 条卡片笔记到宝盒</div></div><div class="cv-right"><span class="cv-time">周一</span></div></div>
     </div>
   </div>
 
   <div class="bnav">
-    <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">工作台</span></button>
+    <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
     <button class="nb-ai on"><div class="nb-ai-ico" style="background:var(--amber);box-shadow:0 4px 18px rgba(232,146,58,.42)">✦</div><span class="nl" style="color:var(--amber);font-weight:700">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
 </div>
 
-<!-- ════ TOOLBOX ════ -->
+<!-- ════ 工具箱 = 发现 / 展示 ════ -->
 <div id="scr-tools" class="scr">
   <div class="scr-hd"><span class="scr-title">工具箱</span></div>
+  <div class="scr-sub">发现适合你的工具，一键加入工作台</div>
   <div class="scr-body">
-    <div class="cat-lbl" style="margin-top:4px">已启用</div>
-    <div class="box-grid">
-      <div class="box-item act" onclick="navTo('inv')"><span class="box-ico">📦</span><span class="box-lbl">物品库</span></div>
-      <div class="box-item act"><span class="box-ico">💰</span><span class="box-lbl">支出记录</span></div>
-      <div class="box-item act"><span class="box-ico">✅</span><span class="box-lbl">待办清单</span></div>
+    <div class="disc-hero">
+      <div class="dh-ey">★ 本周推荐</div>
+      <div class="dh-title">🎁 礼物管家</div>
+      <div class="dh-sub">记录亲友喜好与重要日期，提前预警并由 AI 推荐礼物，再也不会忘记。</div>
+      <div class="dh-meta"><span>★ 4.9</span><span>·</span><span>2.3 万人在用</span><span>·</span><span>免费</span></div>
+      <button class="dh-btn">＋ 加入工作台</button>
     </div>
-    <div class="cat-lbl">可添加</div>
-    <div class="box-grid">
-      <div class="box-item"><span class="box-ico">📖</span><span class="box-lbl">阅读追踪</span></div>
-      <div class="box-item"><span class="box-ico">🏋️</span><span class="box-lbl">健身记录</span></div>
-      <div class="box-item"><span class="box-ico">🌱</span><span class="box-lbl">习惯追踪</span></div>
-      <div class="box-item"><span class="box-ico">🚗</span><span class="box-lbl">车辆管理</span></div>
-      <div class="box-item"><span class="box-ico">💊</span><span class="box-lbl">健康档案</span></div>
-      <div class="box-item"><span class="box-ico">🏠</span><span class="box-lbl">家居维护</span></div>
+
+    <div class="cat-lbl">⚡ 效率</div>
+    <div class="disc-card">
+      <div class="dc-ico">✅</div>
+      <div class="dc-mid"><div class="dc-name">待办清单</div><div class="dc-desc">AI 自动排优先级，重要的不遗漏</div><div class="dc-meta">★ 4.8 · 5.1 万人在用</div></div>
+      <button class="dc-btn owned">已拥有</button>
     </div>
-    <div class="cat-lbl">工具包</div>
-    <div class="pkg"><span class="pkg-ico">⚡</span><div class="pkg-info"><div class="pkg-name">效率日常包</div><div class="pkg-desc">物品库 · 待办 · 习惯追踪</div></div><span style="color:var(--txs)">›</span></div>
-    <div class="pkg"><span class="pkg-ico">✦</span><div class="pkg-info"><div class="pkg-name">AI 助理包</div><div class="pkg-desc">智友 · 笔记 · 日程同步</div></div><span style="color:var(--txs)">›</span></div>
-    <div class="pkg" style="opacity:.55;border-style:dashed"><span class="pkg-ico">＋</span><div class="pkg-info"><div class="pkg-name">自定义工具包</div><div class="pkg-desc">选择你的工具组合</div></div><span style="color:var(--txs)">›</span></div>
+    <div class="disc-card">
+      <div class="dc-ico">🌱</div>
+      <div class="dc-mid"><div class="dc-name">习惯追踪</div><div class="dc-desc">温和坚持，连续打卡可视化</div><div class="dc-meta">★ 4.7 · 3.4 万人在用</div></div>
+      <button class="dc-btn add">＋ 添加</button>
+    </div>
+
+    <div class="cat-lbl">🏡 生活</div>
+    <div class="disc-card">
+      <div class="dc-ico">📦</div>
+      <div class="dc-mid"><div class="dc-name">物品库</div><div class="dc-desc">保质期、保修、存放位置统一管理</div><div class="dc-meta">★ 4.9 · 8.2 万人在用</div></div>
+      <button class="dc-btn owned">已拥有</button>
+    </div>
+    <div class="disc-card">
+      <div class="dc-ico">🚗</div>
+      <div class="dc-mid"><div class="dc-name">车辆管理</div><div class="dc-desc">保养、年检、保险到期自动提醒</div><div class="dc-meta">★ 4.6 · 1.8 万人在用</div></div>
+      <button class="dc-btn add">＋ 添加</button>
+    </div>
+
+    <div class="cat-lbl">💰 财务</div>
+    <div class="disc-card">
+      <div class="dc-ico">💰</div>
+      <div class="dc-mid"><div class="dc-name">支出记录</div><div class="dc-desc">随手记账，AI 自动分类与复盘</div><div class="dc-meta">★ 4.8 · 6.7 万人在用</div></div>
+      <button class="dc-btn owned">已拥有</button>
+    </div>
+    <div class="disc-card">
+      <div class="dc-ico">📈</div>
+      <div class="dc-mid"><div class="dc-name">订阅管理</div><div class="dc-desc">告别忘记的自动续费，省下冤枉钱</div><div class="dc-meta">★ 4.7 · 2.9 万人在用</div></div>
+      <button class="dc-btn add">＋ 添加</button>
+    </div>
   </div>
   <div class="bnav">
-    <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">工作台</span></button>
+    <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
     <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
     <button class="nb on"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -660,7 +707,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <div class="inv-row"><div class="inv-dot" style="background:#9ba5c0"></div><div class="inv-info"><div class="inv-name">蓝牙耳机</div><div class="inv-cat">电子 · 书房</div></div><div class="inv-exp" style="color:var(--txs)">无期限</div></div>
   </div>
   <div class="bnav">
-    <button class="nb on" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">工作台</span></button>
+    <button class="nb on" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
     <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -677,12 +724,12 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 
 <!-- ════ SETTINGS ════ -->
 <div id="scr-cfg" class="scr">
-  <div class="scr-hd"><button class="bk" onclick="goBack()">←</button><span class="scr-title">我的</span></div>
+  <div class="scr-hd"><button class="bk" onclick="goBack()">←</button><span class="scr-title" style="font-size:20px">我的</span></div>
   <div class="cfg-body">
     <div class="cfg-prof">
-      <div class="cfg-av">🌿</div>
+      <div class="cfg-av" id="cfg-av" onclick="uploadAvatar()">🌿<span class="cfg-cam">📷</span></div>
       <div class="cfg-name" id="cfg-uname">小汉</div>
-      <div class="cfg-mail">连接账号后显示</div>
+      <div class="cfg-mail">点击头像可上传照片</div>
     </div>
     <div class="cat-lbl" style="margin-top:0;margin-bottom:8px">已连接服务</div>
     <div class="c-chips">
@@ -705,52 +752,48 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 </div><!-- /phone -->
 <script>
 const TONES={
-  simple:{
-    greet:'早安，{n}',
-    quote:'"简单是终极的复杂" <span>— 达芬奇</span>',
+  simple:{greet:'早安，{n}',quote:'"简单是终极的复杂" <span>— 达芬奇</span>',
     action:'今日内下单礼品（预算 ¥300）。最优方案：<em>护肤套装</em>或<em>定制相册</em>，确保 5 天内到货。',
     reply:'综合建议：<b>定制相册</b>（¥150-200）配手写卡片最暖心；想更实用可选<b>护肤礼盒</b>（¥280-320）。要我帮你比价下单吗？',
-    toneName:'极简清透'
-  },
-  warm:{
-    greet:'{n}，早安 🌸',
-    quote:'宝盒已为你整理好今天，从容开始这一天吧',
+    toneName:'极简清透'},
+  warm:{greet:'{n}，早安 🌸',quote:'宝盒已为你整理好今天，从容开始这一天吧',
     action:'妈妈生日快到了，今天把礼物定好吧 💝 推荐<em>定制相册</em>，加手写卡片更暖心。',
     reply:'送妈妈礼物真贴心！<b>定制相册</b>或<b>护肤套装</b>都很好，再加一张手写卡片她一定特别感动 💝 要我帮你挑吗？',
-    toneName:'温暖陪伴'
-  },
-  pro:{
-    greet:'{n}，今日简报',
-    quote:'3 项待处理 · 1 项紧急 · 2 件过期预警 · 支出 ¥949',
+    toneName:'温暖陪伴'},
+  pro:{greet:'{n}，今日简报',quote:'3 项待处理 · 1 项紧急 · 2 件过期预警 · 支出 ¥949',
     action:'优先行动：今日下单礼品（¥300），确保 <em>5 天</em>内到货。推荐护肤套装或定制相册。',
     reply:'方案对比：① <b>护肤礼盒</b> ¥280-320，实用；② <b>定制相册</b> ¥150-200，情感价值高。建议今日下单确保准时。',
-    toneName:'专业高效'
-  }
+    toneName:'专业高效'}
 };
-let tone='simple',prev='home',dark=false,firstVisit=true;
+let tone='simple',prev='home',dark=false,firstVisit=true,cur='ob';
 
 const ALL=['ob','home','ai','tools','inv','cfg'];
 function go(id,from){
   if(from)prev=from;
+  cur=id;
   ALL.forEach(s=>{const e=document.getElementById('scr-'+s);if(e)e.classList.toggle('on',s===id)});
 }
 function goBack(){go(prev);prev='home'}
 function navTo(id){prev='home';if(id==='ai')showAIChat();go(id)}
 
-/* 智友 视图切换 */
+/* 左 Tab：在首页点 → 弹快捷启动；其他页点 → 回首页 */
+function leftTab(){
+  if(cur==='home'){
+    document.getElementById('home-ov').classList.add('on');
+    document.getElementById('launch-sh').classList.add('on');
+  }else{navTo('home')}
+}
+
+/* 智友 */
 function showAIList(){document.getElementById('ai-unified').classList.remove('on');document.getElementById('ai-list').classList.add('on')}
 function showAIChat(){document.getElementById('ai-list').classList.remove('on');document.getElementById('ai-unified').classList.add('on')}
-function toggleAttach(){document.getElementById('ai-attach').classList.toggle('on')}
+function toggleAttach(){document.getElementById('ai-attach').classList.toggle('on');document.getElementById('ai-mention').classList.remove('on')}
+function toggleMention(){document.getElementById('ai-mention').classList.toggle('on');document.getElementById('ai-attach').classList.remove('on')}
+function pickMention(t){const i=document.getElementById('chat-inp');i.value=t;i.focus();document.getElementById('ai-mention').classList.remove('on')}
 
 /* Onboarding */
-function obGo(n){[1,2,3].forEach(i=>document.getElementById('ob'+i).classList.toggle('on',i===n))}
+function obGo(n){[1,2].forEach(i=>document.getElementById('ob'+i).classList.toggle('on',i===n))}
 function pickTone(t){tone=t;['simple','warm','pro'].forEach(k=>document.getElementById('tc-'+k).classList.toggle('on',k===t))}
-const connSt={};
-function togConn(key){
-  connSt[key]=!connSt[key];
-  document.getElementById('cr-'+key).classList.toggle('on',!!connSt[key]);
-  document.getElementById('cs-'+key).textContent=connSt[key]?'已连接':'连接';
-}
 function enterApp(){
   const n=(document.getElementById('inp-name').value.trim()||'小汉');
   const d=TONES[tone];
@@ -764,18 +807,27 @@ function enterApp(){
   if(firstVisit){firstVisit=false;const tip=document.getElementById('tip');if(tip){tip.classList.add('on');setTimeout(()=>tip.classList.remove('on'),3600);}}
 }
 
-/* Home sheet */
-function openSheet(id){
-  document.getElementById('home-ov').classList.add('on');
-  document.getElementById(id+'-sh').classList.add('on');
-}
+/* Home sheets */
+function openSheet(id){document.getElementById('home-ov').classList.add('on');document.getElementById(id+'-sh').classList.add('on')}
 function closeHomeSheet(){
   document.getElementById('home-ov').classList.remove('on');
-  const e=document.getElementById('remind-sh');if(e)e.classList.remove('on');
+  ['remind','launch'].forEach(k=>{const e=document.getElementById(k+'-sh');if(e)e.classList.remove('on')});
 }
-function quickRecord(){navTo('inv');openAddSheet()}
+function quickRecord(){go('inv','home');openAddSheet()}
 function openAddSheet(){document.getElementById('add-ov').classList.add('on');document.getElementById('add-sh').classList.add('on')}
 function closeAddSheet(){document.getElementById('add-ov').classList.remove('on');document.getElementById('add-sh').classList.remove('on')}
+
+/* 头像上传（demo：换成示例照片渐变） */
+let hasPhoto=false;
+function uploadAvatar(){
+  hasPhoto=!hasPhoto;
+  const grad='linear-gradient(135deg,#f6a5c0,#a18cd1)';
+  [['cfg-av','📷'],['home-av','📷']].forEach(([id])=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(hasPhoto){el.firstChild.textContent='';el.style.background=grad}
+    else{el.firstChild.textContent=id==='home-av'?'🌿':'🌿';el.style.background=''}
+  });
+}
 
 function toggleDark(){dark=!dark;document.documentElement.classList.toggle('dark',dark);const sw=document.getElementById('thsw');if(sw)sw.classList.toggle('on',dark)}
 function tick(){const e=document.getElementById('clock');if(!e)return;const n=new Date();e.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
