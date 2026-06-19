@@ -479,12 +479,6 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .sw.on{background:var(--accent)}
 .sw.on::after{left:19px}
 /* ── Demo mode bar ── */
-.demo-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.db-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.3px}
-.db-btn{padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.18);
-  background:transparent;color:rgba(255,255,255,.42);font-size:12px;cursor:pointer;
-  transition:all .2s;font-family:inherit}
-.db-btn.on{background:rgba(255,255,255,.13);color:#fff;border-color:rgba(255,255,255,.4);font-weight:600}
 /* 天数徽标 */
 .tb-day-badge{font-size:10px;color:var(--accent);font-weight:600;
   background:var(--tint);padding:3px 9px;border-radius:8px;margin-top:5px;display:none}
@@ -525,12 +519,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 </style>
 </head>
 <body>
-<!-- Demo mode toggle -->
-<div class="demo-bar">
-  <span class="db-label">体验对比 ·</span>
-  <button class="db-btn" id="db1" onclick="setDemoDay(1)">初次使用</button>
-  <button class="db-btn on" id="db34" onclick="setDemoDay(34)">使用 34 天后</button>
-</div>
+
 <div class="phone" ondblclick="toggleDark()">
 
 <!-- ════ ONBOARDING (2 步) ════ -->
@@ -1106,12 +1095,7 @@ function enterApp(){
 }
 
 /* ── 个性化渲染引擎 ── */
-function setDemoDay(day){
-  demoDay=day;
-  document.getElementById('db1').classList.toggle('on',day===1);
-  document.getElementById('db34').classList.toggle('on',day===34);
-  renderProfile();
-}
+function setDemoDay(day){demoDay=day;renderProfile()}
 function renderProfile(){
   const p=PROFILES[demoDay];const n=userName;
   const $=id=>document.getElementById(id);
