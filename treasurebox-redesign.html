@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · v11</title>
+<title>宝盒 · v12</title>
 <style>
 /* ── 蓝色系 · Zen Tokens ── */
 :root{
@@ -92,12 +92,12 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;
 
 /* Merged reminder bar */
 .remind-bar{display:flex;align-items:center;gap:9px;padding:13px 15px;margin-bottom:22px;
-  background:var(--bg-card);border:1px solid var(--bd);border-left:3px solid var(--warn);
+  background:var(--bg-card);border:1px solid var(--bd);border-left:3px solid var(--accent);
   border-radius:13px;cursor:pointer;box-shadow:var(--sh)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.rb-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);flex-shrink:0;animation:pulse 2s infinite}
+.rb-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:pulse 2s infinite}
 .rb-main{flex:1;font-size:13px;color:var(--text);font-weight:500}
-.rb-main b{color:var(--warn)}
+.rb-main b{color:var(--accent)}
 .rb-arr{font-size:12px;color:var(--ts);font-weight:600;white-space:nowrap}
 
 /* Countdown — 横向，右侧填充"接下来"列表（消除空白） */
@@ -272,6 +272,49 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 /* ac-spark right — replaces footer */
 .ac-spark-r{padding:0 14px 0 4px;display:flex;align-items:center;justify-content:center;
   font-size:15px;color:var(--accent);opacity:.55;flex-shrink:0}
+.ac-acts{display:flex;gap:8px;padding:0 16px 14px}
+.ac-split{flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:11px;
+  font-size:13px;font-weight:700;cursor:pointer}
+.ac-skip{padding:10px 14px;background:transparent;color:var(--ts);border:1.5px solid var(--bd);
+  border-radius:11px;font-size:13px;font-weight:600;cursor:pointer}
+
+/* 今日能量 */
+.energy{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.energy-face{font-size:20px}
+.energy-bars{display:flex;gap:3px;flex:1}
+.eb{flex:1;height:6px;border-radius:3px;background:var(--bd)}
+.eb.on{background:linear-gradient(90deg,#19c37d,#4a6cf7)}
+.energy-word{font-size:12px;font-weight:700;color:#19c37d;white-space:nowrap}
+.energy-note{font-size:11px;color:var(--ts);line-height:1.4;margin-bottom:9px}
+.mood-log{border-top:1px solid var(--bds);padding-top:8px}
+.ml-lbl{font-size:10px;color:var(--txs)}
+.mood-row{display:flex;justify-content:space-between;margin-top:5px}
+.mood{font-size:19px;cursor:pointer;opacity:.5;transition:all .15s;filter:grayscale(.4)}
+.mood:active,.mood.on{opacity:1;filter:none;transform:scale(1.25)}
+
+/* 任务拆分 popup */
+.split-card{position:absolute;left:18px;right:18px;top:50%;transform:translate(0,-50%) scale(.95);
+  background:var(--bg-card);border-radius:22px;z-index:90;padding:20px;opacity:0;pointer-events:none;
+  transition:all .22s cubic-bezier(.4,0,.2,1);box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:78%;display:flex;flex-direction:column}
+.split-card.on{opacity:1;pointer-events:auto;transform:translate(0,-50%) scale(1)}
+.sp-cap{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--accent);margin-bottom:4px}
+.sp-title{font-size:18px;font-weight:800;margin-bottom:6px}
+.sp-hint{font-size:12px;color:var(--ts);line-height:1.5;margin-bottom:16px}
+.sp-list{overflow-y:auto;scrollbar-width:none;margin:0 -4px;padding:0 4px}
+.sp-list::-webkit-scrollbar{display:none}
+.sp-step{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--bds)}
+.sp-check{width:20px;height:20px;border-radius:7px;border:2px solid var(--bd);flex-shrink:0;margin-top:1px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:all .15s}
+.sp-check.done{background:#19c37d;border-color:#19c37d;color:#fff}
+.sp-body{flex:1}
+.sp-txt{font-size:14px;color:var(--text);line-height:1.45}
+.sp-step.done .sp-txt{color:var(--txs);text-decoration:line-through}
+.sp-sub{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;font-weight:600;
+  color:var(--accent);background:var(--tint);padding:3px 9px;border-radius:7px;cursor:pointer}
+.sp-children{padding-left:14px;border-left:2px solid var(--tint);margin:2px 0 2px 9px}
+.sp-foot{display:flex;gap:8px;margin-top:16px;flex-shrink:0}
+.sp-done-btn{flex:1;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer}
+.sp-skip-btn{padding:12px 16px;background:transparent;color:var(--ts);border:1.5px solid var(--bd);border-radius:12px;font-size:13px;font-weight:600;cursor:pointer}
 
 /* Search category grid (智友历史) */
 .srch-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);
@@ -339,6 +382,28 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .dc-btn{padding:7px 15px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;border:none}
 .dc-btn.add{background:var(--accent);color:#fff}
 .dc-btn.owned{background:transparent;color:var(--ts);border:1.5px solid var(--bd)}
+
+/* 工具箱 网格 */
+.tg-lbl{font-size:11px;font-weight:700;color:var(--ts);margin:20px 0 11px}
+.tg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.tg-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+  padding:18px 6px;background:var(--bg-card);border:1px solid var(--bd);border-radius:18px;cursor:pointer;
+  box-shadow:var(--sh);transition:transform .12s}
+.tg-cell:active{transform:scale(.96)}
+.tg-cell.owned{border:1.5px solid rgba(25,195,125,.5)}
+.tg-ico{font-size:30px;line-height:1}
+.tg-name{font-size:13px;font-weight:700;color:var(--text)}
+.tg-add{font-size:10px;color:var(--accent);font-weight:600}
+.tg-own{font-size:10px;color:#19c37d;font-weight:600}
+/* 工具包 */
+.pk-card{display:flex;align-items:center;gap:13px;padding:15px;background:var(--bg-card);
+  border:1px solid var(--bd);border-radius:16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--sh)}
+.pk-card.dashed{border-style:dashed;background:transparent;box-shadow:none}
+.pk-ico{font-size:24px;flex-shrink:0;width:30px;text-align:center}
+.pk-mid{flex:1}
+.pk-name{font-size:15px;font-weight:700}
+.pk-sub{font-size:11px;color:var(--ts);margin-top:2px}
+.pk-arr{color:var(--txs);font-size:16px}
 
 /* ════ INVENTORY ════ */
 .inv-hd{padding:50px 22px 10px;display:flex;align-items:center;gap:12px;flex-shrink:0}
@@ -452,14 +517,14 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   </div>
 
   <div class="home-body">
-    <!-- 合并提醒栏 -->
+    <!-- 陪你看见（柔和提醒栏） -->
     <div class="remind-bar" onclick="openSheet('remind')">
       <div class="rb-dot"></div>
-      <span class="rb-main">3 项待处理 · <b>1 紧急</b> · 2 件过期预警</span>
-      <span class="rb-arr">查看 ›</span>
+      <span class="rb-main">今天有 <b>3 件小事</b> 可以慢慢处理 · 我帮你排好了顺序</span>
+      <span class="rb-arr">看看 ›</span>
     </div>
 
-    <!-- 倒计时 + 接下来（填充右侧空白） -->
+    <!-- 重要日期 + 今日能量 -->
     <div class="count-hero">
       <div class="ch-left">
         <div class="ch-cap">最近重要日期</div>
@@ -468,33 +533,39 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <span class="ch-sample">示例 · 连接日历后个性化</span>
       </div>
       <div class="ch-right">
-        <div class="ch-r-cap">今日状态</div>
-        <div class="ch-r-item">
-          <span style="font-size:14px;flex-shrink:0">😴</span>
-          <span class="ch-r-name" style="flex:1">睡眠 7.5h</span>
-          <span style="font-size:10px;font-weight:700;color:#19c37d;background:rgba(25,195,125,.13);padding:1px 7px;border-radius:6px">优</span>
+        <div class="ch-r-cap">今日能量</div>
+        <div class="energy">
+          <div class="energy-face">🙂</div>
+          <div class="energy-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb"></span></div>
+          <div class="energy-word">状态不错</div>
         </div>
-        <div class="ch-r-item">
-          <span style="font-size:14px;flex-shrink:0">🚶</span>
-          <span class="ch-r-name" style="flex:1">6,200 步</span>
-          <span style="font-size:10px;font-weight:700;color:var(--accent);background:var(--tint);padding:1px 7px;border-radius:6px">达标</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;cursor:pointer" onclick="openGratitude()">
-          <span style="font-size:12px;color:var(--accent);font-weight:600">🌱 今日感恩</span>
-          <span style="font-size:13px;color:var(--txs)">›</span>
+        <div class="energy-note">✨ 昨晚睡得好，身体在慢慢回升</div>
+        <div class="mood-log">
+          <span class="ml-lbl">此刻心情</span>
+          <div class="mood-row">
+            <span class="mood" onclick="logMood(this,'😄')">😄</span>
+            <span class="mood" onclick="logMood(this,'🙂')">🙂</span>
+            <span class="mood" onclick="logMood(this,'😌')">😌</span>
+            <span class="mood" onclick="logMood(this,'😕')">😕</span>
+            <span class="mood" onclick="logMood(this,'😣')">😣</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 行动建议 → 点击进智友 -->
-    <div class="action-card" onclick="navTo('ai')">
-      <div class="ac-top">
+    <!-- 温馨提醒 → 可拆分 -->
+    <div class="action-card">
+      <div class="ac-top" onclick="navTo('ai')">
         <div class="ac-bar"></div>
         <div class="ac-content">
-          <div class="ac-tag"><div class="ac-dot"></div>AI 行动建议</div>
-          <div class="ac-text" id="ac-text">今日内下单礼品（预算 ¥300）。最优方案：<em>护肤套装</em>或<em>定制相册</em>，确保 5 天内到货。</div>
+          <div class="ac-tag"><div class="ac-dot"></div>温馨提醒</div>
+          <div class="ac-text" id="ac-text">妈妈生日还有几天，要不要现在花两分钟挑个礼物？<em>定制相册</em>或<em>护肤套装</em>都很贴心，做不完也没关系。</div>
         </div>
         <div class="ac-spark-r">✦</div>
+      </div>
+      <div class="ac-acts">
+        <button class="ac-split" onclick="openSplit('给妈妈准备生日礼物')">🧩 帮我拆成小步骤</button>
+        <button class="ac-skip" onclick="skipAction(this)">稍后再说</button>
       </div>
     </div>
 
@@ -525,13 +596,13 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <div class="tk-name">支出记录</div>
         <div class="tk-badge bdg-ok">本周 ¥949</div>
       </div>
-      <div class="tk-headline">本周已花 ¥949，购物比上周多 ¥180</div>
+      <div class="tk-headline">这周记账很认真，已记录 12 笔 👏</div>
       <div class="tk-rows">
         <div class="tk-row"><span class="tk-item">购物</span><span class="tk-val v-b">¥520</span></div>
         <div class="tk-row"><span class="tk-item">餐饮</span><span class="tk-val v-b">¥340</span></div>
         <div class="tk-row"><span class="tk-item">交通</span><span class="tk-val v-m">¥89</span></div>
       </div>
-      <div class="tk-ai">💡 购物支出偏高，AI 建议本周末做一次复盘</div>
+      <div class="tk-ai">🌿 想买的东西可以先放进「冷静区」，明天再决定也来得及</div>
       <div class="tk-acts">
         <button class="tk-bp">＋ 记一笔</button>
         <button class="tk-bs">看明细</button>
@@ -579,31 +650,32 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   <!-- 提醒 sheet -->
   <div class="sheet" id="remind-sh" style="max-height:72%">
     <div class="sh-handle"></div>
-    <div class="sh-title">提醒</div>
+    <div class="sh-title">陪你看见 · 今天可以做的事</div>
     <div class="sh-body">
-      <div class="rg-lbl">今日日程</div>
+      <div class="rg-lbl">先做这一件就好</div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('回复王总邮件','关于 Q3 预算调整方案，回一句也算往前走了一步','建议今天')">
+        <span class="rg-name">回复王总邮件</span><span class="rg-val rv-a">建议今天</span>
+      </div>
+      <div class="rg-lbl">今日安排</div>
       <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('产品会议','产品团队周会，15:00 @ 会议室 B','还剩 4 小时','meeting')">
         <span class="rg-name">产品会议</span><span class="rg-val rv-a">还剩 4 小时</span>
       </div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('健身','跑步 40 分钟，核心训练 20 分钟','还剩 8 小时')">
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('健身','跑步 40 分钟，核心训练 20 分钟，动一动就很好','还剩 8 小时')">
         <span class="rg-name">健身</span><span class="rg-val rv-o">还剩 8 小时</span>
       </div>
-      <div class="rg-lbl">待完成</div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('回复王总邮件','关于 Q3 预算调整方案，请今日内回复','紧急')">
-        <span class="rg-name">回复王总邮件</span><span class="rg-val rv-r">紧急</span>
+      <div class="rg-lbl">不急，有空再看</div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('准备季度报告','Q2 数据汇总，可以分几次慢慢做','本周内')">
+        <span class="rg-name">准备季度报告</span><span class="rg-val rv-o">本周内</span>
       </div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('准备季度报告','Q2 数据汇总，今日截止','今天')">
-        <span class="rg-name">准备季度报告</span><span class="rg-val rv-a">今天</span>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('更新物品清单','检查冰箱、药柜存货，想起来再做','随时')">
+        <span class="rg-name">更新物品清单</span><span class="rg-val rv-o">随时</span>
       </div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('更新物品清单','检查冰箱、药柜存货','本周')">
-        <span class="rg-name">更新物品清单</span><span class="rg-val rv-o">本周</span>
+      <div class="rg-lbl">贴心提醒</div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('妈妈生日','还有几天，挑礼物不用赶，想拆成小步骤可以让智友帮忙','5 天后')">
+        <span class="rg-name">妈妈生日</span><span class="rg-val rv-a">5 天后</span>
       </div>
-      <div class="rg-lbl">重要日期 / 过期预警</div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('妈妈生日','建议今天下单礼物，确保 5 天内到货','5 天后')">
-        <span class="rg-name">妈妈生日</span><span class="rg-val rv-r">5 天后</span>
-      </div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('牛奶过期','冰箱全脂牛奶，建议尽快食用或补购','后天')">
-        <span class="rg-name">牛奶过期</span><span class="rg-val rv-r">后天</span>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('牛奶临期','冰箱全脂牛奶，这两天喝掉刚好','后天')">
+        <span class="rg-name">牛奶临期</span><span class="rg-val rv-r">后天</span>
       </div>
       <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('项目截止','移动端重构方案需提交审核','12 天后')">
         <span class="rg-name">项目截止</span><span class="rg-val rv-a">12 天后</span>
@@ -770,46 +842,32 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <div class="disc-hero">
       <div class="dh-ey">★ 本周推荐</div>
       <div class="dh-title">🎁 礼物管家</div>
-      <div class="dh-sub">记录亲友喜好与重要日期，提前预警并由 AI 推荐礼物，再也不会忘记。</div>
+      <div class="dh-sub">记录亲友喜好与重要日期，到时温柔提醒并由 AI 帮你挑礼物。</div>
       <div class="dh-meta"><span>★ 4.9</span><span>·</span><span>2.3 万人在用</span><span>·</span><span>免费</span></div>
       <button class="dh-btn">＋ 加入工作台</button>
     </div>
 
-    <div class="cat-lbl">⚡ 效率</div>
-    <div class="disc-card">
-      <div class="dc-ico">✅</div>
-      <div class="dc-mid"><div class="dc-name">待办清单</div><div class="dc-desc">AI 自动排优先级，重要的不遗漏</div><div class="dc-meta">★ 4.8 · 5.1 万人在用</div></div>
-      <button class="dc-btn owned">已拥有</button>
-    </div>
-    <div class="disc-card">
-      <div class="dc-ico">🌱</div>
-      <div class="dc-mid"><div class="dc-name">习惯追踪</div><div class="dc-desc">温和坚持，连续打卡可视化</div><div class="dc-meta">★ 4.7 · 3.4 万人在用</div></div>
-      <button class="dc-btn add">＋ 添加</button>
+    <div class="tg-lbl">我的工具</div>
+    <div class="tg-grid">
+      <div class="tg-cell owned" onclick="go('inv','home')"><div class="tg-ico">📦</div><div class="tg-name">物品库</div><div class="tg-own">已拥有</div></div>
+      <div class="tg-cell owned"><div class="tg-ico">💰</div><div class="tg-name">支出记录</div><div class="tg-own">已拥有</div></div>
+      <div class="tg-cell owned"><div class="tg-ico">✅</div><div class="tg-name">待办清单</div><div class="tg-own">已拥有</div></div>
     </div>
 
-    <div class="cat-lbl">🏡 生活</div>
-    <div class="disc-card">
-      <div class="dc-ico">📦</div>
-      <div class="dc-mid"><div class="dc-name">物品库</div><div class="dc-desc">保质期、保修、存放位置统一管理</div><div class="dc-meta">★ 4.9 · 8.2 万人在用</div></div>
-      <button class="dc-btn owned">已拥有</button>
-    </div>
-    <div class="disc-card">
-      <div class="dc-ico">🚗</div>
-      <div class="dc-mid"><div class="dc-name">车辆管理</div><div class="dc-desc">保养、年检、保险到期自动提醒</div><div class="dc-meta">★ 4.6 · 1.8 万人在用</div></div>
-      <button class="dc-btn add">＋ 添加</button>
+    <div class="tg-lbl">可添加</div>
+    <div class="tg-grid">
+      <div class="tg-cell"><div class="tg-ico">📖</div><div class="tg-name">阅读追踪</div><div class="tg-add">＋ 添加</div></div>
+      <div class="tg-cell"><div class="tg-ico">🏋️</div><div class="tg-name">健身记录</div><div class="tg-add">＋ 添加</div></div>
+      <div class="tg-cell"><div class="tg-ico">🌱</div><div class="tg-name">习惯追踪</div><div class="tg-add">＋ 添加</div></div>
+      <div class="tg-cell"><div class="tg-ico">🚗</div><div class="tg-name">车辆管理</div><div class="tg-add">＋ 添加</div></div>
+      <div class="tg-cell"><div class="tg-ico">💊</div><div class="tg-name">健康档案</div><div class="tg-add">＋ 添加</div></div>
+      <div class="tg-cell"><div class="tg-ico">🏡</div><div class="tg-name">家居维护</div><div class="tg-add">＋ 添加</div></div>
     </div>
 
-    <div class="cat-lbl">💰 财务</div>
-    <div class="disc-card">
-      <div class="dc-ico">💰</div>
-      <div class="dc-mid"><div class="dc-name">支出记录</div><div class="dc-desc">随手记账，AI 自动分类与复盘</div><div class="dc-meta">★ 4.8 · 6.7 万人在用</div></div>
-      <button class="dc-btn owned">已拥有</button>
-    </div>
-    <div class="disc-card">
-      <div class="dc-ico">📈</div>
-      <div class="dc-mid"><div class="dc-name">订阅管理</div><div class="dc-desc">告别忘记的自动续费，省下冤枉钱</div><div class="dc-meta">★ 4.7 · 2.9 万人在用</div></div>
-      <button class="dc-btn add">＋ 添加</button>
-    </div>
+    <div class="tg-lbl">工具包</div>
+    <div class="pk-card"><div class="pk-ico">⚡</div><div class="pk-mid"><div class="pk-name">效率日常包</div><div class="pk-sub">物品库 · 待办 · 习惯追踪</div></div><span class="pk-arr">›</span></div>
+    <div class="pk-card"><div class="pk-ico">✦</div><div class="pk-mid"><div class="pk-name">AI 助理包</div><div class="pk-sub">智友 · 笔记 · 日程同步</div></div><span class="pk-arr">›</span></div>
+    <div class="pk-card dashed"><div class="pk-ico">＋</div><div class="pk-mid"><div class="pk-name">自定义工具包</div><div class="pk-sub">选择你的工具组合</div></div><span class="pk-arr">›</span></div>
   </div>
   <div class="bnav">
     <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
@@ -881,20 +939,33 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   </div>
 </div>
 
+<!-- 任务拆分 popup -->
+<div class="overlay" id="split-ov" onclick="closeSplit()"></div>
+<div class="split-card" id="split-card">
+  <div class="sp-cap">🧩 任务拆分 · 一次只做一步</div>
+  <div class="sp-title" id="sp-title">给妈妈准备生日礼物</div>
+  <div class="sp-hint">我把它拆成了几个小步骤。做不完、想跳过都可以，你已经在往前走了。</div>
+  <div class="sp-list" id="sp-list"></div>
+  <div class="sp-foot">
+    <button class="sp-done-btn" onclick="closeSplit()">好，开始第一步</button>
+    <button class="sp-skip-btn" onclick="closeSplit()">稍后</button>
+  </div>
+</div>
+
 </div><!-- /phone -->
 <script>
 const TONES={
   simple:{greet:'早安，{n}',quote:'"简单是终极的复杂" <span>— 达芬奇</span>',
-    action:'今日内下单礼品（预算 ¥300）。最优方案：<em>护肤套装</em>或<em>定制相册</em>，确保 5 天内到货。',
-    reply:'综合建议：<b>定制相册</b>（¥150-200）配手写卡片最暖心；想更实用可选<b>护肤礼盒</b>（¥280-320）。要我帮你比价下单吗？',
+    action:'妈妈生日快到了，要不要现在花两分钟挑个礼物？<em>定制相册</em>或<em>护肤套装</em>都很贴心，做不完也没关系。',
+    reply:'综合建议：<b>定制相册</b>（¥150-200）配手写卡片最暖心；想更实用可选<b>护肤礼盒</b>（¥280-320）。慢慢看，要我帮你比价吗？',
     toneName:'极简清透'},
   warm:{greet:'{n}，早安 🌸',quote:'宝盒已为你整理好今天，从容开始这一天吧',
-    action:'妈妈生日快到了，今天把礼物定好吧 💝 推荐<em>定制相册</em>，加手写卡片更暖心。',
+    action:'妈妈生日快到了，等你有空的时候挑个礼物就好 💝 <em>定制相册</em>加手写卡片很暖心，不急。',
     reply:'送妈妈礼物真贴心！<b>定制相册</b>或<b>护肤套装</b>都很好，再加一张手写卡片她一定特别感动 💝 要我帮你挑吗？',
     toneName:'温暖陪伴'},
-  pro:{greet:'{n}，今日简报',quote:'3 项待处理 · 1 项紧急 · 2 件过期预警 · 支出 ¥949',
-    action:'优先行动：今日下单礼品（¥300），确保 <em>5 天</em>内到货。推荐护肤套装或定制相册。',
-    reply:'方案对比：① <b>护肤礼盒</b> ¥280-320，实用；② <b>定制相册</b> ¥150-200，情感价值高。建议今日下单确保准时。',
+  pro:{greet:'{n}，今日概览',quote:'3 件小事已排好顺序 · 今日能量不错 · 适合处理一件重要的事',
+    action:'本周值得做的一件事：给妈妈挑个生日礼物。<em>护肤套装</em>或<em>定制相册</em>都合适，想拆成小步骤可以点下方。',
+    reply:'方案对比：① <b>护肤礼盒</b> ¥280-320，实用；② <b>定制相册</b> ¥150-200，情感价值高。你来定，我帮你落实。',
     toneName:'专业高效'}
 };
 let tone='simple',prev='home',dark=false,firstVisit=true,cur='ob';
@@ -984,6 +1055,53 @@ function closeRemindDetail(){
 function openGratitude(){
   document.getElementById('home-ov').classList.add('on');
   document.getElementById('gratitude-sh').classList.add('on');
+}
+/* 心情 log */
+function logMood(el,m){
+  el.parentNode.querySelectorAll('.mood').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+}
+/* 温馨提醒：稍后 */
+function skipAction(btn){
+  const card=btn.closest('.action-card');
+  card.style.transition='all .3s';card.style.opacity='.4';
+  btn.textContent='已收起 · 明天再轻轻提醒你';
+}
+
+/* 任务拆分 —— 每步可再拆 3 个子步骤，可无限细分 */
+const SPLIT_DB={
+  '给妈妈准备生日礼物':['想想妈妈最近提过、喜欢的东西','在智友里看看 AI 推荐的几个方案','选一个，确认 5 天内能到货'],
+  '_sub':['先花 1 分钟随手记下想法','把范围缩小到 2 个选择','决定一个，或者明天再定也行']
+};
+function buildSteps(items){
+  const ul=document.createElement('div');
+  items.forEach(t=>{
+    const step=document.createElement('div');step.className='sp-step';
+    step.innerHTML='<div class="sp-check" onclick="toggleStep(this)"></div>'+
+      '<div class="sp-body"><div class="sp-txt">'+t+'</div>'+
+      '<span class="sp-sub" onclick="expandStep(this)">↳ 还是太大？再拆细</span></div>';
+    ul.appendChild(step);
+  });
+  return ul;
+}
+function openSplit(title){
+  document.getElementById('sp-title').textContent=title;
+  const list=document.getElementById('sp-list');list.innerHTML='';
+  list.appendChild(buildSteps(SPLIT_DB[title]||SPLIT_DB['_sub']));
+  document.getElementById('split-ov').classList.add('on');
+  document.getElementById('split-card').classList.add('on');
+}
+function closeSplit(){
+  document.getElementById('split-ov').classList.remove('on');
+  document.getElementById('split-card').classList.remove('on');
+}
+function toggleStep(el){el.classList.toggle('done');el.closest('.sp-step').classList.toggle('done');el.textContent=el.classList.contains('done')?'✓':''}
+function expandStep(el){
+  const body=el.closest('.sp-body');
+  if(body.querySelector('.sp-children'))return; // 已拆过
+  const kids=buildSteps(SPLIT_DB['_sub']);kids.className='sp-children';
+  body.appendChild(kids);
+  el.textContent='✓ 已拆成更小的 3 步';el.style.color='#19c37d';el.style.background='rgba(25,195,125,.1)';el.onclick=null;
 }
 
 function toggleDark(){dark=!dark;document.documentElement.classList.toggle('dark',dark);const sw=document.getElementById('thsw');if(sw)sw.classList.toggle('on',dark)}
