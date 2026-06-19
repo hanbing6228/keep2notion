@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · v10</title>
+<title>宝盒 · v11</title>
 <style>
 /* ── 蓝色系 · Zen Tokens ── */
 :root{
@@ -273,6 +273,27 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .ac-spark-r{padding:0 14px 0 4px;display:flex;align-items:center;justify-content:center;
   font-size:15px;color:var(--accent);opacity:.55;flex-shrink:0}
 
+/* Search category grid (智友历史) */
+.srch-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);
+  margin:0 22px 14px;border-radius:16px;overflow:hidden;flex-shrink:0}
+.sc-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 4px;
+  background:var(--bg-card);cursor:pointer;transition:background .1s}
+.sc-item:active{background:var(--tint)}
+.sc-item>.sc-ico{font-size:22px}
+.sc-item>small{font-size:11px;color:var(--ts);font-weight:500}
+.sc-sect-lbl{font-size:11px;color:var(--txs);padding:0 22px;margin-bottom:8px;flex-shrink:0}
+
+/* Meeting detail extras */
+.rd-join-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.rd-ai-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--tint);
+  border-radius:12px;margin-bottom:6px;cursor:pointer}
+.rd-ai-body{flex:1}
+.rd-ai-lbl{font-size:13px;font-weight:600;color:var(--text)}
+.rd-ai-sub{font-size:10px;color:var(--ts);margin-top:2px}
+.rd-powered{font-size:10px;color:var(--txs);text-align:center;margin-bottom:14px}
+
 /* Conversation list */
 .cv-search{display:flex;align-items:center;gap:8px;margin:0 22px 6px;padding:9px 13px;
   background:var(--bg-card);border:1px solid var(--bd);border-radius:11px;flex-shrink:0}
@@ -447,10 +468,21 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <span class="ch-sample">示例 · 连接日历后个性化</span>
       </div>
       <div class="ch-right">
-        <div class="ch-r-cap">接下来</div>
-        <div class="ch-r-item"><span class="ch-r-name">项目截止</span><span class="ch-r-day">12 天</span></div>
-        <div class="ch-r-item"><span class="ch-r-name">季度汇报</span><span class="ch-r-day">18 天</span></div>
-        <div class="ch-r-item"><span class="ch-r-name">结婚纪念</span><span class="ch-r-day">34 天</span></div>
+        <div class="ch-r-cap">今日状态</div>
+        <div class="ch-r-item">
+          <span style="font-size:14px;flex-shrink:0">😴</span>
+          <span class="ch-r-name" style="flex:1">睡眠 7.5h</span>
+          <span style="font-size:10px;font-weight:700;color:#19c37d;background:rgba(25,195,125,.13);padding:1px 7px;border-radius:6px">优</span>
+        </div>
+        <div class="ch-r-item">
+          <span style="font-size:14px;flex-shrink:0">🚶</span>
+          <span class="ch-r-name" style="flex:1">6,200 步</span>
+          <span style="font-size:10px;font-weight:700;color:var(--accent);background:var(--tint);padding:1px 7px;border-radius:6px">达标</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;cursor:pointer" onclick="openGratitude()">
+          <span style="font-size:12px;color:var(--accent);font-weight:600">🌱 今日感恩</span>
+          <span style="font-size:13px;color:var(--txs)">›</span>
+        </div>
       </div>
     </div>
 
@@ -472,15 +504,15 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="tk-top">
         <div class="tk-ico blue">📦</div>
         <div class="tk-name">物品库</div>
-        <div class="tk-badge bdg-warn">3 件到期</div>
+        <div class="tk-badge bdg-ok">本周清单</div>
       </div>
-      <div class="tk-headline">牛奶后天到期，维生素 C 还有 3 天</div>
+      <div class="tk-headline">AI 已帮你整理好本周补货清单</div>
       <div class="tk-rows">
-        <div class="tk-row"><span class="tk-item">全脂牛奶 · 冰箱</span><span class="tk-val v-r">后天</span></div>
-        <div class="tk-row"><span class="tk-item">维生素 C · 药柜</span><span class="tk-val v-r">3 天后</span></div>
-        <div class="tk-row"><span class="tk-item">保湿护肤霜 · 梳妆台</span><span class="tk-val v-a">7 天后</span></div>
+        <div class="tk-row"><span class="tk-item">全脂牛奶 · 冰箱</span><span class="tk-val v-b">补货</span></div>
+        <div class="tk-row"><span class="tk-item">维生素 C · 药柜</span><span class="tk-val v-b">补货</span></div>
+        <div class="tk-row"><span class="tk-item">保湿护肤霜 · 梳妆台</span><span class="tk-val v-m">关注</span></div>
       </div>
-      <div class="tk-ai">⚡ AI 已为你整理出本周补货清单</div>
+      <div class="tk-ai">✨ 提前备好，生活从容 · 一键发给智友帮你下单</div>
       <div class="tk-acts">
         <button class="tk-bp" onclick="event.stopPropagation();quickRecord()">＋ 记录物品</button>
         <button class="tk-bs" onclick="event.stopPropagation();go('inv','home')">查看全部</button>
@@ -529,13 +561,28 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     </div>
   </div>
 
+  <!-- 今日感恩 sheet -->
+  <div class="sheet" id="gratitude-sh" style="max-height:50%">
+    <div class="sh-handle"></div>
+    <div class="sh-body" style="padding-top:18px">
+      <div style="text-align:center;font-size:28px;margin-bottom:10px">🌱</div>
+      <div style="font-size:18px;font-weight:800;text-align:center;margin-bottom:6px">今日感恩</div>
+      <div style="font-size:13px;color:var(--ts);text-align:center;line-height:1.6;margin-bottom:20px">记下让你感到温暖的一件小事，<br>积累起来会让你越来越好</div>
+      <textarea style="width:100%;border:1.5px solid var(--bd);border-radius:13px;padding:13px;font-size:15px;color:var(--text);background:var(--bg-card);resize:none;outline:none;font-family:inherit;height:88px" placeholder="今天，我很感谢……"></textarea>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button onclick="closeHomeSheet()" style="flex:1;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer">记下来 🌸</button>
+        <button onclick="closeHomeSheet()" style="padding:13px 18px;background:transparent;border:1.5px solid var(--bd);border-radius:13px;font-size:14px;font-weight:600;color:var(--ts);cursor:pointer">稍后</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 提醒 sheet -->
   <div class="sheet" id="remind-sh" style="max-height:72%">
     <div class="sh-handle"></div>
     <div class="sh-title">提醒</div>
     <div class="sh-body">
       <div class="rg-lbl">今日日程</div>
-      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('产品会议','产品团队周会，15:00 @ 会议室 B','还剩 4 小时')">
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('产品会议','产品团队周会，15:00 @ 会议室 B','还剩 4 小时','meeting')">
         <span class="rg-name">产品会议</span><span class="rg-val rv-a">还剩 4 小时</span>
       </div>
       <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('健身','跑步 40 分钟，核心训练 20 分钟','还剩 8 小时')">
@@ -566,16 +613,29 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 
   <!-- 提醒详情 sheet -->
   <div class="overlay" id="rdetail-ov" onclick="closeRemindDetail()"></div>
-  <div class="sheet" id="rdetail-sh" style="max-height:46%">
+  <div class="sheet" id="rdetail-sh" style="max-height:58%">
     <div class="sh-handle"></div>
     <div class="sh-body" style="padding-top:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--txs);margin-bottom:8px">提醒详情</div>
-      <div style="font-size:19px;font-weight:800;color:var(--text);margin-bottom:8px" id="rd-title">产品会议</div>
-      <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:14px" id="rd-desc"></div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
-        <span style="font-size:11px;color:var(--txs)">截止 /</span>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--txs);margin-bottom:8px" id="rd-type-lbl">提醒详情</div>
+      <div style="font-size:19px;font-weight:800;color:var(--text);margin-bottom:6px" id="rd-title">产品会议</div>
+      <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px" id="rd-desc"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span style="font-size:11px;color:var(--txs)">时间 /</span>
         <span style="font-size:13px;font-weight:700;color:var(--accent)" id="rd-time"></span>
       </div>
+      <!-- 会议专属：Zoom + AI 记录 -->
+      <div id="rd-meet" style="display:none">
+        <button class="rd-join-btn" onclick="closeRemindDetail()">📹 加入 Zoom 会议</button>
+        <div class="rd-ai-row">
+          <div class="rd-ai-body">
+            <div class="rd-ai-lbl">✦ AI 会议记录</div>
+            <div class="rd-ai-sub">实时整理要点，自动生成摘要与待办</div>
+          </div>
+          <button class="sw on" id="ai-rec-sw" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="rd-powered">Granola 风格 · 由智友后台整理</div>
+      </div>
+      <!-- 通用按钮 -->
       <div style="display:flex;gap:10px">
         <button onclick="closeRemindDetail();navTo('ai')" style="flex:1;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer">✦ 在智友里处理</button>
         <button onclick="closeRemindDetail()" style="padding:13px 16px;background:transparent;border:1.5px solid var(--bd);border-radius:13px;font-size:14px;font-weight:600;color:var(--ts);cursor:pointer">关闭</button>
@@ -643,18 +703,23 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   <div id="ai-list" class="ai-view">
     <div class="ai-hd">
       <button class="bk" onclick="showAIChat()">←</button>
-      <span class="ai-title">对话</span>
+      <span class="ai-title">搜索</span>
       <button class="ai-icobtn">＋</button>
     </div>
-    <div class="cv-search"><span class="inv-s-ico">🔍</span><input placeholder="搜索对话、AI、主题…"></div>
-    <div class="chips" style="padding:0 22px 8px">
-      <div class="chip on">全部</div>
-      <div class="chip">Claude</div>
-      <div class="chip">ChatGPT</div>
-      <div class="chip">Gemini</div>
-      <div class="chip">Flomo</div>
-      <div class="chip">工具 Agent</div>
+    <div class="cv-search"><span class="inv-s-ico">🔍</span><input placeholder="搜索对话、笔记、AI 建议…"></div>
+    <!-- 分类网格 -->
+    <div class="srch-cats">
+      <div class="sc-item"><span class="sc-ico">🗓</span><small>日期</small></div>
+      <div class="sc-item"><span class="sc-ico">✦</span><small>AI 建议</small></div>
+      <div class="sc-item"><span class="sc-ico">📝</span><small>笔记</small></div>
+      <div class="sc-item"><span class="sc-ico">📦</span><small>物品</small></div>
+      <div class="sc-item"><span class="sc-ico">💰</span><small>支出</small></div>
+      <div class="sc-item"><span class="sc-ico">✅</span><small>待办</small></div>
+      <div class="sc-item"><span class="sc-ico">📷</span><small>图片</small></div>
+      <div class="sc-item"><span class="sc-ico">📞</span><small>通话</small></div>
+      <div class="sc-item"><span class="sc-ico">📎</span><small>文件</small></div>
     </div>
+    <div class="sc-sect-lbl">最近对话</div>
     <div class="cv-list">
       <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,var(--accent),var(--accent-2))">✦</div><div class="cv-mid"><div class="cv-name">智友 <span class="cv-tag">智能调度</span></div><div class="cv-prev">综合建议：定制相册配手写卡片最暖心…</div></div><div class="cv-right"><span class="cv-time">11:20</span><span class="cv-unread">2</span></div></div>
       <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,#7c5af0,#10a37f)">👥</div><div class="cv-mid"><div class="cv-name">产品脑暴群 <span class="cv-tag">群聊</span></div><div class="cv-prev">Claude、ChatGPT、Gemini：3 个 AI 正在讨论方案…</div></div><div class="cv-right"><span class="cv-time">10:05</span></div></div>
@@ -878,7 +943,7 @@ function enterApp(){
 function openSheet(id){document.getElementById('home-ov').classList.add('on');document.getElementById(id+'-sh').classList.add('on')}
 function closeHomeSheet(){
   document.getElementById('home-ov').classList.remove('on');
-  ['remind','launch'].forEach(k=>{const e=document.getElementById(k+'-sh');if(e)e.classList.remove('on')});
+  ['remind','launch','gratitude'].forEach(k=>{const e=document.getElementById(k+'-sh');if(e)e.classList.remove('on')});
 }
 function quickRecord(){go('inv','home');openAddSheet()}
 function openAddSheet(){document.getElementById('add-ov').classList.add('on');document.getElementById('add-sh').classList.add('on')}
@@ -901,16 +966,24 @@ function openLive(){document.getElementById('live-ov').classList.add('on');docum
 function closeLive(){document.getElementById('live-ov').classList.remove('on');document.getElementById('live-sh').classList.remove('on')}
 
 /* 提醒详情 */
-function openRemindDetail(title,desc,time){
+function openRemindDetail(title,desc,time,type){
   document.getElementById('rd-title').textContent=title;
   document.getElementById('rd-desc').textContent=desc;
   document.getElementById('rd-time').textContent=time;
+  const isMeeting=type==='meeting';
+  document.getElementById('rd-meet').style.display=isMeeting?'block':'none';
+  document.getElementById('rd-type-lbl').textContent=isMeeting?'会议提醒':'提醒详情';
   document.getElementById('rdetail-ov').classList.add('on');
   document.getElementById('rdetail-sh').classList.add('on');
 }
 function closeRemindDetail(){
   document.getElementById('rdetail-ov').classList.remove('on');
   document.getElementById('rdetail-sh').classList.remove('on');
+}
+/* 今日感恩 */
+function openGratitude(){
+  document.getElementById('home-ov').classList.add('on');
+  document.getElementById('gratitude-sh').classList.add('on');
 }
 
 function toggleDark(){dark=!dark;document.documentElement.classList.toggle('dark',dark);const sw=document.getElementById('thsw');if(sw)sw.classList.toggle('on',dark)}
