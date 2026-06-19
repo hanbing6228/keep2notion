@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · v9</title>
+<title>宝盒 · v10</title>
 <style>
 /* ── 蓝色系 · Zen Tokens ── */
 :root{
@@ -265,8 +265,13 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .cb-at{font-weight:800;color:var(--accent)}
 .chat-inp{flex:1;background:var(--bg-card);border:1px solid var(--bd);border-radius:22px;
   padding:10px 16px;font-size:14px;color:var(--text);outline:none}
-.chat-send{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;color:#fff;
-  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-live{display:flex;flex-direction:column;align-items:center;padding:5px 11px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;
+  border-radius:20px;color:#fff;cursor:pointer;font-size:15px;flex-shrink:0;gap:1px;line-height:1}
+.chat-live small{font-size:9px;font-weight:700;letter-spacing:.3px}
+/* ac-spark right — replaces footer */
+.ac-spark-r{padding:0 14px 0 4px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--accent);opacity:.55;flex-shrink:0}
 
 /* Conversation list */
 .cv-search{display:flex;align-items:center;gap:8px;margin:0 22px 6px;padding:9px 13px;
@@ -449,7 +454,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       </div>
     </div>
 
-    <!-- 行动建议（明确去智友） -->
+    <!-- 行动建议 → 点击进智友 -->
     <div class="action-card" onclick="navTo('ai')">
       <div class="ac-top">
         <div class="ac-bar"></div>
@@ -457,11 +462,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
           <div class="ac-tag"><div class="ac-dot"></div>AI 行动建议</div>
           <div class="ac-text" id="ac-text">今日内下单礼品（预算 ¥300）。最优方案：<em>护肤套装</em>或<em>定制相册</em>，确保 5 天内到货。</div>
         </div>
-      </div>
-      <div class="ac-foot">
-        <span class="ac-spark">✦</span>
-        <span class="ac-foot-txt">在智友里继续这个话题</span>
-        <span class="ac-foot-arr">→</span>
+        <div class="ac-spark-r">✦</div>
       </div>
     </div>
 
@@ -520,9 +521,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   <!-- 快捷启动 launcher -->
   <div class="sheet" id="launch-sh" style="max-height:60%">
     <div class="sh-handle"></div>
-    <div class="sh-title">快捷启动 · 我的工具</div>
-    <div class="sh-body">
-      <div class="lq-row" onclick="closeHomeSheet()"><div class="lq-ico">🏠</div><div class="lq-info"><div class="lq-name">回到首页</div><div class="lq-desc">工作台总览</div></div><span class="lq-arr">›</span></div>
+    <div class="sh-body" style="padding-top:10px">
       <div class="lq-row" onclick="closeHomeSheet();go('inv','home')"><div class="lq-ico">📦</div><div class="lq-info"><div class="lq-name">物品库</div><div class="lq-desc">3 件即将到期</div></div><span class="lq-arr">›</span></div>
       <div class="lq-row" onclick="closeHomeSheet()"><div class="lq-ico">💰</div><div class="lq-info"><div class="lq-name">支出记录</div><div class="lq-desc">本周 ¥949</div></div><span class="lq-arr">›</span></div>
       <div class="lq-row" onclick="closeHomeSheet()"><div class="lq-ico">✅</div><div class="lq-info"><div class="lq-name">待办清单</div><div class="lq-desc">3 项待处理</div></div><span class="lq-arr">›</span></div>
@@ -536,16 +535,51 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <div class="sh-title">提醒</div>
     <div class="sh-body">
       <div class="rg-lbl">今日日程</div>
-      <div class="rg-item"><span class="rg-name">产品会议</span><span class="rg-val rv-o">下午 3:00</span></div>
-      <div class="rg-item"><span class="rg-name">健身</span><span class="rg-val rv-o">晚上 7:30</span></div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('产品会议','产品团队周会，15:00 @ 会议室 B','还剩 4 小时')">
+        <span class="rg-name">产品会议</span><span class="rg-val rv-a">还剩 4 小时</span>
+      </div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('健身','跑步 40 分钟，核心训练 20 分钟','还剩 8 小时')">
+        <span class="rg-name">健身</span><span class="rg-val rv-o">还剩 8 小时</span>
+      </div>
       <div class="rg-lbl">待完成</div>
-      <div class="rg-item"><span class="rg-name">回复王总邮件</span><span class="rg-val rv-r">紧急</span></div>
-      <div class="rg-item"><span class="rg-name">准备季度报告</span><span class="rg-val rv-a">今天</span></div>
-      <div class="rg-item"><span class="rg-name">更新物品清单</span><span class="rg-val rv-o">本周</span></div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('回复王总邮件','关于 Q3 预算调整方案，请今日内回复','紧急')">
+        <span class="rg-name">回复王总邮件</span><span class="rg-val rv-r">紧急</span>
+      </div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('准备季度报告','Q2 数据汇总，今日截止','今天')">
+        <span class="rg-name">准备季度报告</span><span class="rg-val rv-a">今天</span>
+      </div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('更新物品清单','检查冰箱、药柜存货','本周')">
+        <span class="rg-name">更新物品清单</span><span class="rg-val rv-o">本周</span>
+      </div>
       <div class="rg-lbl">重要日期 / 过期预警</div>
-      <div class="rg-item"><span class="rg-name">妈妈生日</span><span class="rg-val rv-r">5 天后</span></div>
-      <div class="rg-item"><span class="rg-name">牛奶过期</span><span class="rg-val rv-r">后天</span></div>
-      <div class="rg-item"><span class="rg-name">项目截止</span><span class="rg-val rv-a">12 天后</span></div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('妈妈生日','建议今天下单礼物，确保 5 天内到货','5 天后')">
+        <span class="rg-name">妈妈生日</span><span class="rg-val rv-r">5 天后</span>
+      </div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('牛奶过期','冰箱全脂牛奶，建议尽快食用或补购','后天')">
+        <span class="rg-name">牛奶过期</span><span class="rg-val rv-r">后天</span>
+      </div>
+      <div class="rg-item" style="cursor:pointer" onclick="closeHomeSheet();openRemindDetail('项目截止','移动端重构方案需提交审核','12 天后')">
+        <span class="rg-name">项目截止</span><span class="rg-val rv-a">12 天后</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提醒详情 sheet -->
+  <div class="overlay" id="rdetail-ov" onclick="closeRemindDetail()"></div>
+  <div class="sheet" id="rdetail-sh" style="max-height:46%">
+    <div class="sh-handle"></div>
+    <div class="sh-body" style="padding-top:16px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--txs);margin-bottom:8px">提醒详情</div>
+      <div style="font-size:19px;font-weight:800;color:var(--text);margin-bottom:8px" id="rd-title">产品会议</div>
+      <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:14px" id="rd-desc"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+        <span style="font-size:11px;color:var(--txs)">截止 /</span>
+        <span style="font-size:13px;font-weight:700;color:var(--accent)" id="rd-time"></span>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button onclick="closeRemindDetail();navTo('ai')" style="flex:1;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer">✦ 在智友里处理</button>
+        <button onclick="closeRemindDetail()" style="padding:13px 16px;background:transparent;border:1.5px solid var(--bd);border-radius:13px;font-size:14px;font-weight:600;color:var(--ts);cursor:pointer">关闭</button>
+      </div>
     </div>
   </div>
 </div>
@@ -555,6 +589,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   <div id="ai-unified" class="ai-view on">
     <div class="ai-hd">
       <span class="ai-title">智友</span>
+      <button class="ai-icobtn" onclick="showAIList()" style="margin-right:4px">🔍</button>
       <button class="ai-icobtn" onclick="showAIList()">💬</button>
     </div>
     <div class="ai-mode">🧠 智能模式 · 一个输入框，后台自动调度 AI 与工具</div>
@@ -562,17 +597,17 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="bbl-out"><div>帮我想个送妈妈的生日礼物，预算 300</div></div>
       <div class="ai-route">已综合 Claude · ChatGPT 的回答</div>
       <div class="bbl-in">
-        <div class="ai-av" style="background:var(--accent)">智</div>
+        <div class="ai-av" style="background:linear-gradient(135deg,var(--accent),var(--accent-2))">✦</div>
         <div class="bbl-body" id="ai-reply">综合建议：<b>定制相册</b>（¥150-200）配手写卡片最暖心；想更实用可选<b>护肤礼盒</b>（¥280-320）。要我帮你比价下单吗？</div>
       </div>
       <div class="bbl-out"><div><span class="mention">@Flomo</span> 周五前买好牛奶</div></div>
       <div class="bbl-in">
-        <div class="ai-av" style="background:var(--ai-w)">🌊</div>
+        <div class="ai-av" style="background:linear-gradient(135deg,#e66c2c,#f0934a);font-size:13px;font-weight:900">F</div>
         <div class="bbl-body">收到～<div class="savechip">✓ 已记入 Flomo 笔记序列</div></div>
       </div>
       <div class="bbl-out"><div><span class="mention">@Gemini</span> 你怎么看这个礼物预算？</div></div>
       <div class="bbl-in">
-        <div class="ai-av" style="background:var(--ai-gem)">G</div>
+        <div class="ai-av" style="background:linear-gradient(135deg,#4285f4 0%,#ea4335 50%,#fbbc04 100%);font-size:11px;font-weight:900">G</div>
         <div class="bbl-body">300 元做定制相册很充裕，建议留 50 元加急运费，确保 5 天内到。</div>
       </div>
     </div>
@@ -601,7 +636,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <button class="cb-ico cb-at" onclick="toggleMention()">@</button>
       <input class="chat-inp" id="chat-inp" placeholder="发消息给智友…">
       <button class="cb-ico">🎙</button>
-      <button class="chat-send">↑</button>
+      <button class="chat-live" onclick="openLive()">📞<small>通话</small></button>
     </div>
   </div>
 
@@ -611,15 +646,23 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <span class="ai-title">对话</span>
       <button class="ai-icobtn">＋</button>
     </div>
-    <div class="cv-search"><span class="inv-s-ico">🔍</span><input placeholder="搜索对话、AI、工具 agent…"></div>
+    <div class="cv-search"><span class="inv-s-ico">🔍</span><input placeholder="搜索对话、AI、主题…"></div>
+    <div class="chips" style="padding:0 22px 8px">
+      <div class="chip on">全部</div>
+      <div class="chip">Claude</div>
+      <div class="chip">ChatGPT</div>
+      <div class="chip">Gemini</div>
+      <div class="chip">Flomo</div>
+      <div class="chip">工具 Agent</div>
+    </div>
     <div class="cv-list">
-      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:var(--accent)">🧠</div><div class="cv-mid"><div class="cv-name">智友 <span class="cv-tag">智能调度</span></div><div class="cv-prev">综合建议：定制相册配手写卡片最暖心…</div></div><div class="cv-right"><span class="cv-time">11:20</span><span class="cv-unread">2</span></div></div>
-      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,#7c5af0,#19c37d)">👥</div><div class="cv-mid"><div class="cv-name">产品脑暴群 <span class="cv-tag">群聊</span></div><div class="cv-prev">Claude、ChatGPT、Gemini：3 个 AI 正在讨论方案…</div></div><div class="cv-right"><span class="cv-time">10:05</span></div></div>
-      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#7c5af0">✦</div><div class="cv-mid"><div class="cv-name">Claude</div><div class="cv-prev">可以考虑定制相册，附上手写信，300 元内…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
-      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#19c37d">⚙</div><div class="cv-mid"><div class="cv-name">ChatGPT</div><div class="cv-prev">护肤礼盒很受欢迎，兰蔻套装 300 元左右…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,var(--accent),var(--accent-2))">✦</div><div class="cv-mid"><div class="cv-name">智友 <span class="cv-tag">智能调度</span></div><div class="cv-prev">综合建议：定制相册配手写卡片最暖心…</div></div><div class="cv-right"><span class="cv-time">11:20</span><span class="cv-unread">2</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,#7c5af0,#10a37f)">👥</div><div class="cv-mid"><div class="cv-name">产品脑暴群 <span class="cv-tag">群聊</span></div><div class="cv-prev">Claude、ChatGPT、Gemini：3 个 AI 正在讨论方案…</div></div><div class="cv-right"><span class="cv-time">10:05</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(160deg,#7c3aed,#a855f7);font-size:13px;font-weight:900">✦</div><div class="cv-mid"><div class="cv-name">Claude</div><div class="cv-prev">可以考虑定制相册，附上手写信，300 元内…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#10a37f;font-size:12px;font-weight:900">G</div><div class="cv-mid"><div class="cv-name">ChatGPT</div><div class="cv-prev">护肤礼盒很受欢迎，兰蔻套装 300 元左右…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,#4285f4,#ea4335,#fbbc04);font-size:12px;font-weight:900">G</div><div class="cv-mid"><div class="cv-name">Gemini</div><div class="cv-prev">300 元做定制相册很充裕，加急运费留 50…</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
+      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:linear-gradient(135deg,#e66c2c,#f09432);font-size:13px;font-weight:900">F</div><div class="cv-mid"><div class="cv-name">Flomo 助手 <span class="cv-tag">跨平台</span></div><div class="cv-prev">已同步今日 3 条卡片笔记到宝盒</div></div><div class="cv-right"><span class="cv-time">周一</span></div></div>
       <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#4a6cf7">📦</div><div class="cv-mid"><div class="cv-name">物品库 Agent <span class="cv-tag">工具</span></div><div class="cv-prev">牛奶后天到期，需要我加入购物清单吗？</div></div><div class="cv-right"><span class="cv-time">08:00</span><span class="cv-unread">1</span></div></div>
-      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#e8923a">📝</div><div class="cv-mid"><div class="cv-name">随手记 <span class="cv-tag">笔记</span></div><div class="cv-prev">周五前买好牛奶 · 还书 · 给妈妈打电话</div></div><div class="cv-right"><span class="cv-time">昨天</span></div></div>
-      <div class="cv-row" onclick="showAIChat()"><div class="cv-av" style="background:#0a6">🌊</div><div class="cv-mid"><div class="cv-name">Flomo 助手 <span class="cv-tag">跨平台</span></div><div class="cv-prev">已同步今日 3 条卡片笔记到宝盒</div></div><div class="cv-right"><span class="cv-time">周一</span></div></div>
     </div>
   </div>
 
@@ -627,6 +670,30 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
     <button class="nb-ai on"><div class="nb-ai-ico" style="background:var(--amber);box-shadow:0 4px 18px rgba(232,146,58,.42)">✦</div><span class="nl" style="color:var(--amber);font-weight:700">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
+  </div>
+
+  <!-- Live 通话 sheet -->
+  <div class="overlay" id="live-ov" onclick="closeLive()"></div>
+  <div class="sheet" id="live-sh" style="max-height:52%">
+    <div class="sh-handle"></div>
+    <div class="sh-title">Live 通话</div>
+    <div class="sh-body">
+      <div class="lq-row" onclick="closeLive()">
+        <div class="lq-ico" style="background:rgba(74,108,247,.12)">📹</div>
+        <div class="lq-info"><div class="lq-name">视频通话</div><div class="lq-desc">和智友面对面，实时回应</div></div>
+        <span class="lq-arr">›</span>
+      </div>
+      <div class="lq-row" onclick="closeLive()">
+        <div class="lq-ico" style="background:rgba(124,90,240,.12)">🧑‍💻</div>
+        <div class="lq-info"><div class="lq-name">虚拟形象</div><div class="lq-desc">AI 数字人，沉浸式交流</div></div>
+        <span class="lq-arr">›</span>
+      </div>
+      <div class="lq-row" onclick="closeLive()">
+        <div class="lq-ico" style="background:rgba(25,195,125,.1)">🎙</div>
+        <div class="lq-info"><div class="lq-name">音频通话</div><div class="lq-desc">语音实时对话，解放双手</div></div>
+        <span class="lq-arr">›</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -829,10 +896,27 @@ function uploadAvatar(){
   });
 }
 
+/* Live 通话 */
+function openLive(){document.getElementById('live-ov').classList.add('on');document.getElementById('live-sh').classList.add('on')}
+function closeLive(){document.getElementById('live-ov').classList.remove('on');document.getElementById('live-sh').classList.remove('on')}
+
+/* 提醒详情 */
+function openRemindDetail(title,desc,time){
+  document.getElementById('rd-title').textContent=title;
+  document.getElementById('rd-desc').textContent=desc;
+  document.getElementById('rd-time').textContent=time;
+  document.getElementById('rdetail-ov').classList.add('on');
+  document.getElementById('rdetail-sh').classList.add('on');
+}
+function closeRemindDetail(){
+  document.getElementById('rdetail-ov').classList.remove('on');
+  document.getElementById('rdetail-sh').classList.remove('on');
+}
+
 function toggleDark(){dark=!dark;document.documentElement.classList.toggle('dark',dark);const sw=document.getElementById('thsw');if(sw)sw.classList.toggle('on',dark)}
 function tick(){const e=document.getElementById('clock');if(!e)return;const n=new Date();e.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
 tick();setInterval(tick,1000);
-document.querySelectorAll('.chips .chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('.chips .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')}));
+document.querySelectorAll('.chips .chip').forEach(c=>c.addEventListener('click',function(){this.closest('.chips').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));this.classList.add('on')}));
 </script>
 </body>
 </html>
