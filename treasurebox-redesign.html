@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宝盒 · 数字静谧庭院 — UI 原型</title>
+<style>
+  /* ── 设计系统 tokens ─────────────────────────────── */
+  :root {
+    --accent:       #588ce8;
+    --accent-soft:  #dce8fb;
+    --accent-dim:   #3a6dcc;
+    --bg:           #f7f6f3;
+    --bg-card:      #ffffff;
+    --bg-overlay:   rgba(0,0,0,0.38);
+    --text-primary: #1a1a1a;
+    --text-secondary:#6b6b6b;
+    --text-muted:   #adadad;
+    --border:       #e8e6e1;
+    --shadow-sm:    0 1px 4px rgba(0,0,0,0.07);
+    --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg:    0 12px 40px rgba(0,0,0,0.14);
+    --radius-sm:    10px;
+    --radius-md:    16px;
+    --radius-lg:    24px;
+    --radius-xl:    32px;
+    --nav-h:        68px;
+    --status-bar-h: 44px;
+  }
+  [data-theme="dark"] {
+    --bg:           #121212;
+    --bg-card:      #1e1e1e;
+    --text-primary: #f0ede8;
+    --text-secondary:#a0a0a0;
+    --text-muted:   #606060;
+    --border:       #2e2e2e;
+    --accent-soft:  #1c2d4a;
+    --shadow-sm:    0 1px 4px rgba(0,0,0,0.3);
+    --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg:    0 12px 40px rgba(0,0,0,0.5);
+  }
+
+  /* ── 重置 ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Noto Serif SC", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    background: #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px 16px;
+    gap: 24px;
+  }
+
+  /* ── 原型导航条 ────────────────────────────────── */
+  .proto-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #1a1a1a;
+    padding: 12px 20px;
+    border-radius: 100px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .proto-bar button {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  .proto-bar button.active, .proto-bar button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .proto-label {
+    color: #888;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: .5px;
+    font-family: monospace;
+  }
+
+  /* ── 手机外壳 ────────────────────────────────── */
+  .phone {
+    width: 375px;
+    background: var(--bg);
+    border-radius: 48px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 0 0 8px #1a1a1a,
+      0 0 0 10px #333,
+      0 30px 80px rgba(0,0,0,0.6);
+    min-height: 812px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 刘海 */
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 140px; height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 20px 20px;
+    z-index: 99;
+  }
+
+  /* ── 屏幕切换 ────────────────────────────────── */
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+  .screen.active { display: flex; }
+
+  /* ── 共用状态栏 ──────────────────────────────── */
+  .status-bar {
+    height: var(--status-bar-h);
+    padding: 14px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .status-bar .time-status { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .status-bar .icons { display: flex; gap: 6px; align-items: center; color: var(--text-primary); font-size: 13px; }
+
+  /* ── 底部导航 ─────────────────────────────────── */
+  .bottom-nav {
+    height: var(--nav-h);
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px 12px;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all .2s;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+  }
+  .nav-item.active .nav-icon { color: var(--accent); }
+  .nav-item.active .nav-label { color: var(--accent); font-weight: 600; }
+  .nav-icon { font-size: 22px; color: var(--text-muted); transition: color .2s; }
+  .nav-label { font-size: 10px; color: var(--text-muted); transition: color .2s; }
+
+  /* ── 1. ONBOARDING ────────────────────────────── */
+  #screen-onboarding {
+    background: var(--bg);
+    justify-content: center;
+    align-items: center;
+    padding: 48px 28px;
+    gap: 0;
+  }
+  .onboard-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+    animation: fadeUp .6s ease both;
+  }
+  .onboard-logo {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, #588ce8 0%, #3a6dcc 100%);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 8px 24px rgba(88,140,232,0.35);
+  }
+  .onboard-text { text-align: center; }
+  .onboard-text h1 { font-size: 26px; color: var(--text-primary); font-weight: 700; margin-bottom: 8px; }
+  .onboard-text p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+  .onboard-form { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+  .field-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: .5px; }
+  .field-input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--bg-card);
+    font-size: 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field-input:focus { border-color: var(--accent); }
+  .field-input::placeholder { color: var(--text-muted); }
+  .onboard-hint { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6; }
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 4px 14px rgba(88,140,232,0.35);
+  }
+  .btn-primary:hover { background: var(--accent-dim); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* 步骤指示 */
+  .step-dots { display: flex; gap: 6px; }
+  .step-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all .3s;
+  }
+  .step-dot.active { background: var(--accent); width: 18px; border-radius: 3px; }
+
+  /* ── 2. HOME ──────────────────────────────────── */
+  #screen-home .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* 问候区 */
+  .greeting-card {
+    background: linear-gradient(135deg, #588ce8 0%, #3a6dcc 100%);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .greeting-card::after {
+    content: '';
+    position: absolute;
+    right: -20px; top: -20px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .greeting-card::before {
+    content: '';
+    position: absolute;
+    right: 20px; bottom: -30px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .greeting-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .greeting-name { font-size: 22px; font-weight: 700; line-height: 1.3; }
+  .greeting-sub { font-size: 13px; opacity: .75; margin-top: 2px; }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.4);
+    flex-shrink: 0;
+  }
+  .clock-row { display: flex; align-items: baseline; gap: 8px; }
+  .clock-time { font-size: 42px; font-weight: 200; letter-spacing: -1px; }
+  .clock-date { font-size: 12px; opacity: .65; }
+
+  /* 今日焦点（精简） */
+  .section-title {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: .8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: -8px;
+  }
+
+  /* 天气卡（小） */
+  .weather-mini {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+  .weather-left { display: flex; align-items: center; gap: 12px; }
+  .weather-icon { font-size: 32px; }
+  .weather-temp { font-size: 28px; font-weight: 300; color: var(--text-primary); }
+  .weather-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .weather-right { text-align: right; }
+  .weather-city { font-size: 12px; color: var(--text-muted); }
+  .weather-range { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* 工具入口（持久可见） */
+  .tools-section { display: flex; flex-direction: column; gap: 12px; }
+  .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .tool-chip {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-chip:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .tool-chip:active { transform: translateY(0); }
+  .tool-chip.featured {
+    grid-column: span 2;
+    background: var(--accent-soft);
+    border-color: #c8dbf8;
+  }
+  .tool-chip .t-icon { font-size: 26px; flex-shrink: 0; }
+  .tool-chip .t-info { flex: 1; min-width: 0; }
+  .tool-chip .t-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .tool-chip .t-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  .tool-chip .t-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: #e8f2fd;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .tool-chip.coming-soon { opacity: .55; cursor: default; }
+  .tool-chip.coming-soon .t-badge {
+    background: #f0f0f0;
+    color: var(--text-muted);
+  }
+  .tool-chip.coming-soon:hover { box-shadow: var(--shadow-sm); transform: none; }
+
+  /* 今日语录（简化为一行） */
+  .quote-strip {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .quote-icon { font-size: 16px; color: var(--text-muted); flex-shrink: 0; }
+  .quote-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; font-style: italic; }
+
+  /* ── 3. INVENTORY ─────────────────────────────── */
+  #screen-inventory .content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .page-header {
+    padding: 16px 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .page-header h2 { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+  .header-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover { box-shadow: var(--shadow-md); }
+
+  /* 搜索栏 */
+  .search-bar {
+    margin: 0 20px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    flex-shrink: 0;
+  }
+  .search-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-family: inherit;
+  }
+  .search-bar input::placeholder { color: var(--text-muted); }
+
+  /* 分类筛选 */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 16px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-pill {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .filter-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* 物品列表 */
+  .items-list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+  .item-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all .2s;
+    animation: fadeUp .3s ease both;
+  }
+  .item-card:hover { box-shadow: var(--shadow-md); }
+  .item-thumb {
+    width: 52px; height: 52px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .item-meta { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+  .item-where { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+  .item-price { font-size: 14px; font-weight: 600; color: var(--accent); text-align: right; }
+  .item-date { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-align: right; }
+
+  /* 空状态 */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  .empty-icon { font-size: 56px; opacity: .4; }
+  .empty-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
+  .empty-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* FAB */
+  .fab {
+    position: absolute;
+    bottom: calc(var(--nav-h) + 16px);
+    right: 20px;
+    width: 52px; height: 52px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 4px 16px rgba(88,140,232,0.45);
+    cursor: pointer;
+    transition: all .2s;
+    border: none;
+    z-index: 10;
+  }
+  .fab:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(88,140,232,0.55); }
+  .fab:active { transform: scale(0.96); }
+
+  /* ── 4. ADD ITEM MODAL ─────────────────────────── */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    backdrop-filter: blur(2px);
+    animation: fadeIn .25s ease;
+  }
+  .modal-sheet {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: 20px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: slideUp .3s cubic-bezier(.16,1,.3,1);
+  }
+  .modal-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    align-self: center;
+    margin-bottom: 4px;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+  .form-input {
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    color: var(--text-primary);
+    background: var(--bg);
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .emoji-picker {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .emoji-opt {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .emoji-opt.selected, .emoji-opt:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .modal-actions { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 4px; }
+  .btn-secondary {
+    padding: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--text-muted); }
+
+  /* ── 5. NOTES ─────────────────────────────────── */
+  #screen-notes .content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 20px;
+    gap: 10px;
+  }
+  .compose-box {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .compose-textarea {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text-primary);
+    font-family: inherit;
+    resize: none;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+  .compose-textarea::placeholder { color: var(--text-muted); }
+  .compose-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .compose-tools { display: flex; gap: 8px; }
+  .tool-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: var(--bg);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: all .15s;
+  }
+  .tool-btn:hover { background: var(--accent-soft); color: var(--accent); }
+  .char-count { font-size: 11px; color: var(--text-muted); }
+  .send-btn {
+    padding: 8px 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .tag-row {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .tag-row::-webkit-scrollbar { display: none; }
+  .tag-chip {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .tag-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+  .memo-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp .3s ease both;
+  }
+  .memo-text { font-size: 14px; color: var(--text-primary); line-height: 1.7; }
+  .memo-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .memo-time { font-size: 11px; color: var(--text-muted); }
+  .memo-tags { display: flex; gap: 6px; }
+  .memo-tag { font-size: 11px; color: var(--accent); }
+
+  /* ── 6. SETTINGS ──────────────────────────────── */
+  #screen-settings .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0;
+    gap: 12px;
+  }
+  .avatar-lg {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #588ce8 0%, #3a6dcc 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(88,140,232,0.3);
+  }
+  .avatar-edit {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 24px; height: 24px;
+    background: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--bg);
+  }
+  .avatar-name { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+  .settings-group {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .settings-group-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: .8px;
+    padding: 12px 16px 8px;
+    text-transform: uppercase;
+  }
+  .settings-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .settings-row:first-of-type { border-top: none; }
+  .settings-row:hover { background: var(--bg); }
+  .settings-row .s-icon { font-size: 18px; width: 32px; flex-shrink: 0; }
+  .settings-row .s-label { flex: 1; font-size: 15px; color: var(--text-primary); }
+  .settings-row .s-value { font-size: 14px; color: var(--text-muted); }
+  .settings-row .s-arrow { color: var(--text-muted); font-size: 14px; margin-left: 6px; }
+  .lang-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .lang-opt {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all .15s;
+  }
+  .lang-opt.active { background: var(--accent); color: white; }
+  .data-actions { display: flex; flex-direction: column; gap: 10px; }
+  .data-btn {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    font-size: 14px;
+    color: var(--text-primary);
+    font-family: inherit;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    transition: all .15s;
+  }
+  .data-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .data-btn.danger { color: #e05555; }
+  .data-btn.danger:hover { border-color: #e05555; background: #fff5f5; }
+  .version-tag { text-align: center; font-size: 12px; color: var(--text-muted); padding: 8px; }
+
+  /* ── 主题切换 ─────────────────────────────────── */
+  .theme-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 20px;
+    margin-bottom: -8px;
+    justify-content: flex-end;
+  }
+  .theme-switch {
+    width: 44px; height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background .3s;
+    border: none;
+    flex-shrink: 0;
+  }
+  .theme-switch.dark { background: var(--accent); }
+  .theme-switch::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: white;
+    top: 3px; left: 3px;
+    transition: transform .3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .theme-switch.dark::after { transform: translateX(20px); }
+
+  /* ── 动画 ────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  /* ── 说明标签 ─────────────────────────────────── */
+  .annotation {
+    position: absolute;
+    background: #ff6b6b;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+    pointer-events: none;
+    font-family: monospace;
+    letter-spacing: .3px;
+    box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+  }
+  .annotation.green { background: #22c55e; box-shadow: 0 2px 8px rgba(34,197,94,0.4); }
+  .annotation.blue { background: var(--accent); box-shadow: 0 2px 8px rgba(88,140,232,0.4); }
+
+  /* ── 成功提示 ─────────────────────────────────── */
+  .toast {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity .3s;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- 原型控制条 -->
+<div class="proto-bar" id="protoBar">
+  <button onclick="showScreen('onboarding')" id="btn-onboarding" class="active">① Onboarding</button>
+  <button onclick="showScreen('home')" id="btn-home">② 首页</button>
+  <button onclick="showScreen('inventory')" id="btn-inventory">③ 物品库</button>
+  <button onclick="showScreen('add')" id="btn-add">④ 添加物品</button>
+  <button onclick="showScreen('notes')" id="btn-notes">⑤ 笔记</button>
+  <button onclick="showScreen('settings')" id="btn-settings">⑥ 设置</button>
+</div>
+<div class="proto-label">▲ 点击切换屏幕 · 手机内可正常交互</div>
+
+<!-- 主题切换 -->
+<div class="theme-toggle-row" style="width:375px;justify-content:flex-end;padding:0">
+  <span style="color:#888;font-size:12px">暗色</span>
+  <button class="theme-switch" id="themeSwitch" onclick="toggleTheme()"></button>
+</div>
+
+<!-- 手机外壳 -->
+<div class="phone" id="phone">
+
+  <!-- ① Onboarding -->
+  <div class="screen active" id="screen-onboarding" style="padding-top:44px;">
+    <div class="onboard-wrap">
+      <div class="onboard-logo">🪷</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+        <div class="step-dots">
+          <div class="step-dot active"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+        <div class="onboard-text">
+          <h1>你好，欢迎来到宝盒</h1>
+          <p>先告诉我你的名字<br>我会用它来问候你</p>
+        </div>
+      </div>
+
+      <div class="onboard-form">
+        <div class="form-group">
+          <div class="field-label">你的名字</div>
+          <input class="field-input" type="text" placeholder="输入你常用的称呼..." id="nameInput" maxlength="10">
+        </div>
+        <button class="btn-primary" onclick="nextOnboarding()">继续 →</button>
+      </div>
+
+      <div class="onboard-hint">
+        🔒 宝盒完全离线运行<br>你的数据只存在这台设备上
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 首页 -->
+  <div class="screen" id="screen-home">
+    <div class="status-bar">
+      <span class="time-status">9:41</span>
+      <div class="icons">☀️ <span>100%</span></div>
+    </div>
+
+    <div class="content">
+      <!-- 问候区 -->
+      <div class="greeting-card">
+        <div class="greeting-top">
+          <div>
+            <div class="greeting-name">晴晴，早上好 ☀️</div>
+            <div class="greeting-sub">丙午年 · 五月初四</div>
+          </div>
+          <div class="avatar" onclick="showScreen('settings')">🧑</div>
+        </div>
+        <div class="clock-row">
+          <div class="clock-time">09:41</div>
+          <div class="clock-date">2026年6月19日<br>星期五</div>
+        </div>
+      </div>
+
+      <!-- 天气（精简为一张卡，不堆叠） -->
+      <div>
+        <div class="section-title">今日天气</div>
+        <div style="height:10px"></div>
+        <div class="weather-mini">
+          <div class="weather-left">
+            <div class="weather-icon">⛅️</div>
+            <div>
+              <div class="weather-temp">24°</div>
+              <div class="weather-desc">多云，体感舒适</div>
+            </div>
+          </div>
+          <div class="weather-right">
+            <div class="weather-city">📍 上海</div>
+            <div class="weather-range">最低18° · 最高27°</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工具区（持久入口，不隐藏） -->
+      <div class="tools-section">
+        <div class="section-title">工具</div>
+        <div class="tools-grid">
+          <div class="tool-chip featured" onclick="showScreen('inventory')">
+            <div class="t-icon">📦</div>
+            <div class="t-info">
+              <div class="t-name">物品库</div>
+              <div class="t-desc">记住买过的东西在哪里</div>
+            </div>
+            <div class="t-badge">已开放</div>
+          </div>
+          <div class="tool-chip coming-soon">
+            <div class="t-icon">🧠</div>
+            <div class="t-info">
+              <div class="t-name">秘书</div>
+              <div class="t-desc">智能助手</div>
+            </div>
+            <div class="t-badge">即将推出</div>
+          </div>
+          <div class="tool-chip coming-soon">
+            <div class="t-icon">🧘</div>
+            <div class="t-info">
+              <div class="t-name">冥想</div>
+              <div class="t-desc">内在探索</div>
+            </div>
+            <div class="t-badge">即将推出</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 语录（精简为一行，不占主要视觉） -->
+      <div class="quote-strip">
+        <div class="quote-icon">✦</div>
+        <div class="quote-text">心之所向，身之所往。</div>
+        <div style="font-size:18px;color:var(--text-muted);cursor:pointer">↺</div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item active" onclick="showScreen('home')">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">首页</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('inventory')">
+        <div class="nav-icon">📦</div>
+        <div class="nav-label">物品库</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('notes')">
+        <div class="nav-icon">📝</div>
+        <div class="nav-label">笔记</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('settings')">
+        <div class="nav-icon">👤</div>
+        <div class="nav-label">我的</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ③ 物品库 -->
+  <div class="screen" id="screen-inventory">
+    <div class="status-bar">
+      <span class="time-status">9:41</span>
+      <div class="icons">📶 <span>100%</span></div>
+    </div>
+
+    <div class="page-header">
+      <h2>物品库</h2>
+      <div class="header-actions">
+        <div class="icon-btn">🔍</div>
+        <div class="icon-btn">⋯</div>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <span style="color:var(--text-muted)">🔍</span>
+      <input type="text" placeholder="搜索物品名称、地点、类型…">
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-pill active">全部</button>
+      <button class="filter-pill">电子产品</button>
+      <button class="filter-pill">日用品</button>
+      <button class="filter-pill">服装</button>
+      <button class="filter-pill">书籍</button>
+      <button class="filter-pill">食品</button>
+    </div>
+
+    <div class="content" style="padding:0 0 80px">
+      <div class="items-list">
+        <div class="item-card" style="animation-delay:.05s">
+          <div class="item-thumb">🎧</div>
+          <div class="item-info">
+            <div class="item-name">AirPods Pro 2</div>
+            <div class="item-meta">Apple 蓝牙耳机</div>
+            <div class="item-where">📍 床头抽屉右侧</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-price">¥1,799</div>
+            <div class="item-date">2025-11-03</div>
+          </div>
+        </div>
+
+        <div class="item-card" style="animation-delay:.1s">
+          <div class="item-thumb">📖</div>
+          <div class="item-info">
+            <div class="item-name">置身事内</div>
+            <div class="item-meta">兰小欢 · 上海人民出版社</div>
+            <div class="item-where">📍 书架第三层左边</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-price">¥58</div>
+            <div class="item-date">2024-08-17</div>
+          </div>
+        </div>
+
+        <div class="item-card" style="animation-delay:.15s">
+          <div class="item-thumb">🧴</div>
+          <div class="item-info">
+            <div class="item-name">资生堂防晒霜</div>
+            <div class="item-meta">SPF50+ · 60ml</div>
+            <div class="item-where">📍 浴室镜柜第一层</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-price">¥230</div>
+            <div class="item-date">2026-04-20</div>
+          </div>
+        </div>
+
+        <div class="item-card" style="animation-delay:.2s">
+          <div class="item-thumb">🖥️</div>
+          <div class="item-info">
+            <div class="item-name">LG 显示器</div>
+            <div class="item-meta">27英寸 4K · LG 27UK850</div>
+            <div class="item-where">📍 书桌上</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-price">¥2,499</div>
+            <div class="item-date">2023-06-11</div>
+          </div>
+        </div>
+
+        <div class="item-card" style="animation-delay:.25s">
+          <div class="item-thumb">👟</div>
+          <div class="item-info">
+            <div class="item-name">New Balance 993</div>
+            <div class="item-meta">US9 · 灰白配色</div>
+            <div class="item-where">📍 鞋柜第二格</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-price">¥1,200</div>
+            <div class="item-date">2026-01-08</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="fab" onclick="showScreen('add')">＋</button>
+
+    <div class="bottom-nav">
+      <button class="nav-item" onclick="showScreen('home')">
+        <div class="nav-icon">🏠</div><div class="nav-label">首页</div>
+      </button>
+      <button class="nav-item active">
+        <div class="nav-icon">📦</div><div class="nav-label">物品库</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('notes')">
+        <div class="nav-icon">📝</div><div class="nav-label">笔记</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('settings')">
+        <div class="nav-icon">👤</div><div class="nav-label">我的</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ④ 添加物品（Bottom Sheet Modal） -->
+  <div class="screen" id="screen-add" style="background:var(--bg);">
+    <!-- 底层：物品库（模糊） -->
+    <div style="position:absolute;inset:0;filter:blur(2px);overflow:hidden;pointer-events:none">
+      <div class="status-bar"><span class="time-status">9:41</span></div>
+      <div class="page-header"><h2>物品库</h2></div>
+    </div>
+
+    <div class="modal-overlay" onclick="overlayClose(event)">
+      <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-title">记录一件物品</div>
+
+        <!-- 图标选择 -->
+        <div class="form-group">
+          <div class="form-label">选个图标</div>
+          <div class="emoji-picker">
+            <div class="emoji-opt selected" onclick="selectEmoji(this)">📦</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">🎧</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">👟</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">📖</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">🧴</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">🖥️</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">🎮</div>
+            <div class="emoji-opt" onclick="selectEmoji(this)">🍳</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">物品名称</div>
+          <input class="form-input" type="text" placeholder="比如：索尼 WH-1000XM5">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">花了多少</div>
+            <input class="form-input" type="number" placeholder="¥0">
+          </div>
+          <div class="form-group">
+            <div class="form-label">购买日期</div>
+            <input class="form-input" type="date" value="2026-06-19">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">放在哪里 📍</div>
+          <input class="form-input" type="text" placeholder="比如：书房桌子右侧抽屉">
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="showScreen('inventory')">取消</button>
+          <button class="btn-primary" onclick="saveItem()" style="padding:14px">保存记录 ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 笔记 -->
+  <div class="screen" id="screen-notes">
+    <div class="status-bar">
+      <span class="time-status">9:41</span>
+      <div class="icons">📶 <span>100%</span></div>
+    </div>
+
+    <div class="page-header">
+      <h2>笔记</h2>
+      <div class="icon-btn">🔍</div>
+    </div>
+
+    <!-- 标签索引 -->
+    <div class="tag-row" style="padding:0 20px 12px">
+      <div class="tag-chip" style="background:var(--accent);color:white;border-color:var(--accent)"># 全部 (12)</div>
+      <div class="tag-chip"># 读书 (4)</div>
+      <div class="tag-chip"># 想法 (5)</div>
+      <div class="tag-chip"># 工作 (2)</div>
+      <div class="tag-chip"># 生活 (1)</div>
+    </div>
+
+    <div class="content">
+      <!-- 撰写框（始终可见） -->
+      <div class="compose-box">
+        <textarea class="compose-textarea" placeholder="记下此刻的想法… #标签 可以分类"></textarea>
+        <div class="compose-toolbar">
+          <div class="compose-tools">
+            <button class="tool-btn" title="加粗">𝗕</button>
+            <button class="tool-btn">#</button>
+            <button class="tool-btn">• —</button>
+            <button class="tool-btn">🖼️</button>
+            <button class="tool-btn">🎤</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="char-count">0 / 5000</span>
+            <button class="send-btn">发送</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 历史笔记 -->
+      <div class="memo-card" style="animation-delay:.05s">
+        <div class="memo-text">今天读完了《置身事内》，兰小欢对土地财政的分析真的很通透。地方政府的激励结构决定了很多现象的根源。</div>
+        <div class="memo-footer">
+          <span class="memo-time">今天 08:23</span>
+          <div class="memo-tags"><span class="memo-tag">#读书</span><span class="memo-tag">#想法</span></div>
+        </div>
+      </div>
+
+      <div class="memo-card" style="animation-delay:.1s">
+        <div class="memo-text">晨跑5公里，天气很好，适合做决定的一天。</div>
+        <div class="memo-footer">
+          <span class="memo-time">今天 07:10</span>
+          <div class="memo-tags"><span class="memo-tag">#生活</span></div>
+        </div>
+      </div>
+
+      <div class="memo-card" style="animation-delay:.15s">
+        <div class="memo-text">宝盒的设计原则：克制比堆砌更难。每加一个功能，都要问自己"去掉它用户会在意吗"。</div>
+        <div class="memo-footer">
+          <span class="memo-time">昨天 22:47</span>
+          <div class="memo-tags"><span class="memo-tag">#想法</span><span class="memo-tag">#工作</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item" onclick="showScreen('home')">
+        <div class="nav-icon">🏠</div><div class="nav-label">首页</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('inventory')">
+        <div class="nav-icon">📦</div><div class="nav-label">物品库</div>
+      </button>
+      <button class="nav-item active">
+        <div class="nav-icon">📝</div><div class="nav-label">笔记</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('settings')">
+        <div class="nav-icon">👤</div><div class="nav-label">我的</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑥ 设置 -->
+  <div class="screen" id="screen-settings">
+    <div class="status-bar">
+      <span class="time-status">9:41</span>
+      <div class="icons">📶 <span>100%</span></div>
+    </div>
+
+    <div class="page-header">
+      <h2>我的</h2>
+    </div>
+
+    <div class="content">
+      <div class="avatar-section">
+        <div class="avatar-lg">
+          🧑
+          <div class="avatar-edit">✏️</div>
+        </div>
+        <div class="avatar-name" id="settingsName">晴晴</div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">个人资料</div>
+        <div class="settings-row">
+          <span class="s-icon">✏️</span>
+          <span class="s-label">显示名称</span>
+          <span class="s-value">晴晴</span>
+          <span class="s-arrow">›</span>
+        </div>
+        <div class="settings-row">
+          <span class="s-icon">🌐</span>
+          <span class="s-label">语言</span>
+          <div class="lang-toggle">
+            <button class="lang-opt active">中文</button>
+            <button class="lang-opt">English</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <span class="s-icon">🎨</span>
+          <span class="s-label">外观</span>
+          <div class="lang-toggle">
+            <button class="lang-opt active" onclick="setTheme('light')">浅色</button>
+            <button class="lang-opt" onclick="setTheme('dark')">深色</button>
+            <button class="lang-opt">自动</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">数据管理</div>
+        <div class="data-actions" style="padding:12px 12px 16px">
+          <button class="data-btn">📤 导出我的数据</button>
+          <button class="data-btn">📥 从文件恢复</button>
+          <button class="data-btn danger">🗑️ 清除所有数据</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">关于</div>
+        <div class="settings-row">
+          <span class="s-icon">📋</span>
+          <span class="s-label">隐私政策</span>
+          <span class="s-arrow">›</span>
+        </div>
+        <div class="settings-row">
+          <span class="s-icon">💬</span>
+          <span class="s-label">意见反馈</span>
+          <span class="s-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="version-tag">宝盒 v0.1.0 · 本地优先 · 无需账号</div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item" onclick="showScreen('home')">
+        <div class="nav-icon">🏠</div><div class="nav-label">首页</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('inventory')">
+        <div class="nav-icon">📦</div><div class="nav-label">物品库</div>
+      </button>
+      <button class="nav-item" onclick="showScreen('notes')">
+        <div class="nav-icon">📝</div><div class="nav-label">笔记</div>
+      </button>
+      <button class="nav-item active">
+        <div class="nav-icon">👤</div><div class="nav-label">我的</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+</div><!-- /phone -->
+
+<script>
+  // ── 屏幕切换 ────────────────────────────────
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.proto-bar button').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    const btn = document.getElementById('btn-' + name);
+    if (btn) btn.classList.add('active');
+  }
+
+  // ── Onboarding ───────────────────────────────
+  function nextOnboarding() {
+    const name = document.getElementById('nameInput').value.trim() || '朋友';
+    document.querySelector('.greeting-name').textContent = name + '，早上好 ☀️';
+    document.getElementById('settingsName').textContent = name;
+    showToast('欢迎，' + name + '！');
+    setTimeout(() => showScreen('home'), 600);
+  }
+
+  // ── Emoji 选择 ───────────────────────────────
+  function selectEmoji(el) {
+    document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ── 保存物品 ─────────────────────────────────
+  function saveItem() {
+    showScreen('inventory');
+    showToast('✓ 物品已记录');
+  }
+
+  // ── 遮罩关闭 ─────────────────────────────────
+  function overlayClose(e) {
+    if (e.target === e.currentTarget) showScreen('inventory');
+  }
+
+  // ── Toast ────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // ── 主题切换 ──────────────────────────────────
+  let isDark = false;
+  function toggleTheme() {
+    isDark = !isDark;
+    const phone = document.getElementById('phone');
+    const sw = document.getElementById('themeSwitch');
+    phone.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    sw.classList.toggle('dark', isDark);
+  }
+  function setTheme(t) {
+    isDark = t === 'dark';
+    document.getElementById('phone').setAttribute('data-theme', t);
+    document.getElementById('themeSwitch').classList.toggle('dark', isDark);
+  }
+
+  // ── 时钟 ─────────────────────────────────────
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const t = h + ':' + m;
+    document.querySelectorAll('.time-status').forEach(el => el.textContent = t);
+    document.querySelectorAll('.clock-time').forEach(el => el.textContent = t);
+  }
+  updateClock();
+  setInterval(updateClock, 10000);
+
+  // ── 语言按钮 ─────────────────────────────────
+  document.querySelectorAll('.lang-toggle').forEach(g => {
+    g.querySelectorAll('.lang-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        g.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+</script>
+</body>
+</html>
