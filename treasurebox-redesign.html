@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · v12</title>
+<title>宝盒 · v13</title>
 <style>
 /* ── 蓝色系 · Zen Tokens ── */
 :root{
@@ -279,18 +279,33 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   border-radius:11px;font-size:13px;font-weight:600;cursor:pointer}
 
 /* 今日能量 */
-.energy{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.energy-face{font-size:20px}
-.energy-bars{display:flex;gap:3px;flex:1}
+.energy-bars{display:flex;gap:3px;margin-bottom:7px}
 .eb{flex:1;height:6px;border-radius:3px;background:var(--bd)}
 .eb.on{background:linear-gradient(90deg,#19c37d,#4a6cf7)}
-.energy-word{font-size:12px;font-weight:700;color:#19c37d;white-space:nowrap}
 .energy-note{font-size:11px;color:var(--ts);line-height:1.4;margin-bottom:9px}
-.mood-log{border-top:1px solid var(--bds);padding-top:8px}
-.ml-lbl{font-size:10px;color:var(--txs)}
-.mood-row{display:flex;justify-content:space-between;margin-top:5px}
-.mood{font-size:19px;cursor:pointer;opacity:.5;transition:all .15s;filter:grayscale(.4)}
-.mood:active,.mood.on{opacity:1;filter:none;transform:scale(1.25)}
+/* 心情入口 */
+.mood-entry{display:flex;align-items:center;gap:7px;cursor:pointer;padding:7px 0;border-top:1px solid var(--bds)}
+.mood-dot{width:22px;height:22px;border-radius:50%;background:#f6c90e;flex-shrink:0;transition:background .3s}
+.mood-entry-txt{flex:1;font-size:11px;color:var(--ts)}
+/* 心情色盘 picker */
+.mood-picker{position:absolute;left:22px;right:22px;bottom:106px;background:var(--bg-card);
+  border-radius:24px;z-index:91;padding:18px 18px 14px;display:none;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.32)}
+.mood-picker.on{display:block}
+.mp-title{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.mp-hint{font-size:10px;color:var(--txs);margin-top:10px}
+.mood-wheel{width:170px;height:170px;border-radius:50%;cursor:pointer;display:block;margin:0 auto;
+  background:conic-gradient(
+    #ff6b6b 0deg 45deg,
+    #ff9f43 45deg 90deg,
+    #ffd93d 90deg 135deg,
+    #6bcb77 135deg 180deg,
+    #00cec9 180deg 225deg,
+    #74b9ff 225deg 270deg,
+    #a29bfe 270deg 315deg,
+    #fd79a8 315deg 360deg
+  );
+  position:relative}
 
 /* 任务拆分 popup */
 .split-card{position:absolute;left:18px;right:18px;top:50%;transform:translate(0,-50%) scale(.95);
@@ -520,35 +535,25 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <!-- 陪你看见（柔和提醒栏） -->
     <div class="remind-bar" onclick="openSheet('remind')">
       <div class="rb-dot"></div>
-      <span class="rb-main">今天有 <b>3 件小事</b> 可以慢慢处理 · 我帮你排好了顺序</span>
+      <span class="rb-main">今天有 <b>3 件事</b> · 有 <b>1 件</b>今天处理会更从容</span>
       <span class="rb-arr">看看 ›</span>
     </div>
 
     <!-- 重要日期 + 今日能量 -->
     <div class="count-hero">
       <div class="ch-left">
-        <div class="ch-cap">最近重要日期</div>
+        <div class="ch-cap">重要日期</div>
         <div class="ch-main"><span class="ch-num" id="ch-num">5</span><span class="ch-unit">天</span></div>
         <div class="ch-label" id="ch-label">妈妈生日</div>
-        <span class="ch-sample">示例 · 连接日历后个性化</span>
       </div>
       <div class="ch-right">
         <div class="ch-r-cap">今日能量</div>
-        <div class="energy">
-          <div class="energy-face">🙂</div>
-          <div class="energy-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb"></span></div>
-          <div class="energy-word">状态不错</div>
-        </div>
+        <div class="energy-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb"></span></div>
         <div class="energy-note">✨ 昨晚睡得好，身体在慢慢回升</div>
-        <div class="mood-log">
-          <span class="ml-lbl">此刻心情</span>
-          <div class="mood-row">
-            <span class="mood" onclick="logMood(this,'😄')">😄</span>
-            <span class="mood" onclick="logMood(this,'🙂')">🙂</span>
-            <span class="mood" onclick="logMood(this,'😌')">😌</span>
-            <span class="mood" onclick="logMood(this,'😕')">😕</span>
-            <span class="mood" onclick="logMood(this,'😣')">😣</span>
-          </div>
+        <div class="mood-entry" onclick="openMoodPicker()">
+          <div class="mood-dot" id="mood-dot"></div>
+          <span class="mood-entry-txt">此刻心情</span>
+          <span style="font-size:12px;color:var(--txs)">›</span>
         </div>
       </div>
     </div>
@@ -564,55 +569,35 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <div class="ac-spark-r">✦</div>
       </div>
       <div class="ac-acts">
-        <button class="ac-split" onclick="openSplit('给妈妈准备生日礼物')">🧩 帮我拆成小步骤</button>
-        <button class="ac-skip" onclick="skipAction(this)">稍后再说</button>
+        <button class="ac-split" onclick="openSplit('给妈妈准备生日礼物')">💥 粉碎任务</button>
+        <button class="ac-skip" onclick="nextAction(this)">下一条</button>
       </div>
     </div>
 
-    <!-- 我的工具 -->
-    <div class="sec-lbl">我的工具</div>
     <div class="tool-card" onclick="go('inv','home')">
       <div class="tk-top">
         <div class="tk-ico blue">📦</div>
         <div class="tk-name">物品库</div>
         <div class="tk-badge bdg-ok">本周清单</div>
       </div>
-      <div class="tk-headline">AI 已帮你整理好本周补货清单</div>
+      <div class="tk-headline">可整理本周补货清单</div>
       <div class="tk-rows">
         <div class="tk-row"><span class="tk-item">全脂牛奶 · 冰箱</span><span class="tk-val v-b">补货</span></div>
         <div class="tk-row"><span class="tk-item">维生素 C · 药柜</span><span class="tk-val v-b">补货</span></div>
         <div class="tk-row"><span class="tk-item">保湿护肤霜 · 梳妆台</span><span class="tk-val v-m">关注</span></div>
       </div>
-      <div class="tk-ai">✨ 提前备好，生活从容 · 一键发给智友帮你下单</div>
+      <div class="tk-ai">✨ 提前备好，生活从容 · 可让智友帮你下单</div>
       <div class="tk-acts">
         <button class="tk-bp" onclick="event.stopPropagation();quickRecord()">＋ 记录物品</button>
         <button class="tk-bs" onclick="event.stopPropagation();go('inv','home')">查看全部</button>
       </div>
     </div>
 
-    <div class="tool-card">
-      <div class="tk-top">
-        <div class="tk-ico amber">💰</div>
-        <div class="tk-name">支出记录</div>
-        <div class="tk-badge bdg-ok">本周 ¥949</div>
-      </div>
-      <div class="tk-headline">这周记账很认真，已记录 12 笔 👏</div>
-      <div class="tk-rows">
-        <div class="tk-row"><span class="tk-item">购物</span><span class="tk-val v-b">¥520</span></div>
-        <div class="tk-row"><span class="tk-item">餐饮</span><span class="tk-val v-b">¥340</span></div>
-        <div class="tk-row"><span class="tk-item">交通</span><span class="tk-val v-m">¥89</span></div>
-      </div>
-      <div class="tk-ai">🌿 想买的东西可以先放进「冷静区」，明天再决定也来得及</div>
-      <div class="tk-acts">
-        <button class="tk-bp">＋ 记一笔</button>
-        <button class="tk-bs">看明细</button>
-      </div>
-    </div>
   </div>
 
   <!-- Nav: 我的(launcher) | 智友 | 工具箱 -->
   <div class="bnav">
-    <button class="nb on" onclick="leftTab()"><span class="ni">▦</span><span class="nl">我的</span></button>
+    <button class="nb on" onclick="leftTab()"><span class="ni">🏠</span><span class="nl">首页</span></button>
     <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -701,7 +686,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
         <div class="rd-ai-row">
           <div class="rd-ai-body">
             <div class="rd-ai-lbl">✦ AI 会议记录</div>
-            <div class="rd-ai-sub">实时整理要点，自动生成摘要与待办</div>
+            <div class="rd-ai-sub">实时整理要点，可帮你生成摘要与待办</div>
           </div>
           <button class="sw on" id="ai-rec-sw" onclick="this.classList.toggle('on')"></button>
         </div>
@@ -804,7 +789,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
   </div>
 
   <div class="bnav">
-    <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
+    <button class="nb" onclick="navTo('home')"><span class="ni">🏠</span><span class="nl">首页</span></button>
     <button class="nb-ai on"><div class="nb-ai-ico" style="background:var(--amber);box-shadow:0 4px 18px rgba(232,146,58,.42)">✦</div><span class="nl" style="color:var(--amber);font-weight:700">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -870,7 +855,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <div class="pk-card dashed"><div class="pk-ico">＋</div><div class="pk-mid"><div class="pk-name">自定义工具包</div><div class="pk-sub">选择你的工具组合</div></div><span class="pk-arr">›</span></div>
   </div>
   <div class="bnav">
-    <button class="nb" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
+    <button class="nb" onclick="navTo('home')"><span class="ni">🏠</span><span class="nl">首页</span></button>
     <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
     <button class="nb on"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -897,7 +882,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <div class="inv-row"><div class="inv-dot" style="background:#9ba5c0"></div><div class="inv-info"><div class="inv-name">蓝牙耳机</div><div class="inv-cat">电子 · 书房</div></div><div class="inv-exp" style="color:var(--txs)">无期限</div></div>
   </div>
   <div class="bnav">
-    <button class="nb on" onclick="navTo('home')"><span class="ni">▦</span><span class="nl">我的</span></button>
+    <button class="nb on" onclick="navTo('home')"><span class="ni">🏠</span><span class="nl">首页</span></button>
     <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
     <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
@@ -942,7 +927,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 <!-- 任务拆分 popup -->
 <div class="overlay" id="split-ov" onclick="closeSplit()"></div>
 <div class="split-card" id="split-card">
-  <div class="sp-cap">🧩 任务拆分 · 一次只做一步</div>
+  <div class="sp-cap">💥 粉碎任务 · 一次只做一步</div>
   <div class="sp-title" id="sp-title">给妈妈准备生日礼物</div>
   <div class="sp-hint">我把它拆成了几个小步骤。做不完、想跳过都可以，你已经在往前走了。</div>
   <div class="sp-list" id="sp-list"></div>
@@ -950,6 +935,17 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
     <button class="sp-done-btn" onclick="closeSplit()">好，开始第一步</button>
     <button class="sp-skip-btn" onclick="closeSplit()">稍后</button>
   </div>
+</div>
+
+<!-- 心情色盘 overlay -->
+<div class="overlay" id="mood-ov" onclick="closeMoodPicker()"></div>
+<div class="mood-picker" id="mood-picker">
+  <div class="mp-title">此刻心情</div>
+  <div style="position:relative;width:170px;height:170px;margin:0 auto">
+    <div class="mood-wheel" id="mood-wheel" onclick="handleWheelClick(event)"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:var(--bg-card);pointer-events:none"></div>
+  </div>
+  <div class="mp-hint">轻触任意色区选择心情</div>
 </div>
 
 </div><!-- /phone -->
@@ -1056,17 +1052,38 @@ function openGratitude(){
   document.getElementById('home-ov').classList.add('on');
   document.getElementById('gratitude-sh').classList.add('on');
 }
-/* 心情 log */
-function logMood(el,m){
-  el.parentNode.querySelectorAll('.mood').forEach(x=>x.classList.remove('on'));
-  el.classList.add('on');
+/* 心情色盘 */
+function openMoodPicker(){
+  document.getElementById('mood-ov').classList.add('on');
+  document.getElementById('mood-picker').classList.add('on');
 }
-/* 温馨提醒：稍后 */
-function skipAction(btn){
+function closeMoodPicker(){
+  document.getElementById('mood-ov').classList.remove('on');
+  document.getElementById('mood-picker').classList.remove('on');
+}
+function handleWheelClick(e){
+  const rect=e.currentTarget.getBoundingClientRect();
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  const dx=e.clientX-cx,dy=e.clientY-cy;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  const r=rect.width/2;
+  if(dist>r||dist<r*0.2)return;
+  let deg=Math.atan2(dy,dx)*180/Math.PI;
+  const cssAngle=(deg+90+360)%360;
+  const colors=['#ff6b6b','#ff9f43','#ffd93d','#6bcb77','#00cec9','#74b9ff','#a29bfe','#fd79a8'];
+  selectMood(colors[Math.floor(cssAngle/45)%8]);
+}
+function selectMood(color){
+  document.getElementById('mood-dot').style.background=color;
+  closeMoodPicker();
+}
+/* 温馨提醒：下一条 */
+function nextAction(btn){
   const card=btn.closest('.action-card');
   card.style.transition='all .3s';card.style.opacity='.4';
-  btn.textContent='已收起 · 明天再轻轻提醒你';
+  btn.textContent='换一条提醒';
 }
+function skipAction(btn){nextAction(btn)}
 
 /* 任务拆分 —— 每步可再拆 3 个子步骤，可无限细分 */
 const SPLIT_DB={
