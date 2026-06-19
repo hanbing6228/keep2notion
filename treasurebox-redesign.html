@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · v13</title>
+<title>宝盒 · v14</title>
 <style>
 /* ── 蓝色系 · Zen Tokens ── */
 :root{
@@ -26,7 +26,7 @@ html.dark{
   --sh-md:0 10px 34px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:#1a1e3a;font-family:-apple-system,'PingFang SC',sans-serif}
 .phone{width:390px;height:844px;background:var(--bg);border-radius:54px;
   overflow:hidden;position:relative;color:var(--text);
@@ -478,9 +478,59 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 .sw::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
 .sw.on{background:var(--accent)}
 .sw.on::after{left:19px}
+/* ── Demo mode bar ── */
+.demo-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.db-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.3px}
+.db-btn{padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.18);
+  background:transparent;color:rgba(255,255,255,.42);font-size:12px;cursor:pointer;
+  transition:all .2s;font-family:inherit}
+.db-btn.on{background:rgba(255,255,255,.13);color:#fff;border-color:rgba(255,255,255,.4);font-weight:600}
+/* 天数徽标 */
+.tb-day-badge{font-size:10px;color:var(--accent);font-weight:600;
+  background:var(--tint);padding:3px 9px;border-radius:8px;margin-top:5px;display:none}
+/* 解锁时刻卡片 */
+.insight-card{display:none;background:linear-gradient(135deg,rgba(74,108,247,.07),rgba(124,90,240,.07));
+  border:1.5px solid rgba(124,90,240,.22);border-radius:16px;padding:14px 16px;margin-bottom:16px}
+.ic-hd{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.ic-lbl{flex:1;font-size:10px;font-weight:700;letter-spacing:.6px;color:var(--accent-2);text-transform:uppercase}
+.ic-close{border:none;background:none;color:var(--txs);font-size:18px;cursor:pointer;padding:0;line-height:1}
+.ic-body{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:5px}
+.ic-source{font-size:10px;color:var(--txs);margin-bottom:11px}
+.ic-fbs{display:flex;gap:8px}
+.ic-fb{padding:7px 14px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
+.ic-fb.pos{background:rgba(25,195,125,.12);color:#19c37d}
+.ic-fb.neg{background:rgba(155,165,192,.1);color:var(--ts)}
+/* 智友记忆 */
+.mem-prog{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:11px 13px;
+  background:var(--tint);border-radius:11px;border:1px solid rgba(74,108,247,.14)}
+.mem-prog-track{flex:1;height:5px;background:var(--bd);border-radius:3px;overflow:hidden}
+.mem-prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .6s}
+.mem-prog-lbl{font-size:11px;color:var(--accent);font-weight:600;white-space:nowrap}
+.mem-list{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.mem-item{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;
+  background:var(--bg-card);border:1px solid var(--bd);border-radius:11px}
+.mem-cat{font-size:9px;font-weight:700;color:var(--accent);background:var(--tint);
+  padding:2px 7px;border-radius:5px;white-space:nowrap;margin-top:2px;flex-shrink:0}
+.mem-body{flex:1}
+.mem-txt{font-size:12px;color:var(--text);line-height:1.4}
+.mem-conf{font-size:10px;color:var(--txs);margin-top:2px}
+/* 了解深度 */
+.dh-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.dh-row{display:flex;align-items:center;gap:9px}
+.dh-name{font-size:12px;color:var(--ts);width:58px;flex-shrink:0;line-height:1.3}
+.dh-track{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden}
+.dh-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#19c37d,#4a6cf7);transition:width .8s}
+.dh-pct{font-size:10px;font-weight:700;color:var(--ts);width:26px;text-align:right;flex-shrink:0}
+.dh-unlock{font-size:9px;color:var(--accent);flex-shrink:0;max-width:88px;line-height:1.3}
 </style>
 </head>
 <body>
+<!-- Demo mode toggle -->
+<div class="demo-bar">
+  <span class="db-label">体验对比 ·</span>
+  <button class="db-btn" id="db1" onclick="setDemoDay(1)">初次使用</button>
+  <button class="db-btn on" id="db34" onclick="setDemoDay(34)">使用 34 天后</button>
+</div>
 <div class="phone" ondblclick="toggleDark()">
 
 <!-- ════ ONBOARDING (2 步) ════ -->
@@ -529,13 +579,14 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="tb-time"><div class="clk" id="clock">09:41</div><div class="wthr">🌤 北京 · 24°C</div></div>
     </div>
     <div class="tb-quote" id="gz-quote">"简单是终极的复杂" <span>— 达芬奇</span></div>
+    <div class="tb-day-badge" id="tb-day-badge"></div>
   </div>
 
   <div class="home-body">
     <!-- 陪你看见（柔和提醒栏） -->
     <div class="remind-bar" onclick="openSheet('remind')">
       <div class="rb-dot"></div>
-      <span class="rb-main">今天有 <b>3 件事</b> · 有 <b>1 件</b>今天处理会更从容</span>
+      <span class="rb-main" id="rb-main-text">今天有 <b>3 件事</b> · 有 <b>1 件</b>今天处理会更从容</span>
       <span class="rb-arr">看看 ›</span>
     </div>
 
@@ -549,12 +600,27 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="ch-right">
         <div class="ch-r-cap">今日能量</div>
         <div class="energy-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb"></span></div>
-        <div class="energy-note">✨ 昨晚睡得好，身体在慢慢回升</div>
+        <div class="energy-note" id="energy-note-txt">✨ 昨晚睡得好，身体在慢慢回升</div>
         <div class="mood-entry" onclick="openMoodPicker()">
           <div class="mood-dot" id="mood-dot"></div>
           <span class="mood-entry-txt">此刻心情</span>
           <span style="font-size:12px;color:var(--txs)">›</span>
         </div>
+      </div>
+    </div>
+
+    <!-- 解锁时刻：AI 新发现 -->
+    <div class="insight-card" id="insight-card">
+      <div class="ic-hd">
+        <span>🔍</span>
+        <span class="ic-lbl">宝盒发现了一件关于你的事</span>
+        <button class="ic-close" onclick="dismissInsight()">×</button>
+      </div>
+      <div class="ic-body" id="ic-body">你好像每周五下午特别高效，我会把重要提醒调到那时候</div>
+      <div class="ic-source" id="ic-source">基于过去 4 周任务完成时段分析</div>
+      <div class="ic-fbs">
+        <button class="ic-fb pos" onclick="feedbackInsight(true)">👍 这很准确</button>
+        <button class="ic-fb neg" onclick="feedbackInsight(false)">✗ 不太对</button>
       </div>
     </div>
 
@@ -849,6 +915,8 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="tg-cell"><div class="tg-ico">🏡</div><div class="tg-name">家居维护</div><div class="tg-add">＋ 添加</div></div>
     </div>
 
+    <div class="tg-lbl">了解深度</div>
+    <div class="dh-list" id="dh-list"></div>
     <div class="tg-lbl">工具包</div>
     <div class="pk-card"><div class="pk-ico">⚡</div><div class="pk-mid"><div class="pk-name">效率日常包</div><div class="pk-sub">物品库 · 待办 · 习惯追踪</div></div><span class="pk-arr">›</span></div>
     <div class="pk-card"><div class="pk-ico">✦</div><div class="pk-mid"><div class="pk-name">AI 助理包</div><div class="pk-sub">智友 · 笔记 · 日程同步</div></div><span class="pk-arr">›</span></div>
@@ -911,6 +979,12 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
       <div class="c-chip"><span class="c-ico">✦</span><span class="c-name">Claude</span><span class="c-st">已连接</span></div>
       <div class="c-chip"><span class="c-ico">🌊</span><span class="c-name">Flomo（笔记汇入智友）</span><span class="c-st">已连接</span></div>
     </div>
+    <div class="cat-lbl" style="margin:16px 0 10px">智友对你的了解</div>
+    <div class="mem-prog">
+      <div class="mem-prog-track"><div class="mem-prog-fill" id="mem-prog-fill" style="width:4%"></div></div>
+      <span class="mem-prog-lbl" id="mem-prog-lbl">宝盒正在了解你</span>
+    </div>
+    <div class="mem-list" id="mem-list"></div>
     <div class="cfg-grp">
       <div class="cfg-row"><span class="cfg-ico">🌙</span><span class="cfg-lbl">深色模式</span><button class="sw" id="thsw" onclick="toggleDark()"></button></div>
       <div class="cfg-row"><span class="cfg-ico">🎨</span><span class="cfg-lbl">沟通风格</span><span class="cfg-val" id="tone-val">极简清透</span></div>
@@ -952,7 +1026,7 @@ html.dark .bnav{background:rgba(13,16,38,.94)}
 <script>
 const TONES={
   simple:{greet:'早安，{n}',quote:'"简单是终极的复杂" <span>— 达芬奇</span>',
-    action:'妈妈生日快到了，要不要现在花两分钟挑个礼物？<em>定制相册</em>或<em>护肤套装</em>都很贴心，做不完也没关系。',
+    action:'妈妈生日还有几天，要不要现在花两分钟挑个礼物？<em>定制相册</em>或<em>护肤套装</em>都很贴心，做不完也没关系。',
     reply:'综合建议：<b>定制相册</b>（¥150-200）配手写卡片最暖心；想更实用可选<b>护肤礼盒</b>（¥280-320）。慢慢看，要我帮你比价吗？',
     toneName:'极简清透'},
   warm:{greet:'{n}，早安 🌸',quote:'宝盒已为你整理好今天，从容开始这一天吧',
@@ -964,7 +1038,35 @@ const TONES={
     reply:'方案对比：① <b>护肤礼盒</b> ¥280-320，实用；② <b>定制相册</b> ¥150-200，情感价值高。你来定，我帮你落实。',
     toneName:'专业高效'}
 };
-let tone='simple',prev='home',dark=false,firstVisit=true,cur='ob';
+const PROFILES={
+  1:{daysSinceStart:1,greet:'早安，{n}',quote:'"简单是终极的复杂" <span>— 达芬奇</span>',
+    remindText:'今天有 <b>3 件事</b> · 有 <b>1 件</b>今天处理会更从容',
+    energyNote:'✨ 昨晚睡得好，身体在慢慢回升',
+    acText:'妈妈生日还有几天，要不要现在花两分钟挑个礼物？<em>定制相册</em>或<em>护肤套装</em>都很贴心，做不完也没关系。',
+    moodColor:'#f6c90e',dayBadge:null,insightVisible:false,
+    memories:[],memProgWidth:'4%',memProgLbl:'宝盒正在了解你 · 再用几天就会有发现',
+    dataHealth:[{name:'家居物品',pct:5,unlock:null},{name:'消费习惯',pct:0,unlock:'接入支出记录'},
+      {name:'情绪节律',pct:0,unlock:'记录 5 次心情'},{name:'人际关系',pct:0,unlock:'添加重要的人'},
+      {name:'健康数据',pct:0,unlock:'接入健康数据'}]},
+  34:{daysSinceStart:34,greet:'{n}，今天慢慢来',
+    quote:'周一了，你通常这天能量偏低 · 今天只有一件真的需要你',
+    remindText:'周一，你通常能量偏低 · 只有 <b>1 件</b>真的需要你',
+    energyNote:'近两周情绪偏蓝，今天不用逼自己 · 慢慢来就好',
+    acText:'还有几天 · 你上次提到想送<em>定制相册</em>，现在花 2 分钟确认一下就好，不急。',
+    moodColor:'#74b9ff',dayBadge:'第 34 天 · 越来越了解你',insightVisible:true,
+    insightBody:'你好像每周五下午特别高效，我会把重要提醒调到那时候',
+    insightSource:'基于过去 4 周任务完成时段分析',
+    memories:[{cat:'节律',txt:'晚上 10-11 点最活跃',conf:88},
+      {cat:'情绪',txt:'近两周情绪偏蓝，在慢慢回暖',conf:75},
+      {cat:'习惯',txt:'周一容易低效，周五产出高',conf:82},
+      {cat:'偏好',txt:'喜欢从容节奏，不喜欢被催',conf:91},
+      {cat:'关系',txt:'最在意妈妈和几个老朋友',conf:79}],
+    memProgWidth:'68%',memProgLbl:'已了解 23 件事 · 持续成长中',
+    dataHealth:[{name:'家居物品',pct:80,unlock:null},{name:'消费习惯',pct:60,unlock:null},
+      {name:'情绪节律',pct:40,unlock:'再记 5 次可解锁洞察'},{name:'人际关系',pct:20,unlock:'添加重要的人后解锁'},
+      {name:'健康数据',pct:0,unlock:'接入后可推算最佳状态时段'}]}
+};
+let tone='simple',prev='home',dark=false,firstVisit=true,cur='ob',demoDay=34,userName='小汉';
 
 const ALL=['ob','home','ai','tools','inv','cfg'];
 function go(id,from){
@@ -994,16 +1096,70 @@ function pickMention(t){const i=document.getElementById('chat-inp');i.value=t;i.
 function obGo(n){[1,2].forEach(i=>document.getElementById('ob'+i).classList.toggle('on',i===n))}
 function pickTone(t){tone=t;['simple','warm','pro'].forEach(k=>document.getElementById('tc-'+k).classList.toggle('on',k===t))}
 function enterApp(){
-  const n=(document.getElementById('inp-name').value.trim()||'小汉');
+  userName=(document.getElementById('inp-name').value.trim()||'小汉');
   const d=TONES[tone];
-  document.getElementById('gz-name').textContent=d.greet.replace('{n}',n);
-  document.getElementById('gz-quote').innerHTML=d.quote;
-  document.getElementById('ac-text').innerHTML=d.action;
   const r=document.getElementById('ai-reply');if(r)r.innerHTML=d.reply;
   const tv=document.getElementById('tone-val');if(tv)tv.textContent=d.toneName;
-  const cu=document.getElementById('cfg-uname');if(cu)cu.textContent=n;
-  go('home');
+  const cu=document.getElementById('cfg-uname');if(cu)cu.textContent=userName;
+  go('home');renderProfile();
   if(firstVisit){firstVisit=false;const tip=document.getElementById('tip');if(tip){tip.classList.add('on');setTimeout(()=>tip.classList.remove('on'),3600);}}
+}
+
+/* ── 个性化渲染引擎 ── */
+function setDemoDay(day){
+  demoDay=day;
+  document.getElementById('db1').classList.toggle('on',day===1);
+  document.getElementById('db34').classList.toggle('on',day===34);
+  renderProfile();
+}
+function renderProfile(){
+  const p=PROFILES[demoDay];const n=userName;
+  const $=id=>document.getElementById(id);
+  const set=(id,html,txt)=>{const e=$(id);if(!e)return;txt?e.textContent=html:e.innerHTML=html};
+  set('gz-name',p.greet.replace('{n}',n),true);
+  set('gz-quote',p.quote);
+  const bdg=$('tb-day-badge');if(bdg){bdg.textContent=p.dayBadge||'';bdg.style.display=p.dayBadge?'inline-block':'none';}
+  set('rb-main-text',p.remindText);
+  set('energy-note-txt',p.energyNote,true);
+  const md=$('mood-dot');if(md)md.style.background=p.moodColor;
+  set('ac-text',p.acText);
+  // Insight card
+  const ic=$('insight-card');
+  if(ic){
+    if(p.insightVisible){set('ic-body',p.insightBody,true);set('ic-source',p.insightSource,true);ic.style.display='block';}
+    else ic.style.display='none';
+  }
+  // Memory (cfg)
+  const pf=$('mem-prog-fill');if(pf)pf.style.width=p.memProgWidth;
+  set('mem-prog-lbl',p.memProgLbl,true);
+  const ml=$('mem-list');
+  if(ml){
+    ml.innerHTML='';
+    if(!p.memories.length)ml.innerHTML='<div style="font-size:12px;color:var(--txs);text-align:center;padding:12px 0">再用几天，宝盒就会有新发现 🌱</div>';
+    else p.memories.forEach(m=>{
+      const el=document.createElement('div');el.className='mem-item';
+      el.innerHTML='<div class="mem-cat">'+m.cat+'</div><div class="mem-body"><div class="mem-txt">'+m.txt+'</div><div class="mem-conf">置信度 '+m.conf+'%</div></div>';
+      ml.appendChild(el);
+    });
+  }
+  // Data health (tools)
+  const dl=$('dh-list');
+  if(dl){
+    dl.innerHTML='';
+    p.dataHealth.forEach(d=>{
+      const el=document.createElement('div');el.className='dh-row';
+      const u=d.unlock&&d.pct<100?'<span class="dh-unlock">→ '+d.unlock+'</span>':'';
+      el.innerHTML='<span class="dh-name">'+d.name+'</span><div class="dh-track"><div class="dh-fill" style="width:'+d.pct+'%"></div></div><span class="dh-pct">'+d.pct+'%</span>'+u;
+      dl.appendChild(el);
+    });
+  }
+}
+/* 解锁时刻反馈 */
+function dismissInsight(){document.getElementById('insight-card').style.display='none'}
+function feedbackInsight(pos){
+  const ic=document.getElementById('insight-card');
+  ic.innerHTML='<div style="text-align:center;padding:10px 0;font-size:13px;color:var(--ts)">'+(pos?'👍 感谢反馈，我会记住这个规律':'✓ 明白了，继续观察调整')+'</div>';
+  setTimeout(()=>{ic.style.display='none';},1800);
 }
 
 /* Home sheets */
@@ -1075,6 +1231,7 @@ function handleWheelClick(e){
 }
 function selectMood(color){
   document.getElementById('mood-dot').style.background=color;
+  PROFILES[demoDay].moodColor=color;
   closeMoodPicker();
 }
 /* 温馨提醒：下一条 */
@@ -1125,6 +1282,7 @@ function toggleDark(){dark=!dark;document.documentElement.classList.toggle('dark
 function tick(){const e=document.getElementById('clock');if(!e)return;const n=new Date();e.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
 tick();setInterval(tick,1000);
 document.querySelectorAll('.chips .chip').forEach(c=>c.addEventListener('click',function(){this.closest('.chips').querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));this.classList.add('on')}));
+renderProfile();
 </script>
 </body>
 </html>
