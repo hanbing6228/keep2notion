@@ -3,963 +3,540 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>宝盒 · UI 原型 v4</title>
+<title>宝盒 · v5</title>
 <style>
-/* ── Design Tokens ── */
 :root {
-  --bg:       #f2ede5;
-  --bg-card:  #faf8f4;
-  --bg-dark:  #1a2f28;
-  --accent:   #3d6b5a;
-  --amber:    #c07838;
-  --text:     #1e1b16;
-  --text-s:   #7a7068;
-  --text-xs:  #aba39a;
-  --border:   #ddd8ce;
-  --border-s: rgba(30,27,22,.08);
-  --sh:       0 2px 12px rgba(30,27,22,.07);
-  --sh-md:    0 6px 24px rgba(30,27,22,.10);
-  --warn:     #d45252;
-  --warn-s:   rgba(212,82,82,.12);
-  --ok-s:     rgba(61,107,90,.10);
-  --ai-claude: #7c5af0;
-  --ai-gpt:    #19c37d;
-  --ai-gemini: #4285f4;
-  --ai-wenxin: #e66c2c;
+  --bg:#f2ede5; --bg-card:#faf8f4; --bg-dark:#1a2f28;
+  --accent:#3d6b5a; --amber:#c07838;
+  --text:#1e1b16; --ts:#7a7068; --txs:#aba39a;
+  --bd:#ddd8ce; --bds:rgba(30,27,22,.07);
+  --warn:#d45252;
+  --ai-c:#7c5af0; --ai-g:#19c37d; --ai-gem:#4285f4; --ai-w:#e66c2c;
 }
 html.dark {
-  --bg:       #141210;
-  --bg-card:  #1e1b18;
-  --bg-dark:  #0d1f18;
-  --text:     #f0ece4;
-  --text-s:   #a09c96;
-  --text-xs:  #706c68;
-  --border:   #2e2b28;
-  --border-s: rgba(240,236,228,.07);
-  --sh:       0 2px 12px rgba(0,0,0,.3);
-  --sh-md:    0 6px 24px rgba(0,0,0,.4);
+  --bg:#141210; --bg-card:#1e1b18; --bg-dark:#0d1f18;
+  --text:#f0ece4; --ts:#a09c96; --txs:#706c68;
+  --bd:#2e2b28; --bds:rgba(240,236,228,.06);
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:#bfbab3;font-family:-apple-system,'PingFang SC',sans-serif}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: #c8c3bc;
-  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
-}
+/* Phone */
+.phone{width:390px;height:844px;background:var(--bg);border-radius:54px;
+  overflow:hidden;position:relative;color:var(--text);
+  box-shadow:0 40px 80px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.1)}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:120px;height:34px;background:#0a0a0a;border-radius:0 0 22px 22px;
+  z-index:200;pointer-events:none}
 
-/* ── Phone shell ── */
-.phone {
-  width: 390px; height: 844px;
-  background: var(--bg);
-  border-radius: 54px;
-  overflow: hidden;
-  position: relative;
-  color: var(--text);
-  box-shadow: 0 40px 80px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.12);
-}
-.phone::before {
-  content: '';
-  position: absolute; top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 120px; height: 34px;
-  background: #0a0a0a;
-  border-radius: 0 0 22px 22px;
-  z-index: 200;
-  pointer-events: none;
-}
+/* Screens */
+.scr{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg)}
+.scr.on{display:flex}
 
-/* ── Screen system ── */
-.screen {
-  position: absolute; inset: 0;
-  display: none; flex-direction: column;
-  background: var(--bg);
-}
-.screen.on { display: flex; }
+/* ═══ ONBOARDING ═══ */
+.obs{display:none;flex:1;flex-direction:column}
+.obs.on{display:flex}
 
-/* ════════════════════════════════════════
-   ONBOARDING — 3 steps
-════════════════════════════════════════ */
-.ob-step { display: none; flex: 1; flex-direction: column; }
-.ob-step.on { display: flex; }
+#ob1{align-items:center;justify-content:center;padding:60px 40px 48px}
+.ob-logo{font-size:56px;margin-bottom:20px}
+.ob-brand{font-size:30px;font-weight:700;letter-spacing:-.5px}
+.ob-tag{font-size:14px;color:var(--ts);margin:6px 0 48px}
+.ob-inp{width:100%;border:none;border-bottom:1.5px solid var(--bd);
+  background:transparent;padding:13px 0;font-size:16px;color:var(--text);
+  outline:none;margin-bottom:14px}
+.ob-inp::placeholder{color:var(--txs)}
+.ob-btn{width:100%;margin-top:28px;padding:16px;background:var(--amber);
+  color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:600;cursor:pointer}
+.ob-dots{display:flex;gap:6px;margin-top:30px}
+.ob-dot{width:6px;height:6px;border-radius:3px;background:var(--bd);transition:width .2s}
+.ob-dot.on{width:18px;background:var(--amber)}
 
-/* Step 1 — welcome */
-#ob-s1 {
-  align-items: center; justify-content: center;
-  padding: 60px 40px 48px;
-  gap: 0;
-}
-.ob-logo { font-size: 56px; margin-bottom: 20px; }
-.ob-brand { font-size: 30px; font-weight: 700; letter-spacing: -.5px; }
-.ob-tagline { font-size: 14px; color: var(--text-s); margin: 6px 0 44px; }
-.ob-field {
-  width: 100%;
-  border: none; border-bottom: 1.5px solid var(--border);
-  background: transparent;
-  padding: 13px 0;
-  font-size: 16px; color: var(--text);
-  outline: none; margin-bottom: 14px;
-}
-.ob-field::placeholder { color: var(--text-xs); }
-.ob-btn {
-  width: 100%; margin-top: 28px;
-  padding: 16px;
-  background: var(--amber); color: #fff;
-  border: none; border-radius: 14px;
-  font-size: 17px; font-weight: 600;
-  cursor: pointer; letter-spacing: .3px;
-}
-.ob-dots { display: flex; gap: 6px; margin-top: 32px; }
-.ob-dot { width: 6px; height: 6px; border-radius: 3px; background: var(--border); transition: width .2s; }
-.ob-dot.on { width: 18px; background: var(--amber); }
+#ob2{padding:56px 28px 40px;justify-content:center}
+#ob3{padding:52px 28px 36px;justify-content:center}
+.ob-h{font-size:22px;font-weight:700;margin-bottom:6px}
+.ob-sub{font-size:14px;color:var(--ts);margin-bottom:24px;line-height:1.5}
 
-/* Step 2 — tone selection */
-#ob-s2 {
-  padding: 60px 28px 48px;
-  justify-content: center;
-}
-.ob-s2-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-.ob-s2-sub { font-size: 14px; color: var(--text-s); margin-bottom: 32px; line-height: 1.5; }
-.tone-grid { display: flex; flex-direction: column; gap: 12px; }
-.tone-card {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 16px;
-  background: var(--bg-card);
-  border: 2px solid var(--border);
-  border-radius: 16px;
-  cursor: pointer;
-  transition: border-color .15s, background .15s;
-}
-.tone-card.sel {
-  border-color: var(--accent);
-  background: var(--ok-s);
-}
-.tone-icon { font-size: 26px; flex-shrink: 0; margin-top: 1px; }
-.tone-info { flex: 1; }
-.tone-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-.tone-desc { font-size: 12px; color: var(--text-s); line-height: 1.5; }
-.tone-check {
-  width: 20px; height: 20px; border-radius: 50%;
-  border: 2px solid var(--border);
-  flex-shrink: 0; margin-top: 2px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: transparent;
-  transition: all .15s;
-}
-.tone-card.sel .tone-check {
-  background: var(--accent); border-color: var(--accent);
-  color: #fff;
-}
+/* Tone cards */
+.tones{display:flex;flex-direction:column;gap:10px}
+.tc{display:flex;align-items:flex-start;gap:13px;padding:15px 16px;
+  background:var(--bg-card);border:2px solid var(--bd);border-radius:18px;cursor:pointer;
+  transition:border-color .15s,background .15s}
+.tc.on{border-color:var(--accent);background:rgba(61,107,90,.08)}
+.tc-ico{font-size:26px;flex-shrink:0;margin-top:1px}
+.tc-body{flex:1}
+.tc-name{font-size:15px;font-weight:700;color:var(--text)}
+.tc-desc{font-size:12px;color:var(--ts);margin-top:2px;line-height:1.4}
+.tc-eg{display:inline-block;margin-top:6px;font-size:11px;color:var(--txs);
+  background:var(--bg);padding:3px 8px;border-radius:6px;font-style:italic}
+.tc.on .tc-eg{background:rgba(61,107,90,.1);color:var(--accent)}
+.tc-chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:transparent;transition:all .15s}
+.tc.on .tc-chk{background:var(--accent);border-color:var(--accent);color:#fff}
 
-/* Step 3 — connect */
-#ob-s3 {
-  padding: 60px 28px 48px;
-  justify-content: center;
-}
-.ob-s3-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-.ob-s3-sub { font-size: 14px; color: var(--text-s); margin-bottom: 28px; line-height: 1.5; }
-.conn-quick { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.conn-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px;
-  background: var(--bg-card);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  cursor: pointer;
-}
-.conn-row.done { border-color: var(--accent); background: var(--ok-s); }
-.conn-icon { font-size: 22px; }
-.conn-info { flex: 1; }
-.conn-name { font-size: 14px; font-weight: 600; color: var(--text); }
-.conn-desc { font-size: 11px; color: var(--text-xs); margin-top: 1px; }
-.conn-status { font-size: 12px; font-weight: 600; color: var(--text-xs); }
-.conn-status.ok { color: var(--accent); }
-.ob-skip { font-size: 13px; color: var(--text-s); text-align: center; cursor: pointer; margin-top: 8px; text-decoration: underline; }
+/* Connect step */
+.conn-cat{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--txs);margin:14px 0 8px}
+.conn-rows{display:flex;flex-direction:column;gap:7px}
+.conn-row{display:flex;align-items:center;gap:11px;padding:12px 14px;
+  background:var(--bg-card);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer}
+.conn-row.on{border-color:var(--accent);background:rgba(61,107,90,.08)}
+.conn-ico{font-size:20px}
+.conn-info{flex:1}
+.conn-name{font-size:14px;font-weight:600;color:var(--text)}
+.conn-desc{font-size:11px;color:var(--txs);margin-top:1px}
+.conn-st{font-size:11px;font-weight:700;color:var(--txs)}
+.conn-row.on .conn-st{color:var(--accent)}
+.ob-skip{font-size:13px;color:var(--ts);text-align:center;cursor:pointer;margin-top:10px}
 
-/* ════════════════════════════════════════
-   HOME SCREEN
-════════════════════════════════════════ */
-#scr-home { overflow: hidden; }
+/* ═══ HOME ═══ */
+.topbar{padding:50px 22px 0;display:flex;align-items:flex-start;
+  justify-content:space-between;flex-shrink:0}
+.av-btn{width:36px;height:36px;border-radius:50%;background:var(--bg-dark);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px}
+.top-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.top-r-row{display:flex;align-items:center;gap:8px}
+.note-btn{width:30px;height:30px;border-radius:50%;background:var(--bg-card);
+  border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;
+  font-size:14px;cursor:pointer;color:var(--ts)}
+.clk{font-size:22px;font-weight:200;color:var(--text);letter-spacing:-.5px}
+.wthr{font-size:11px;color:var(--ts)}
 
-/* Top bar */
-.topbar {
-  padding: 48px 22px 14px;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0;
-}
-.avatar-btn {
-  width: 38px; height: 38px;
-  background: var(--bg-dark); border-radius: 50%;
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-}
-.time-block { text-align: right; }
-.time-text {
-  font-size: 24px; font-weight: 200;
-  color: var(--text); letter-spacing: -.5px; line-height: 1;
-}
-.weather-text {
-  font-size: 12px; color: var(--text-s); margin-top: 2px;
-}
+.home-body{flex:1;overflow-y:auto;padding:0 24px 100px;scrollbar-width:none}
+.home-body::-webkit-scrollbar{display:none}
 
-/* Scrollable body */
-.home-scroll {
-  flex: 1; overflow-y: auto;
-  padding: 0 20px 130px;
-  scrollbar-width: none;
-}
-.home-scroll::-webkit-scrollbar { display: none; }
+/* Hero — Today's Focus */
+.focus{margin:22px 0 28px;padding:20px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.focus-greet{font-size:13px;color:var(--ts);margin-bottom:14px;line-height:1.5}
+.focus-num{font-size:76px;font-weight:800;color:var(--amber);line-height:1;
+  letter-spacing:-4px;font-variant-numeric:tabular-nums}
+.focus-unit{font-size:22px;font-weight:400;color:var(--amber)}
+.focus-event{font-size:19px;font-weight:600;color:var(--text);margin-top:5px}
+.focus-ai{font-size:13px;color:var(--ts);margin-top:10px;line-height:1.65;
+  padding-left:12px;border-left:2px solid var(--accent)}
 
-.greeting { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.greeting-sub { font-size: 13px; color: var(--text-s); }
+/* Inline sections */
+.sec{margin-bottom:24px}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--txs);margin-bottom:12px}
+.sl{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 0;border-bottom:1px solid var(--bds)}
+.sl:last-child{border-bottom:none}
+.sl-l{display:flex;align-items:baseline;gap:10px}
+.sl-name{font-size:15px;color:var(--text)}
+.sl-time{font-size:12px;color:var(--ts)}
+.sl-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.tag-urg{background:rgba(212,82,82,.1);color:var(--warn)}
+.tag-tod{background:rgba(192,120,56,.1);color:var(--amber)}
+.tag-ok{background:rgba(61,107,90,.1);color:var(--accent)}
 
-/* Section header */
-.sec-hd {
-  display: flex; align-items: center; justify-content: space-between;
-  margin: 22px 0 10px;
-}
-.sec-label {
-  font-size: 11px; font-weight: 700;
-  color: var(--text-xs); letter-spacing: .8px; text-transform: uppercase;
-}
-.sec-action {
-  font-size: 12px; color: var(--accent);
-  background: none; border: none; cursor: pointer;
-  font-weight: 600;
-}
+.warn-row{display:flex;align-items:center;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--bds);cursor:pointer}
+.warn-row:last-child{border-bottom:none}
+.wd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.wn{flex:1;font-size:15px;color:var(--text)}
+.we{font-size:12px;font-weight:700}
+.we-r{color:var(--warn)}
+.we-a{color:var(--amber)}
+.we-g{color:var(--txs)}
+.wa{font-size:14px;color:var(--txs)}
 
-/* Reminder strip — horizontal scroll */
-.remind-strip {
-  display: flex; gap: 10px;
-  overflow-x: auto; scrollbar-width: none;
-  margin: 0 -20px; padding: 0 20px 4px;
-}
-.remind-strip::-webkit-scrollbar { display: none; }
+.quote{padding:20px 0 8px;border-top:1px solid var(--bd);text-align:center}
+.qt{font-size:13px;color:var(--ts);line-height:1.7;font-style:italic}
+.qs{font-size:11px;color:var(--txs);margin-top:4px}
 
-.r-card {
-  flex-shrink: 0; width: 190px;
-  background: var(--bg-card);
-  border-radius: 16px; border: 1px solid var(--border);
-  padding: 13px 14px;
-}
-.r-card.ai {
-  background: linear-gradient(145deg, #1a2f28 0%, #2d4a3e 100%);
-  border-color: transparent;
-}
-.r-hd {
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 9px;
-}
-.r-ico { font-size: 13px; }
-.r-lbl { font-size: 10px; font-weight: 700; color: var(--text-s); letter-spacing: .5px; text-transform: uppercase; }
-.ai .r-lbl { color: rgba(255,255,255,.45); }
-.r-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 5px 0; border-bottom: 1px solid var(--border-s);
-}
-.r-row:last-child { border-bottom: none; }
-.r-name { font-size: 12px; color: var(--text); }
-.r-val { font-size: 11px; color: var(--text-s); white-space: nowrap; }
-.r-val.warn { color: var(--warn); font-weight: 700; }
-.ai-text {
-  font-size: 12px; color: rgba(255,255,255,.8);
-  line-height: 1.55;
-}
-.ai-text em { color: #a8d5b5; font-style: normal; font-weight: 600; }
+/* ═══ BOTTOM NAV ═══ */
+.bnav{position:absolute;bottom:0;left:0;right:0;height:82px;
+  display:flex;align-items:flex-start;padding-top:10px;
+  background:rgba(250,248,244,.94);backdrop-filter:blur(20px);
+  border-top:1px solid var(--bd);z-index:50}
+html.dark .bnav{background:rgba(30,27,24,.94)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  border:none;background:none;cursor:pointer;padding:5px 0}
+.nb .ni{font-size:22px;color:var(--txs);transition:color .15s}
+.nb .nl{font-size:10px;color:var(--txs);transition:color .15s}
+.nb.on .ni,.nb.on .nl{color:var(--accent)}
+.nb.on .nl{font-weight:700}
+/* Center AI tab */
+.nb-ai{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  border:none;background:none;cursor:pointer;padding:4px 0}
+.nb-ai-ico{width:44px;height:44px;border-radius:22px;background:var(--accent);
+  margin-top:-15px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:#fff;box-shadow:0 4px 18px rgba(61,107,90,.42);transition:background .15s}
+.nb-ai.on .nb-ai-ico{background:var(--amber);box-shadow:0 4px 18px rgba(192,120,56,.42)}
+.nb-ai .nl{font-size:10px;color:var(--txs);margin-top:2px;transition:color .15s}
+.nb-ai.on .nl{color:var(--amber);font-weight:700}
 
-/* Tool module grid */
-.mod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* First-use tooltip */
+.tip{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:var(--bg);font-size:12px;font-weight:600;
+  padding:8px 16px;border-radius:20px;white-space:nowrap;z-index:60;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+  opacity:0;transition:opacity .4s;pointer-events:none}
+.tip::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--text);border-bottom:none;pointer-events:none}
+.tip.on{opacity:1}
 
-.mod-card {
-  background: var(--bg-card); border-radius: 16px;
-  border: 1px solid var(--border);
-  padding: 13px; cursor: pointer;
-  min-height: 140px;
-  display: flex; flex-direction: column;
-}
-.mod-card.dk {
-  background: var(--bg-dark); border-color: transparent;
-}
-.mod-hd {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 10px;
-}
-.mod-name {
-  font-size: 11px; font-weight: 700;
-  color: var(--text-s); letter-spacing: .3px;
-}
-.dk .mod-name { color: rgba(255,255,255,.4); }
-.mod-badge {
-  font-size: 10px; font-weight: 700;
-  padding: 2px 7px; border-radius: 8px;
-}
-.badge-warn { background: var(--warn-s); color: var(--warn); }
-.badge-ok   { background: var(--ok-s);   color: var(--accent); }
-.dk .badge-warn { background: rgba(212,82,82,.25); }
+/* ═══ NOTE OVERLAY ═══ */
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);
+  z-index:70;display:none;cursor:pointer}
+.overlay.on{display:block}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:var(--bg-card);
+  border-radius:24px 24px 0 0;z-index:80;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sheet.on{transform:translateY(0)}
+.sh-handle{width:36px;height:4px;border-radius:2px;background:var(--bd);
+  margin:12px auto 0;flex-shrink:0}
+.sh-title{font-size:15px;font-weight:700;color:var(--text);padding:14px 20px 8px;flex-shrink:0}
+.sh-body{overflow-y:auto;padding:4px 20px 24px;max-height:420px;scrollbar-width:none}
+.sh-body::-webkit-scrollbar{display:none}
 
-.mod-rows { flex: 1; display: flex; flex-direction: column; gap: 0; }
-.mod-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 5px 0; border-bottom: 1px solid var(--border-s);
-}
-.dk .mod-row { border-color: rgba(255,255,255,.07); }
-.mod-row:last-child { border-bottom: none; }
-.mod-item { font-size: 12px; color: var(--text); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dk .mod-item { color: rgba(255,255,255,.85); }
-.mod-tag { font-size: 10px; font-weight: 700; white-space: nowrap; }
-.tag-warn { color: var(--warn); }
-.tag-ok   { color: var(--accent); }
-.tag-dim  { color: rgba(255,255,255,.35); }
-.tag-muted { color: var(--text-xs); }
+.nc{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg);
+  border-radius:14px;border:1.5px solid var(--bd);cursor:pointer;margin-bottom:8px}
+.nc.done{border-color:var(--accent);background:rgba(61,107,90,.08)}
+.nc-ico{font-size:22px}
+.nc-info{flex:1}
+.nc-name{font-size:14px;font-weight:700;color:var(--text)}
+.nc-hint{font-size:11px;color:var(--txs);margin-top:1px}
+.nc-st{font-size:11px;font-weight:700}
+.nc-st.ok{color:var(--accent)}
+.nc-st.no{color:var(--txs)}
 
-/* Quote */
-.quote-wrap {
-  margin-top: 28px; padding: 18px 20px;
-  background: var(--bg-card); border-radius: 16px;
-  border: 1px solid var(--border); text-align: center;
-}
-.q-mark { font-size: 28px; color: var(--amber); opacity: .4; line-height: 1; }
-.q-text { font-size: 13px; color: var(--text-s); line-height: 1.7; font-style: italic; margin: 6px 0 4px; }
-.q-src  { font-size: 11px; color: var(--text-xs); }
+/* ═══ 智友 ═══ */
+.ai-hd{padding:50px 22px 14px;display:flex;align-items:center;flex-shrink:0}
+.ai-title{font-size:20px;font-weight:700;color:var(--text)}
+.ai-roster{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
+  padding:0 22px 12px;flex-shrink:0}
+.ai-roster::-webkit-scrollbar{display:none}
+.aichip{display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:20px;
+  border:1.5px solid var(--bd);background:var(--bg-card);cursor:pointer;
+  white-space:nowrap;transition:all .15s;flex-shrink:0}
+.aichip.on{background:rgba(61,107,90,.08);border-color:var(--accent)}
+.ai-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ai-cname{font-size:12px;font-weight:700;color:var(--text)}
+.ai-tool{display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px 10px;flex-shrink:0}
+.ai-tl{font-size:13px;font-weight:600;color:var(--text)}
+.sw{width:38px;height:22px;border-radius:11px;background:var(--bd);border:none;
+  cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:#fff;transition:left .2s}
+.sw.on{background:var(--accent)}
+.sw.on::after{left:19px}
+.ai-msgs{flex:1;overflow-y:auto;padding:0 22px 10px;scrollbar-width:none}
+.ai-msgs::-webkit-scrollbar{display:none}
+.bbl-out{display:flex;justify-content:flex-end;margin-bottom:10px}
+.bbl-out>div{background:var(--accent);color:#fff;padding:10px 14px;
+  border-radius:18px 18px 4px 18px;font-size:13px;max-width:76%;line-height:1.45}
+.bbl-in{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
+.ai-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;margin-top:1px}
+.bbl-body{background:var(--bg-card);border:1px solid var(--bd);padding:10px 14px;
+  border-radius:4px 18px 18px 18px;font-size:13px;color:var(--text);
+  line-height:1.5;max-width:80%}
+.chat-bar{display:flex;gap:8px;align-items:center;padding:10px 22px 16px;
+  border-top:1px solid var(--bd);background:var(--bg-card);flex-shrink:0}
+.chat-inp{flex:1;background:var(--bg);border:1px solid var(--bd);border-radius:22px;
+  padding:10px 16px;font-size:14px;color:var(--text);outline:none}
+.chat-send{width:38px;height:38px;border-radius:50%;background:var(--accent);
+  border:none;color:#fff;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
-/* ── Bottom nav (2 items) ── */
-.bnav {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 80px;
-  background: rgba(250,248,244,.92);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex; align-items: flex-start; padding-top: 10px;
-  z-index: 50;
-}
-html.dark .bnav { background: rgba(30,27,24,.92); }
-.nb {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 3px;
-  border: none; background: none; cursor: pointer;
-  padding: 5px 0;
-}
-.nb-ico { font-size: 22px; color: var(--text-xs); transition: color .15s; }
-.nb-lbl { font-size: 10px; color: var(--text-xs); letter-spacing: .2px; transition: color .15s; }
-.nb.on .nb-ico { color: var(--accent); }
-.nb.on .nb-lbl { color: var(--accent); font-weight: 700; }
+/* ═══ TOOLBOX ═══ */
+.scr-hd{padding:50px 22px 14px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.bk{width:32px;height:32px;border-radius:50%;background:var(--bg-card);
+  border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;color:var(--text)}
+.scr-title{font-size:20px;font-weight:700;color:var(--text)}
+.scr-body{flex:1;overflow-y:auto;padding:0 22px 100px;scrollbar-width:none}
+.scr-body::-webkit-scrollbar{display:none}
+.cat-lbl{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--txs);margin:18px 0 10px}
+.box-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.box-item{aspect-ratio:1;background:var(--bg-card);border-radius:16px;
+  border:1.5px solid var(--bd);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.box-item.act{border-color:var(--accent);background:rgba(61,107,90,.08)}
+.box-ico{font-size:26px}
+.box-lbl{font-size:11px;font-weight:600;color:var(--ts);text-align:center}
+.box-item.act .box-lbl{color:var(--accent);font-weight:700}
+.pkg{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg-card);
+  border-radius:14px;border:1px solid var(--bd);margin-bottom:8px;cursor:pointer}
+.pkg-ico{font-size:22px}
+.pkg-info{flex:1}
+.pkg-name{font-size:14px;font-weight:700;color:var(--text)}
+.pkg-desc{font-size:11px;color:var(--txs);margin-top:2px}
 
-/* ── FAB cluster ── */
-.fab-wrap {
-  position: absolute; bottom: 96px; right: 20px;
-  z-index: 60;
-  display: flex; flex-direction: column-reverse;
-  align-items: center; gap: 10px;
-}
-.fab-main {
-  width: 50px; height: 50px; border-radius: 25px;
-  background: var(--accent); border: none; cursor: pointer;
-  color: #fff; font-size: 24px; font-weight: 200;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(61,107,90,.45);
-  transition: transform .25s cubic-bezier(.4,0,.2,1);
-}
-.fab-main.open { transform: rotate(45deg); }
-.fab-sub {
-  width: 42px; height: 42px; border-radius: 21px;
-  border: none; cursor: pointer; color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 12px rgba(0,0,0,.18);
-  transform: scale(0) translateY(8px);
-  opacity: 0; pointer-events: none;
-  transition: transform .22s cubic-bezier(.4,0,.2,1), opacity .2s;
-  position: relative; font-size: 17px;
-}
-.fab-sub::before {
-  content: attr(data-tip);
-  position: absolute; right: calc(100% + 9px);
-  white-space: nowrap;
-  font-size: 11px; font-weight: 700;
-  background: var(--bg-card); color: var(--text);
-  padding: 4px 10px; border-radius: 8px;
-  border: 1px solid var(--border);
-  box-shadow: var(--sh);
-  pointer-events: none;
-}
-.fab-sub.s-ai   { background: var(--ai-claude); }
-.fab-sub.s-note { background: var(--amber); }
-.fab-wrap.open .fab-sub {
-  transform: scale(1) translateY(0);
-  opacity: 1; pointer-events: auto;
-}
-.fab-wrap.open .fab-sub:nth-child(2) { transition-delay: .04s; }
+/* ═══ INVENTORY ═══ */
+.inv-bar{display:flex;align-items:center;gap:8px;margin:0 22px 10px;padding:10px 14px;
+  background:var(--bg-card);border:1px solid var(--bd);border-radius:12px;flex-shrink:0}
+.inv-s-ico{font-size:14px;color:var(--ts)}
+.inv-s-inp{flex:1;border:none;background:transparent;font-size:14px;color:var(--text);outline:none}
+.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;
+  padding:0 22px 10px;flex-shrink:0}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;
+  background:var(--bg-card);border:1px solid var(--bd);color:var(--ts);cursor:pointer;flex-shrink:0}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.inv-list{flex:1;overflow-y:auto;padding:0 22px 90px;scrollbar-width:none}
+.inv-list::-webkit-scrollbar{display:none}
+.inv-row{display:flex;align-items:center;gap:11px;padding:13px 0;
+  border-bottom:1px solid var(--bds);cursor:pointer}
+.inv-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.inv-info{flex:1}
+.inv-name{font-size:15px;font-weight:500;color:var(--text)}
+.inv-cat{font-size:11px;color:var(--txs);margin-top:2px}
+.inv-exp{font-size:12px;font-weight:700;white-space:nowrap}
+/* Add FAB */
+.add-fab{position:absolute;bottom:28px;right:22px;width:52px;height:52px;
+  border-radius:26px;background:var(--amber);border:none;cursor:pointer;
+  color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(192,120,56,.45);z-index:40}
+/* Add sheet */
+.add-field{width:100%;border:none;border-bottom:1.5px solid var(--bd);
+  background:transparent;padding:12px 0;font-size:16px;color:var(--text);
+  outline:none;margin-bottom:6px}
+.add-field::placeholder{color:var(--txs)}
+.add-row{display:flex;gap:12px}
+.add-row .add-field{flex:1}
+.add-submit{width:100%;margin-top:20px;padding:15px;background:var(--accent);
+  color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer}
 
-/* ── Panel overlay + sheets ── */
-.overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.38);
-  z-index: 70; display: none; cursor: pointer;
-}
-.overlay.on { display: block; }
-.panel {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: var(--bg-card);
-  border-radius: 24px 24px 0 0;
-  z-index: 80;
-  transform: translateY(100%);
-  transition: transform .32s cubic-bezier(.4,0,.2,1);
-  max-height: 72%; display: flex; flex-direction: column;
-}
-.panel.on { transform: translateY(0); }
-.p-handle {
-  width: 36px; height: 4px; border-radius: 2px;
-  background: var(--border); margin: 12px auto 0; flex-shrink: 0;
-}
-.p-title {
-  font-size: 15px; font-weight: 700; color: var(--text);
-  padding: 14px 20px 6px; flex-shrink: 0;
-}
-.p-body {
-  flex: 1; overflow-y: auto; padding: 4px 20px 16px;
-  scrollbar-width: none;
-}
-.p-body::-webkit-scrollbar { display: none; }
-
-/* AI panel */
-.ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-.ai-chip {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 12px; border-radius: 12px;
-  border: 1.5px solid var(--border);
-  background: var(--bg); cursor: pointer;
-  transition: border-color .15s;
-}
-.ai-chip.on { border-color: var(--accent); background: var(--ok-s); }
-.ai-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.ai-cname { font-size: 12px; font-weight: 700; color: var(--text); }
-.group-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 11px 14px; background: var(--bg);
-  border-radius: 12px; margin-bottom: 12px;
-}
-.group-lbl { font-size: 13px; font-weight: 600; color: var(--text); }
-.sw {
-  width: 38px; height: 22px; border-radius: 11px;
-  background: var(--border); border: none; cursor: pointer;
-  position: relative; transition: background .2s; flex-shrink: 0;
-}
-.sw::after {
-  content: ''; position: absolute;
-  top: 3px; left: 3px;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: #fff; transition: left .2s;
-}
-.sw.on { background: var(--accent); }
-.sw.on::after { left: 19px; }
-
-/* Bubble messages */
-.bubbles { display: flex; flex-direction: column; gap: 8px; }
-.bubble-out { display: flex; justify-content: flex-end; }
-.bubble-out > div {
-  background: var(--accent); color: #fff;
-  padding: 9px 13px; border-radius: 16px 16px 4px 16px;
-  font-size: 12px; max-width: 76%; line-height: 1.4;
-}
-.bubble-in { display: flex; gap: 7px; align-items: flex-start; }
-.ai-av {
-  width: 22px; height: 22px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0;
-}
-.bubble-in > div:last-child {
-  background: var(--bg); border: 1px solid var(--border);
-  padding: 9px 13px; border-radius: 4px 16px 16px 16px;
-  font-size: 12px; color: var(--text); line-height: 1.5; max-width: 80%;
-}
-
-/* Chat input */
-.chat-bar {
-  display: flex; gap: 8px; align-items: center;
-  padding: 10px 20px 16px; border-top: 1px solid var(--border);
-  background: var(--bg-card); flex-shrink: 0;
-}
-.chat-inp {
-  flex: 1; background: var(--bg); border: 1px solid var(--border);
-  border-radius: 20px; padding: 9px 14px;
-  font-size: 14px; color: var(--text); outline: none;
-}
-.chat-send {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--accent); border: none;
-  color: #fff; font-size: 16px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-
-/* Note panel */
-.nc-list { display: flex; flex-direction: column; gap: 8px; }
-.nc-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; background: var(--bg);
-  border-radius: 14px; border: 1.5px solid var(--border);
-  cursor: pointer;
-}
-.nc-row.done { border-color: var(--accent); background: var(--ok-s); }
-.nc-ico { font-size: 22px; }
-.nc-info { flex: 1; }
-.nc-name { font-size: 14px; font-weight: 700; color: var(--text); }
-.nc-hint { font-size: 11px; color: var(--text-xs); margin-top: 1px; }
-.nc-st { font-size: 11px; font-weight: 700; }
-.nc-st.ok { color: var(--accent); }
-.nc-st.no { color: var(--text-xs); }
-
-/* ════════════════════════════════════════
-   TOOLBOX SCREEN
-════════════════════════════════════════ */
-#scr-tools { }
-.scr-hd {
-  padding: 50px 22px 14px;
-  display: flex; align-items: center; gap: 12px; flex-shrink: 0;
-}
-.back {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--bg-card); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; cursor: pointer; color: var(--text);
-}
-.scr-title { font-size: 20px; font-weight: 700; color: var(--text); }
-.scr-body { flex: 1; overflow-y: auto; padding: 0 20px 40px; scrollbar-width: none; }
-.scr-body::-webkit-scrollbar { display: none; }
-.cat-lbl {
-  font-size: 11px; font-weight: 700;
-  color: var(--text-xs); letter-spacing: .7px; text-transform: uppercase;
-  margin: 20px 0 10px;
-}
-.box-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.box-item {
-  aspect-ratio: 1; background: var(--bg-card);
-  border-radius: 16px; border: 1.5px solid var(--border);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 6px; cursor: pointer;
-}
-.box-item.act { border-color: var(--accent); background: var(--ok-s); }
-.box-item.locked { opacity: .35; cursor: default; }
-.box-ico { font-size: 26px; }
-.box-lbl { font-size: 11px; font-weight: 600; color: var(--text-s); text-align: center; }
-.box-item.act .box-lbl { color: var(--accent); font-weight: 700; }
-
-.pkg-card {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; background: var(--bg-card);
-  border-radius: 14px; border: 1px solid var(--border);
-  margin-bottom: 8px; cursor: pointer;
-}
-.pkg-ico { font-size: 22px; }
-.pkg-info { flex: 1; }
-.pkg-name { font-size: 14px; font-weight: 700; color: var(--text); }
-.pkg-tools { font-size: 11px; color: var(--text-xs); margin-top: 2px; }
-.pkg-arr { color: var(--text-xs); font-size: 14px; }
-
-/* ════════════════════════════════════════
-   INVENTORY SCREEN
-════════════════════════════════════════ */
-#scr-inv { }
-.search-bar {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 10px 14px; margin: 0 20px 10px;
-  flex-shrink: 0;
-}
-.s-ico { font-size: 14px; color: var(--text-s); }
-.s-inp { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--text); outline: none; }
-.chips {
-  display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none;
-  margin: 0 -20px; padding: 0 20px 10px;
-  flex-shrink: 0;
-}
-.chips::-webkit-scrollbar { display: none; }
-.chip {
-  white-space: nowrap; padding: 6px 13px;
-  border-radius: 20px; font-size: 12px; font-weight: 600;
-  background: var(--bg-card); border: 1px solid var(--border);
-  color: var(--text-s); cursor: pointer; flex-shrink: 0;
-}
-.chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
-.inv-list { flex: 1; overflow-y: auto; padding: 0 20px 30px; scrollbar-width: none; }
-.inv-list::-webkit-scrollbar { display: none; }
-.inv-row {
-  display: flex; align-items: center; gap: 11px;
-  padding: 13px 0; border-bottom: 1px solid var(--border-s); cursor: pointer;
-}
-.inv-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.inv-info { flex: 1; }
-.inv-name { font-size: 14px; font-weight: 500; color: var(--text); }
-.inv-cat  { font-size: 11px; color: var(--text-xs); margin-top: 2px; }
-.inv-exp  { font-size: 12px; font-weight: 700; white-space: nowrap; }
-.exp-warn { color: var(--warn); }
-.exp-ok   { color: var(--text-xs); }
-
-/* ════════════════════════════════════════
-   SETTINGS SCREEN
-════════════════════════════════════════ */
-#scr-cfg { }
-.cfg-body { flex: 1; overflow-y: auto; padding: 0 20px 40px; scrollbar-width: none; }
-.cfg-body::-webkit-scrollbar { display: none; }
-.cfg-profile {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 24px 0 28px; gap: 8px;
-}
-.cfg-av {
-  width: 72px; height: 72px; border-radius: 36px;
-  background: var(--bg-dark);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 34px;
-}
-.cfg-name { font-size: 18px; font-weight: 700; color: var(--text); }
-.cfg-mail { font-size: 12px; color: var(--text-xs); }
-
-.conn-chips { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
-.c-chip {
-  display: flex; align-items: center; gap: 10px;
-  padding: 11px 13px; background: var(--ok-s);
-  border-radius: 12px; border: 1px solid rgba(61,107,90,.18);
-}
-.c-chip-ico { font-size: 18px; }
-.c-chip-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
-.c-chip-st { font-size: 11px; font-weight: 700; color: var(--accent); }
-
-.cfg-group {
-  background: var(--bg-card); border-radius: 16px;
-  border: 1px solid var(--border); overflow: hidden; margin-bottom: 14px;
-}
-.cfg-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; border-bottom: 1px solid var(--border-s);
-  cursor: pointer;
-}
-.cfg-row:last-child { border-bottom: none; }
-.cfg-ico { font-size: 17px; width: 22px; text-align: center; }
-.cfg-lbl { flex: 1; font-size: 15px; color: var(--text); }
-.cfg-val { font-size: 13px; color: var(--text-s); }
-.cfg-arr { color: var(--text-s); font-size: 14px; }
+/* ═══ SETTINGS ═══ */
+.cfg-body{flex:1;overflow-y:auto;padding:0 22px 40px;scrollbar-width:none}
+.cfg-body::-webkit-scrollbar{display:none}
+.cfg-prof{display:flex;flex-direction:column;align-items:center;padding:20px 0 28px;gap:8px}
+.cfg-av{width:72px;height:72px;border-radius:36px;background:var(--bg-dark);
+  display:flex;align-items:center;justify-content:center;font-size:34px}
+.cfg-name{font-size:18px;font-weight:700}
+.cfg-mail{font-size:12px;color:var(--txs)}
+.c-chips{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
+.c-chip{display:flex;align-items:center;gap:10px;padding:11px 13px;
+  background:rgba(61,107,90,.08);border-radius:12px;border:1px solid rgba(61,107,90,.18)}
+.c-ico{font-size:18px}
+.c-name{flex:1;font-size:13px;font-weight:700}
+.c-st{font-size:11px;font-weight:700;color:var(--accent)}
+.cfg-grp{background:var(--bg-card);border-radius:16px;border:1px solid var(--bd);
+  overflow:hidden;margin-bottom:14px}
+.cfg-row{display:flex;align-items:center;gap:12px;padding:14px 16px;
+  border-bottom:1px solid var(--bds);cursor:pointer}
+.cfg-row:last-child{border-bottom:none}
+.cfg-ico{font-size:17px;width:22px;text-align:center}
+.cfg-lbl{flex:1;font-size:15px}
+.cfg-val{font-size:13px;color:var(--ts)}
 </style>
 </head>
 <body>
 <div class="phone" ondblclick="toggleDark()">
 
-<!-- ══════════════ ONBOARDING ══════════════ -->
-<div id="scr-ob" class="screen on">
-  <!-- Step 1 -->
-  <div id="ob-s1" class="ob-step on">
+<!-- ═══ ONBOARDING ═══ -->
+<div id="scr-ob" class="scr on">
+  <div id="ob1" class="obs on">
     <div class="ob-logo">🪷</div>
     <div class="ob-brand">宝盒</div>
-    <div class="ob-tagline">你的极简智能生活助手</div>
-    <input class="ob-field" placeholder="你的名字" type="text">
-    <input class="ob-field" placeholder="手机 / 邮箱" type="text">
-    <button class="ob-btn" onclick="obNext(2)">下一步 →</button>
-    <div class="ob-dots">
-      <div class="ob-dot on" id="dot1"></div>
-      <div class="ob-dot" id="dot2"></div>
-      <div class="ob-dot" id="dot3"></div>
-    </div>
+    <div class="ob-tag">你的极简智能生活助手</div>
+    <input class="ob-inp" id="inp-name" placeholder="你的名字" type="text">
+    <input class="ob-inp" placeholder="手机 / 邮箱" type="text">
+    <button class="ob-btn" onclick="obGo(2)">下一步 →</button>
+    <div class="ob-dots"><div class="ob-dot on"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
   </div>
-  <!-- Step 2 — tone selection -->
-  <div id="ob-s2" class="ob-step">
-    <div class="ob-s2-title">选择你的风格</div>
-    <div class="ob-s2-sub">宝盒会根据你的偏好，调整 AI 助理的沟通方式和界面信息密度</div>
-    <div class="tone-grid">
-      <div class="tone-card sel" id="tone-simple" onclick="selTone('simple')">
-        <span class="tone-icon">🪷</span>
-        <div class="tone-info">
-          <div class="tone-name">极简清透</div>
-          <div class="tone-desc">信息精炼，留白充足，只看最重要的事</div>
+
+  <div id="ob2" class="obs">
+    <div class="ob-h">选择你的风格</div>
+    <div class="ob-sub">宝盒根据偏好调整 AI 助理的沟通方式与首页展示</div>
+    <div class="tones">
+      <div class="tc on" id="tc-simple" onclick="pickTone('simple')">
+        <span class="tc-ico">🪷</span>
+        <div class="tc-body">
+          <div class="tc-name">极简清透</div>
+          <div class="tc-desc">只看最重要的事，大量留白</div>
+          <div class="tc-eg">"今天有件事需要你注意"</div>
         </div>
-        <div class="tone-check">✓</div>
+        <div class="tc-chk">✓</div>
       </div>
-      <div class="tone-card" id="tone-warm" onclick="selTone('warm')">
-        <span class="tone-icon">☕</span>
-        <div class="tone-info">
-          <div class="tone-name">温暖陪伴</div>
-          <div class="tone-desc">语气亲切，像朋友一样主动提醒关怀</div>
+      <div class="tc" id="tc-warm" onclick="pickTone('warm')">
+        <span class="tc-ico">☕</span>
+        <div class="tc-body">
+          <div class="tc-name">温暖陪伴</div>
+          <div class="tc-desc">像朋友一样，有情感温度</div>
+          <div class="tc-eg">"记得给妈妈准备生日礼物哦 🌸"</div>
         </div>
-        <div class="tone-check">✓</div>
+        <div class="tc-chk">✓</div>
       </div>
-      <div class="tone-card" id="tone-pro" onclick="selTone('pro')">
-        <span class="tone-icon">⚡</span>
-        <div class="tone-info">
-          <div class="tone-name">专业高效</div>
-          <div class="tone-desc">数据导向，直接呈现进度与指标</div>
+      <div class="tc" id="tc-pro" onclick="pickTone('pro')">
+        <span class="tc-ico">⚡</span>
+        <div class="tc-body">
+          <div class="tc-name">专业高效</div>
+          <div class="tc-desc">数据驱动，直接给出行动指令</div>
+          <div class="tc-eg">"3 项待处理 · 1 紧急 · 2 过期预警"</div>
         </div>
-        <div class="tone-check">✓</div>
+        <div class="tc-chk">✓</div>
       </div>
     </div>
-    <button class="ob-btn" style="margin-top:24px" onclick="obNext(3)">下一步 →</button>
-    <div class="ob-dots" style="justify-content:center">
-      <div class="ob-dot" id="dot1b"></div>
-      <div class="ob-dot on" id="dot2b"></div>
-      <div class="ob-dot" id="dot3b"></div>
-    </div>
+    <button class="ob-btn" style="margin-top:20px" onclick="obGo(3)">下一步 →</button>
+    <div class="ob-dots" style="justify-content:center"><div class="ob-dot"></div><div class="ob-dot on"></div><div class="ob-dot"></div></div>
   </div>
-  <!-- Step 3 — connect -->
-  <div id="ob-s3" class="ob-step">
-    <div class="ob-s3-title">连接你的工具</div>
-    <div class="ob-s3-sub">宝盒作为统一入口，聚合你已在使用的服务。随时可在设置中修改。</div>
-    <div class="conn-quick">
-      <div class="conn-row" id="cr-flomo" onclick="toggleConn('flomo')">
-        <span class="conn-icon">🌊</span>
-        <div class="conn-info">
-          <div class="conn-name">Flomo</div>
-          <div class="conn-desc">快速卡片笔记</div>
-        </div>
-        <span class="conn-status" id="cs-flomo">连接</span>
+
+  <div id="ob3" class="obs">
+    <div class="ob-h">连接你的工具</div>
+    <div class="ob-sub">宝盒作为统一入口聚合你在用的服务，随时可在设置修改</div>
+    <div class="conn-cat">📝 笔记工具</div>
+    <div class="conn-rows">
+      <div class="conn-row" id="cr-flomo" onclick="togConn('flomo')">
+        <span class="conn-ico">🌊</span>
+        <div class="conn-info"><div class="conn-name">Flomo</div><div class="conn-desc">快速卡片笔记</div></div>
+        <span class="conn-st" id="cs-flomo">连接</span>
       </div>
-      <div class="conn-row" id="cr-notion" onclick="toggleConn('notion')">
-        <span class="conn-icon">◻</span>
-        <div class="conn-info">
-          <div class="conn-name">Notion</div>
-          <div class="conn-desc">结构化知识库</div>
-        </div>
-        <span class="conn-status" id="cs-notion">连接</span>
-      </div>
-      <div class="conn-row" id="cr-claude" onclick="toggleConn('claude')">
-        <span class="conn-icon">✦</span>
-        <div class="conn-info">
-          <div class="conn-name">Claude AI</div>
-          <div class="conn-desc">智友核心 AI</div>
-        </div>
-        <span class="conn-status" id="cs-claude">连接</span>
-      </div>
-      <div class="conn-row" id="cr-gpt" onclick="toggleConn('gpt')">
-        <span class="conn-icon">⚙</span>
-        <div class="conn-info">
-          <div class="conn-name">ChatGPT</div>
-          <div class="conn-desc">智友备用 AI</div>
-        </div>
-        <span class="conn-status" id="cs-gpt">连接</span>
+      <div class="conn-row" id="cr-notion" onclick="togConn('notion')">
+        <span class="conn-ico">◻</span>
+        <div class="conn-info"><div class="conn-name">Notion</div><div class="conn-desc">结构化知识库</div></div>
+        <span class="conn-st" id="cs-notion">连接</span>
       </div>
     </div>
-    <button class="ob-btn" onclick="go('home')">进入宝盒 →</button>
-    <div class="ob-skip" onclick="go('home')">跳过，稍后设置</div>
-    <div class="ob-dots" style="justify-content:center;margin-top:20px">
-      <div class="ob-dot" id="dot1c"></div>
-      <div class="ob-dot" id="dot2c"></div>
-      <div class="ob-dot on" id="dot3c"></div>
+    <div class="conn-cat">✦ AI 助理</div>
+    <div class="conn-rows">
+      <div class="conn-row" id="cr-claude" onclick="togConn('claude')">
+        <span class="conn-ico">✦</span>
+        <div class="conn-info"><div class="conn-name">Claude</div><div class="conn-desc">智友核心 AI</div></div>
+        <span class="conn-st" id="cs-claude">连接</span>
+      </div>
+      <div class="conn-row" id="cr-gpt" onclick="togConn('gpt')">
+        <span class="conn-ico">⚙</span>
+        <div class="conn-info"><div class="conn-name">ChatGPT</div><div class="conn-desc">智友备用 AI</div></div>
+        <span class="conn-st" id="cs-gpt">连接</span>
+      </div>
     </div>
+    <button class="ob-btn" style="margin-top:16px" onclick="enterApp()">进入宝盒 →</button>
+    <div class="ob-skip" onclick="enterApp()">跳过，稍后设置</div>
+    <div class="ob-dots" style="justify-content:center;margin-top:18px"><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot on"></div></div>
   </div>
 </div>
 
-<!-- ══════════════ HOME ══════════════ -->
-<div id="scr-home" class="screen">
-  <!-- Top bar -->
+<!-- ═══ HOME ═══ -->
+<div id="scr-home" class="scr">
   <div class="topbar">
-    <button class="avatar-btn" onclick="go('cfg')">🌿</button>
-    <div class="time-block">
-      <div class="time-text" id="clock">09:41</div>
-      <div class="weather-text">🌤 北京 · 24°C 多云</div>
+    <button class="av-btn" onclick="go('cfg','home')">🌿</button>
+    <div class="top-r">
+      <div class="top-r-row">
+        <button class="note-btn" onclick="openNote()">✎</button>
+        <span class="clk" id="clock">09:41</span>
+      </div>
+      <div class="wthr">🌤 北京 · 24°C 多云</div>
     </div>
   </div>
 
-  <!-- Scrollable body -->
-  <div class="home-scroll">
-    <div class="greeting">早上好，小汉 👋</div>
-    <div class="greeting-sub">今天有 2 件待处理事项</div>
-
-    <!-- ── 智能提醒 ── -->
-    <div class="sec-hd">
-      <span class="sec-label">智能提醒</span>
-      <button class="sec-action">管理</button>
-    </div>
-    <div class="remind-strip">
-      <div class="r-card">
-        <div class="r-hd"><span class="r-ico">📅</span><span class="r-lbl">今日日程</span></div>
-        <div class="r-row"><span class="r-name">产品会议</span><span class="r-val">下午 3:00</span></div>
-        <div class="r-row"><span class="r-name">健身</span><span class="r-val">晚上 7:30</span></div>
-        <div class="r-row"><span class="r-name">阅读</span><span class="r-val">睡前</span></div>
-      </div>
-      <div class="r-card">
-        <div class="r-hd"><span class="r-ico">🗓</span><span class="r-lbl">重要日期</span></div>
-        <div class="r-row"><span class="r-name">妈妈生日</span><span class="r-val warn">5 天后</span></div>
-        <div class="r-row"><span class="r-name">项目截止</span><span class="r-val warn">12 天后</span></div>
-        <div class="r-row"><span class="r-name">季度汇报</span><span class="r-val">18 天后</span></div>
-      </div>
-      <div class="r-card ai">
-        <div class="r-hd"><span class="r-ico">✦</span><span class="r-lbl">AI 预警</span></div>
-        <div class="ai-text">
-          妈妈生日还有 <em>5 天</em>，建议今天提前订花或礼物。<br><br>
-          下午会议前，确认<em>季度报告</em>是否更新完毕。
-        </div>
-      </div>
-      <div class="r-card">
-        <div class="r-hd"><span class="r-ico">✓</span><span class="r-lbl">重要待办</span></div>
-        <div class="r-row"><span class="r-name">回复王总邮件</span><span class="r-val warn">紧急</span></div>
-        <div class="r-row"><span class="r-name">准备季度报告</span><span class="r-val">今天</span></div>
-        <div class="r-row"><span class="r-name">更新物品清单</span><span class="r-val">本周</span></div>
-      </div>
+  <div class="home-body">
+    <!-- HERO -->
+    <div class="focus">
+      <div class="focus-greet" id="greet">今天有件事需要你注意</div>
+      <div><span class="focus-num">5</span><span class="focus-unit">天</span></div>
+      <div class="focus-event">妈妈生日</div>
+      <div class="focus-ai" id="ai-focus">建议今天提前订好礼物，避免临时慌乱。</div>
     </div>
 
-    <!-- ── 我的工具 ── -->
-    <div class="sec-hd">
-      <span class="sec-label">我的工具</span>
-      <button class="sec-action" onclick="go('tools')">更多 →</button>
+    <div class="sec">
+      <div class="sec-lbl">今天</div>
+      <div class="sl"><div class="sl-l"><span class="sl-name">产品会议</span><span class="sl-time">下午 3:00</span></div></div>
+      <div class="sl"><div class="sl-l"><span class="sl-name">健身</span><span class="sl-time">晚上 7:30</span></div></div>
     </div>
-    <div class="mod-grid">
-      <!-- 物品库 -->
-      <div class="mod-card dk" onclick="go('inv')">
-        <div class="mod-hd">
-          <span class="mod-name">物品库</span>
-          <span class="mod-badge badge-warn">3 到期</span>
-        </div>
-        <div class="mod-rows">
-          <div class="mod-row">
-            <span class="mod-item">牛奶</span>
-            <span class="mod-tag tag-warn">后天</span>
-          </div>
-          <div class="mod-row">
-            <span class="mod-item">维生素C</span>
-            <span class="mod-tag tag-warn">3天</span>
-          </div>
-          <div class="mod-row">
-            <span class="mod-item">护肤霜</span>
-            <span class="mod-tag tag-dim">7天</span>
-          </div>
-        </div>
+
+    <div class="sec">
+      <div class="sec-lbl">待完成</div>
+      <div class="sl"><div class="sl-l"><span class="sl-name">回复王总邮件</span></div><span class="sl-tag tag-urg">紧急</span></div>
+      <div class="sl"><div class="sl-l"><span class="sl-name">准备季度报告</span></div><span class="sl-tag tag-tod">今天</span></div>
+      <div class="sl"><div class="sl-l"><span class="sl-name">更新物品清单</span></div><span class="sl-tag tag-ok">本周</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">物品预警</div>
+      <div class="warn-row" onclick="go('inv','home')">
+        <div class="wd" style="background:#d45252"></div><span class="wn">全脂牛奶</span>
+        <span class="we we-r">后天到期</span><span class="wa">›</span>
       </div>
-      <!-- 本周支出 -->
-      <div class="mod-card">
-        <div class="mod-hd">
-          <span class="mod-name">本周支出</span>
-          <span class="mod-badge badge-ok">正常</span>
-        </div>
-        <div class="mod-rows">
-          <div class="mod-row">
-            <span class="mod-item">餐饮</span>
-            <span class="mod-tag tag-ok">¥ 340</span>
-          </div>
-          <div class="mod-row">
-            <span class="mod-item">购物</span>
-            <span class="mod-tag tag-ok">¥ 520</span>
-          </div>
-          <div class="mod-row">
-            <span class="mod-item">交通</span>
-            <span class="mod-tag tag-muted">¥ 89</span>
-          </div>
-        </div>
+      <div class="warn-row" onclick="go('inv','home')">
+        <div class="wd" style="background:#d45252"></div><span class="wn">维生素C</span>
+        <span class="we we-r">3天后到期</span><span class="wa">›</span>
+      </div>
+      <div class="warn-row" onclick="go('inv','home')">
+        <div class="wd" style="background:#c07838"></div><span class="wn">护肤霜</span>
+        <span class="we we-a">7天后到期</span><span class="wa">›</span>
       </div>
     </div>
 
-    <!-- Quote -->
-    <div class="quote-wrap">
-      <div class="q-mark">"</div>
-      <div class="q-text">简单是终极的复杂。</div>
-      <div class="q-src">— 列奥纳多·达·芬奇</div>
+    <div class="quote">
+      <div class="qt">"简单是终极的复杂。"</div>
+      <div class="qs">— 列奥纳多·达·芬奇</div>
     </div>
   </div>
 
-  <!-- Bottom nav -->
   <div class="bnav">
-    <button class="nb on" id="nb-home">
-      <span class="nb-ico">⌂</span>
-      <span class="nb-lbl">首页</span>
-    </button>
-    <button class="nb" id="nb-tools" onclick="go('tools')">
-      <span class="nb-ico">⊞</span>
-      <span class="nb-lbl">工具箱</span>
-    </button>
+    <button class="nb on" id="nb-home" onclick="navTo('home')"><span class="ni">⌂</span><span class="nl">首页</span></button>
+    <button class="nb-ai" id="nb-ai-h" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
+    <button class="nb" id="nb-tools-h" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
 
-  <!-- FAB -->
-  <div class="fab-wrap" id="fab">
-    <div class="fab-sub s-ai"   data-tip="智友" onclick="openPanel('ai')">✦</div>
-    <div class="fab-sub s-note" data-tip="笔记" onclick="openPanel('note')">✎</div>
-    <button class="fab-main" id="fab-btn" onclick="toggleFab()">+</button>
-  </div>
+  <div class="tip" id="tip">✦ 从这里和 AI 对话</div>
 
-  <!-- Overlay -->
-  <div class="overlay" id="overlay" onclick="closeAll()"></div>
-
-  <!-- 智友 panel -->
-  <div class="panel" id="panel-ai">
-    <div class="p-handle"></div>
-    <div class="p-title">智友 · AI 群组</div>
-    <div class="p-body">
-      <div class="ai-grid">
-        <div class="ai-chip on"><div class="ai-dot" style="background:var(--ai-claude)"></div><span class="ai-cname">Claude</span></div>
-        <div class="ai-chip on"><div class="ai-dot" style="background:var(--ai-gpt)"></div><span class="ai-cname">ChatGPT</span></div>
-        <div class="ai-chip"><div class="ai-dot" style="background:var(--ai-gemini)"></div><span class="ai-cname">Gemini</span></div>
-        <div class="ai-chip"><div class="ai-dot" style="background:var(--ai-wenxin)"></div><span class="ai-cname">文心</span></div>
-      </div>
-      <div class="group-row">
-        <span class="group-lbl">群聊模式</span>
-        <button class="sw on" onclick="this.classList.toggle('on')"></button>
-      </div>
-      <div class="bubbles">
-        <div class="bubble-out"><div>帮我想一个送给妈妈的生日礼物，预算 300 元</div></div>
-        <div class="bubble-in">
-          <div class="ai-av" style="background:var(--ai-claude)">C</div>
-          <div>可以考虑定制相册或珠宝盒，附上手写信，300元内能找到品质不错的选项。</div>
-        </div>
-        <div class="bubble-in">
-          <div class="ai-av" style="background:var(--ai-gpt)">G</div>
-          <div>护肤礼盒也很受欢迎！兰蔻、科颜氏 300 元左右有精选套装，实用又有仪式感。</div>
-        </div>
-      </div>
-    </div>
-    <div class="chat-bar">
-      <input class="chat-inp" placeholder="问所有 AI…">
-      <button class="chat-send">↑</button>
-    </div>
-  </div>
-
-  <!-- 笔记 panel -->
-  <div class="panel" id="panel-note">
-    <div class="p-handle"></div>
-    <div class="p-title">笔记 · 连接你的工具</div>
-    <div class="p-body">
-      <div class="nc-list">
-        <div class="nc-row done">
-          <span class="nc-ico">🌊</span>
-          <div class="nc-info"><div class="nc-name">Flomo</div><div class="nc-hint">快速卡片笔记</div></div>
-          <span class="nc-st ok">已连接</span>
-        </div>
-        <div class="nc-row">
-          <span class="nc-ico">◻</span>
-          <div class="nc-info"><div class="nc-name">Notion</div><div class="nc-hint">结构化知识库</div></div>
-          <span class="nc-st no">未连接</span>
-        </div>
-        <div class="nc-row">
-          <span class="nc-ico">💎</span>
-          <div class="nc-info"><div class="nc-name">Obsidian</div><div class="nc-hint">双链本地笔记</div></div>
-          <span class="nc-st no">未连接</span>
-        </div>
-        <div class="nc-row">
-          <span class="nc-ico">📝</span>
-          <div class="nc-info"><div class="nc-name">Apple Notes</div><div class="nc-hint">系统原生笔记</div></div>
-          <span class="nc-st no">未连接</span>
-        </div>
-        <div class="nc-row done">
-          <span class="nc-ico">🪷</span>
-          <div class="nc-info"><div class="nc-name">宝盒内置</div><div class="nc-hint">轻量快记</div></div>
-          <span class="nc-st ok">已启用</span>
-        </div>
-      </div>
+  <!-- Note overlay -->
+  <div class="overlay" id="note-ov" onclick="closeNote()"></div>
+  <div class="sheet" id="note-sh" style="max-height:65%">
+    <div class="sh-handle"></div>
+    <div class="sh-title">笔记 · 连接你的工具</div>
+    <div class="sh-body">
+      <div class="nc done"><span class="nc-ico">🌊</span><div class="nc-info"><div class="nc-name">Flomo</div><div class="nc-hint">快速卡片笔记</div></div><span class="nc-st ok">已连接</span></div>
+      <div class="nc"><span class="nc-ico">◻</span><div class="nc-info"><div class="nc-name">Notion</div><div class="nc-hint">结构化知识库</div></div><span class="nc-st no">未连接</span></div>
+      <div class="nc"><span class="nc-ico">💎</span><div class="nc-info"><div class="nc-name">Obsidian</div><div class="nc-hint">双链本地笔记</div></div><span class="nc-st no">未连接</span></div>
+      <div class="nc"><span class="nc-ico">📝</span><div class="nc-info"><div class="nc-name">Apple Notes</div><div class="nc-hint">系统原生笔记</div></div><span class="nc-st no">未连接</span></div>
+      <div class="nc done"><span class="nc-ico">🪷</span><div class="nc-info"><div class="nc-name">宝盒内置</div><div class="nc-hint">轻量快记</div></div><span class="nc-st ok">已启用</span></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════ TOOLBOX ══════════════ -->
-<div id="scr-tools" class="screen">
-  <div class="scr-hd">
-    <button class="back" onclick="go('home')">←</button>
-    <span class="scr-title">工具箱</span>
+<!-- ═══ 智友 ═══ -->
+<div id="scr-ai" class="scr">
+  <div class="ai-hd"><span class="ai-title">智友</span></div>
+  <div class="ai-roster">
+    <div class="aichip on"><div class="ai-dot" style="background:var(--ai-c)"></div><span class="ai-cname">Claude</span></div>
+    <div class="aichip on"><div class="ai-dot" style="background:var(--ai-g)"></div><span class="ai-cname">ChatGPT</span></div>
+    <div class="aichip"><div class="ai-dot" style="background:var(--ai-gem)"></div><span class="ai-cname">Gemini</span></div>
+    <div class="aichip"><div class="ai-dot" style="background:var(--ai-w)"></div><span class="ai-cname">文心一言</span></div>
   </div>
+  <div class="ai-tool">
+    <span class="ai-tl">群聊模式</span>
+    <button class="sw on" onclick="this.classList.toggle('on')"></button>
+  </div>
+  <div class="ai-msgs">
+    <div class="bbl-out"><div>帮我想一个送给妈妈的生日礼物，预算 300 元</div></div>
+    <div class="bbl-in">
+      <div class="ai-av" style="background:var(--ai-c)">C</div>
+      <div class="bbl-body" id="ai-reply">可以考虑定制相册，附上手写信，300 元内能找到品质不错的选项。</div>
+    </div>
+    <div class="bbl-in">
+      <div class="ai-av" style="background:var(--ai-g)">G</div>
+      <div class="bbl-body">护肤礼盒很受欢迎，兰蔻套装 300 元左右，实用又有仪式感。</div>
+    </div>
+  </div>
+  <div class="chat-bar">
+    <input class="chat-inp" placeholder="问所有 AI…">
+    <button class="chat-send">↑</button>
+  </div>
+  <div class="bnav">
+    <button class="nb" onclick="navTo('home')"><span class="ni">⌂</span><span class="nl">首页</span></button>
+    <button class="nb-ai on"><div class="nb-ai-ico" style="background:var(--amber);box-shadow:0 4px 18px rgba(192,120,56,.42)">✦</div><span class="nl" style="color:var(--amber);font-weight:700">智友</span></button>
+    <button class="nb" onclick="navTo('tools')"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
+  </div>
+</div>
+
+<!-- ═══ TOOLBOX ═══ -->
+<div id="scr-tools" class="scr">
+  <div class="scr-hd"><span class="scr-title">工具箱</span></div>
   <div class="scr-body">
-    <div class="cat-lbl">已启用</div>
+    <div class="cat-lbl" style="margin-top:4px">已启用</div>
     <div class="box-grid">
-      <div class="box-item act" onclick="go('inv')">
-        <span class="box-ico">📦</span><span class="box-lbl">物品库</span>
-      </div>
-      <div class="box-item act">
-        <span class="box-ico">💰</span><span class="box-lbl">支出记录</span>
-      </div>
-      <div class="box-item act">
-        <span class="box-ico">✅</span><span class="box-lbl">待办清单</span>
-      </div>
+      <div class="box-item act" onclick="go('inv','tools')"><span class="box-ico">📦</span><span class="box-lbl">物品库</span></div>
+      <div class="box-item act"><span class="box-ico">💰</span><span class="box-lbl">支出记录</span></div>
+      <div class="box-item act"><span class="box-ico">✅</span><span class="box-lbl">待办清单</span></div>
     </div>
     <div class="cat-lbl">可添加</div>
     <div class="box-grid">
@@ -971,238 +548,195 @@ html.dark .bnav { background: rgba(30,27,24,.92); }
       <div class="box-item"><span class="box-ico">🏠</span><span class="box-lbl">家居维护</span></div>
     </div>
     <div class="cat-lbl">工具包</div>
-    <div class="pkg-card">
-      <span class="pkg-ico">⚡</span>
-      <div class="pkg-info">
-        <div class="pkg-name">效率日常包</div>
-        <div class="pkg-tools">物品库 · 待办 · 习惯追踪</div>
-      </div>
-      <span class="pkg-arr">›</span>
-    </div>
-    <div class="pkg-card">
-      <span class="pkg-ico">✦</span>
-      <div class="pkg-info">
-        <div class="pkg-name">AI 助理包</div>
-        <div class="pkg-tools">智友 · 笔记连接 · 日程同步</div>
-      </div>
-      <span class="pkg-arr">›</span>
-    </div>
-    <div class="pkg-card" style="border-style:dashed; opacity:.6">
-      <span class="pkg-ico">＋</span>
-      <div class="pkg-info">
-        <div class="pkg-name">自定义工具包</div>
-        <div class="pkg-tools">选择你的工具组合</div>
-      </div>
-      <span class="pkg-arr">›</span>
-    </div>
+    <div class="pkg"><span class="pkg-ico">⚡</span><div class="pkg-info"><div class="pkg-name">效率日常包</div><div class="pkg-desc">物品库 · 待办 · 习惯追踪</div></div><span style="color:var(--txs)">›</span></div>
+    <div class="pkg"><span class="pkg-ico">✦</span><div class="pkg-info"><div class="pkg-name">AI 助理包</div><div class="pkg-desc">智友 · 笔记 · 日程同步</div></div><span style="color:var(--txs)">›</span></div>
+    <div class="pkg" style="opacity:.55;border-style:dashed"><span class="pkg-ico">＋</span><div class="pkg-info"><div class="pkg-name">自定义工具包</div><div class="pkg-desc">选择你的工具组合</div></div><span style="color:var(--txs)">›</span></div>
+  </div>
+  <div class="bnav">
+    <button class="nb" onclick="navTo('home')"><span class="ni">⌂</span><span class="nl">首页</span></button>
+    <button class="nb-ai" onclick="navTo('ai')"><div class="nb-ai-ico">✦</div><span class="nl">智友</span></button>
+    <button class="nb on"><span class="ni">⊞</span><span class="nl">工具箱</span></button>
   </div>
 </div>
 
-<!-- ══════════════ INVENTORY ══════════════ -->
-<div id="scr-inv" class="screen">
+<!-- ═══ INVENTORY ═══ -->
+<div id="scr-inv" class="scr">
   <div class="scr-hd">
-    <button class="back" onclick="go('home')">←</button>
+    <button class="bk" id="bk-inv" onclick="goBack()">←</button>
     <span class="scr-title">物品库</span>
   </div>
-  <div class="search-bar">
-    <span class="s-ico">🔍</span>
-    <input class="s-inp" placeholder="搜索物品…">
-  </div>
-  <div class="chips" style="padding-left:20px;padding-right:20px">
-    <div class="chip on">全部</div>
-    <div class="chip">即将过期</div>
-    <div class="chip">食品</div>
-    <div class="chip">护肤</div>
-    <div class="chip">药品</div>
-    <div class="chip">电子</div>
+  <div class="inv-bar"><span class="inv-s-ico">🔍</span><input class="inv-s-inp" placeholder="搜索物品…"></div>
+  <div class="chips">
+    <div class="chip on">全部</div><div class="chip">即将过期</div>
+    <div class="chip">食品</div><div class="chip">护肤</div>
+    <div class="chip">药品</div><div class="chip">电子</div>
   </div>
   <div class="inv-list">
-    <div class="inv-row">
-      <div class="inv-dot" style="background:#d45252"></div>
-      <div class="inv-info"><div class="inv-name">全脂牛奶</div><div class="inv-cat">食品 · 冰箱</div></div>
-      <div class="inv-exp exp-warn">后天到期</div>
+    <div class="inv-row"><div class="inv-dot" style="background:#d45252"></div><div class="inv-info"><div class="inv-name">全脂牛奶</div><div class="inv-cat">食品 · 冰箱</div></div><div class="inv-exp we-r">后天到期</div></div>
+    <div class="inv-row"><div class="inv-dot" style="background:#d45252"></div><div class="inv-info"><div class="inv-name">维生素C泡腾片</div><div class="inv-cat">药品 · 药柜</div></div><div class="inv-exp we-r">3天后</div></div>
+    <div class="inv-row"><div class="inv-dot" style="background:#c07838"></div><div class="inv-info"><div class="inv-name">保湿护肤霜</div><div class="inv-cat">护肤 · 梳妆台</div></div><div class="inv-exp we-a">7天后</div></div>
+    <div class="inv-row"><div class="inv-dot" style="background:#3d6b5a"></div><div class="inv-info"><div class="inv-name">橄榄油</div><div class="inv-cat">食品 · 厨房</div></div><div class="inv-exp we-g">30天后</div></div>
+    <div class="inv-row"><div class="inv-dot" style="background:#3d6b5a"></div><div class="inv-info"><div class="inv-name">iPhone 15 Pro</div><div class="inv-cat">电子 · 保修至 2025.12</div></div><div class="inv-exp we-g">在保</div></div>
+    <div class="inv-row"><div class="inv-dot" style="background:#6b9bd2"></div><div class="inv-info"><div class="inv-name">蓝牙耳机</div><div class="inv-cat">电子 · 书房</div></div><div class="inv-exp we-g">无期限</div></div>
+  </div>
+  <button class="add-fab" onclick="openAdd()">+</button>
+  <!-- Add overlay + sheet -->
+  <div class="overlay" id="add-ov" onclick="closeAdd()"></div>
+  <div class="sheet" id="add-sh" style="padding:0 22px 40px;max-height:55%">
+    <div class="sh-handle"></div>
+    <div class="sh-title" style="padding:14px 0 16px">添加物品</div>
+    <input class="add-field" placeholder="物品名称" type="text">
+    <div class="add-row">
+      <input class="add-field" placeholder="分类" type="text">
+      <input class="add-field" placeholder="存放位置" type="text">
     </div>
-    <div class="inv-row">
-      <div class="inv-dot" style="background:#d45252"></div>
-      <div class="inv-info"><div class="inv-name">维生素C泡腾片</div><div class="inv-cat">药品 · 药柜</div></div>
-      <div class="inv-exp exp-warn">3天后到期</div>
-    </div>
-    <div class="inv-row">
-      <div class="inv-dot" style="background:#c07838"></div>
-      <div class="inv-info"><div class="inv-name">保湿护肤霜</div><div class="inv-cat">护肤 · 梳妆台</div></div>
-      <div class="inv-exp exp-warn">7天后到期</div>
-    </div>
-    <div class="inv-row">
-      <div class="inv-dot" style="background:#3d6b5a"></div>
-      <div class="inv-info"><div class="inv-name">橄榄油</div><div class="inv-cat">食品 · 厨房</div></div>
-      <div class="inv-exp exp-ok">30天后到期</div>
-    </div>
-    <div class="inv-row">
-      <div class="inv-dot" style="background:#3d6b5a"></div>
-      <div class="inv-info"><div class="inv-name">iPhone 15 Pro</div><div class="inv-cat">电子 · 保修至 2025.12</div></div>
-      <div class="inv-exp exp-ok">在保</div>
-    </div>
-    <div class="inv-row">
-      <div class="inv-dot" style="background:#6b9bd2"></div>
-      <div class="inv-info"><div class="inv-name">蓝牙耳机</div><div class="inv-cat">电子 · 书房</div></div>
-      <div class="inv-exp exp-ok">无期限</div>
-    </div>
+    <input class="add-field" placeholder="到期日期（选填）" type="text">
+    <button class="add-submit" onclick="closeAdd()">保存</button>
   </div>
 </div>
 
-<!-- ══════════════ SETTINGS ══════════════ -->
-<div id="scr-cfg" class="screen">
+<!-- ═══ SETTINGS ═══ -->
+<div id="scr-cfg" class="scr">
   <div class="scr-hd">
-    <button class="back" onclick="go('home')">←</button>
+    <button class="bk" onclick="goBack()">←</button>
     <span class="scr-title">我的</span>
   </div>
   <div class="cfg-body">
-    <div class="cfg-profile">
+    <div class="cfg-prof">
       <div class="cfg-av">🌿</div>
-      <div class="cfg-name">小汉</div>
+      <div class="cfg-name" id="cfg-uname">小汉</div>
       <div class="cfg-mail">hanbing6228@gmail.com</div>
     </div>
-
-    <div class="sec-label" style="margin-bottom:8px">已连接服务</div>
-    <div class="conn-chips">
-      <div class="c-chip"><span class="c-chip-ico">🌊</span><span class="c-chip-name">Flomo</span><span class="c-chip-st">已连接</span></div>
-      <div class="c-chip"><span class="c-chip-ico">✦</span><span class="c-chip-name">Claude AI</span><span class="c-chip-st">已连接</span></div>
-      <div class="c-chip"><span class="c-chip-ico">⚙</span><span class="c-chip-name">ChatGPT</span><span class="c-chip-st">已连接</span></div>
+    <div class="cat-lbl" style="margin-top:0;margin-bottom:8px">已连接服务</div>
+    <div class="c-chips">
+      <div class="c-chip"><span class="c-ico">🌊</span><span class="c-name">Flomo</span><span class="c-st">已连接</span></div>
+      <div class="c-chip"><span class="c-ico">✦</span><span class="c-name">Claude</span><span class="c-st">已连接</span></div>
+      <div class="c-chip"><span class="c-ico">⚙</span><span class="c-name">ChatGPT</span><span class="c-st">已连接</span></div>
     </div>
-
-    <div class="cfg-group">
-      <div class="cfg-row">
-        <span class="cfg-ico">🌙</span>
-        <span class="cfg-lbl">深色模式</span>
-        <button class="sw" id="thsw" onclick="toggleDark()"></button>
-      </div>
-      <div class="cfg-row">
-        <span class="cfg-ico">🎨</span>
-        <span class="cfg-lbl">沟通风格</span>
-        <span class="cfg-val">极简清透</span>
-      </div>
-      <div class="cfg-row">
-        <span class="cfg-ico">🔔</span>
-        <span class="cfg-lbl">通知设置</span>
-        <span class="cfg-arr">›</span>
-      </div>
-      <div class="cfg-row">
-        <span class="cfg-ico">🔗</span>
-        <span class="cfg-lbl">连接管理</span>
-        <span class="cfg-arr">›</span>
-      </div>
+    <div class="cfg-grp">
+      <div class="cfg-row"><span class="cfg-ico">🌙</span><span class="cfg-lbl">深色模式</span><button class="sw" id="thsw" onclick="toggleDark()"></button></div>
+      <div class="cfg-row"><span class="cfg-ico">🎨</span><span class="cfg-lbl">沟通风格</span><span class="cfg-val" id="tone-val">极简清透</span></div>
+      <div class="cfg-row"><span class="cfg-ico">🔔</span><span class="cfg-lbl">通知设置</span><span class="cfg-val">›</span></div>
+      <div class="cfg-row"><span class="cfg-ico">🔗</span><span class="cfg-lbl">连接管理</span><span class="cfg-val">›</span></div>
     </div>
-    <div class="cfg-group">
-      <div class="cfg-row">
-        <span class="cfg-ico">💾</span>
-        <span class="cfg-lbl">数据备份</span>
-        <span class="cfg-arr">›</span>
-      </div>
-      <div class="cfg-row">
-        <span class="cfg-ico">🔒</span>
-        <span class="cfg-lbl">隐私与安全</span>
-        <span class="cfg-arr">›</span>
-      </div>
+    <div class="cfg-grp">
+      <div class="cfg-row"><span class="cfg-ico">💾</span><span class="cfg-lbl">数据备份</span><span class="cfg-val">›</span></div>
+      <div class="cfg-row"><span class="cfg-ico">🔒</span><span class="cfg-lbl">隐私与安全</span><span class="cfg-val">›</span></div>
     </div>
   </div>
 </div>
 
-</div><!-- /phone -->
+</div>
 
 <script>
-// ── State ──
-let dark = false;
-let fabOpen = false;
+// ── Tone data ──
+const TONES = {
+  simple:{
+    greet:'今天有件事需要你注意',
+    focus:'建议今天提前订好礼物，避免临时慌乱。',
+    reply:'定制相册，附手写信，300 元内可以找到品质不错的选项。',
+    name:'极简清透'
+  },
+  warm:{
+    greet:'小汉，记得今天给妈妈准备生日礼物哦 🌸',
+    focus:'妈妈生日快到了！今天就把礼物提前定好吧，她一定会很感动的 💝',
+    reply:'送妈妈礼物真贴心！定制相册或护肤套装都很好，加一张手写卡片会让她特别感动 💝',
+    name:'温暖陪伴'
+  },
+  pro:{
+    greet:'3 项待处理 · 1 项紧急 · 2 件过期预警',
+    focus:'行动建议：今日内下单礼品（预算 ¥300）。最优方案：护肤套装或定制相册，确保 5 天内到货。',
+    reply:'推荐：① 护肤礼盒（¥280-320）② 定制相册（¥150-200）。建议今日下单确保准时到达。',
+    name:'专业高效'
+  }
+};
+let tone='simple', prev='home', dark=false, firstVisit=true;
 
-// ── Screen nav ──
-const SCREENS = ['ob','home','tools','inv','cfg'];
-function go(id) {
-  SCREENS.forEach(s => {
-    const el = document.getElementById('scr-'+s);
-    if (el) el.classList.toggle('on', s===id);
+// ── Navigation ──
+const ALL=['ob','home','ai','tools','inv','cfg'];
+function go(id,from){
+  if(from) prev=from;
+  ALL.forEach(s=>{const e=document.getElementById('scr-'+s);if(e)e.classList.toggle('on',s===id)});
+}
+function goBack(){go(prev);prev='home'}
+function navTo(id){
+  prev='home';
+  go(id);
+  ['home','ai-h','tools-h'].forEach(k=>{
+    const e=document.getElementById('nb-'+k);
+    if(e)e.classList.toggle('on',k==='home'&&id==='home'||k==='ai-h'&&id==='ai'||k==='tools-h'&&id==='tools');
   });
-  closeAll();
-  // sync bottom nav
-  document.getElementById('nb-home').classList.toggle('on', id==='home');
-  const nbt = document.getElementById('nb-tools');
-  if (nbt) nbt.classList.toggle('on', id==='tools');
 }
 
 // ── Onboarding ──
-function obNext(step) {
-  [1,2,3].forEach(n => document.getElementById('ob-s'+n).classList.toggle('on', n===step));
+function obGo(n){[1,2,3].forEach(i=>document.getElementById('ob'+i).classList.toggle('on',i===n))}
+function pickTone(t){
+  tone=t;
+  ['simple','warm','pro'].forEach(k=>document.getElementById('tc-'+k).classList.toggle('on',k===t));
 }
-let selectedTone = 'simple';
-function selTone(t) {
-  selectedTone = t;
-  ['simple','warm','pro'].forEach(k => document.getElementById('tone-'+k).classList.toggle('sel', k===t));
+const connSt={};
+function togConn(key){
+  connSt[key]=!connSt[key];
+  document.getElementById('cr-'+key).classList.toggle('on',!!connSt[key]);
+  document.getElementById('cs-'+key).textContent=connSt[key]?'已连接':'连接';
 }
-const connStates = {};
-function toggleConn(key) {
-  connStates[key] = !connStates[key];
-  const row = document.getElementById('cr-'+key);
-  const st  = document.getElementById('cs-'+key);
-  row.classList.toggle('done', !!connStates[key]);
-  st.textContent = connStates[key] ? '已连接' : '连接';
-  st.classList.toggle('ok', !!connStates[key]);
-}
-
-// ── FAB ──
-function toggleFab() {
-  fabOpen = !fabOpen;
-  document.getElementById('fab').classList.toggle('open', fabOpen);
-  document.getElementById('fab-btn').classList.toggle('open', fabOpen);
-}
-
-// ── Panels ──
-function openPanel(id) {
-  closeAll();
-  document.getElementById('overlay').classList.add('on');
-  document.getElementById('panel-'+id).classList.add('on');
-  fabOpen = false;
-  document.getElementById('fab').classList.remove('open');
-  document.getElementById('fab-btn').classList.remove('open');
-}
-function closeAll() {
-  const ov = document.getElementById('overlay');
-  if (ov) ov.classList.remove('on');
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
-  fabOpen = false;
-  const fab = document.getElementById('fab');
-  const btn = document.getElementById('fab-btn');
-  if (fab) fab.classList.remove('open');
-  if (btn) btn.classList.remove('open');
+function enterApp(){
+  // apply tone
+  const d=TONES[tone];
+  document.getElementById('greet').textContent=d.greet;
+  document.getElementById('ai-focus').textContent=d.focus;
+  const r=document.getElementById('ai-reply');if(r)r.textContent=d.reply;
+  const tv=document.getElementById('tone-val');if(tv)tv.textContent=d.name;
+  go('home');
+  if(firstVisit){
+    firstVisit=false;
+    const tip=document.getElementById('tip');
+    tip.classList.add('on');
+    setTimeout(()=>tip.classList.remove('on'),3600);
+  }
 }
 
-// ── Theme ──
-function toggleDark() {
-  dark = !dark;
-  document.documentElement.classList.toggle('dark', dark);
-  const sw = document.getElementById('thsw');
-  if (sw) sw.classList.toggle('on', dark);
+// ── Note panel ──
+function openNote(){
+  document.getElementById('note-ov').classList.add('on');
+  document.getElementById('note-sh').classList.add('on');
+}
+function closeNote(){
+  document.getElementById('note-ov').classList.remove('on');
+  document.getElementById('note-sh').classList.remove('on');
+}
+
+// ── Add item ──
+function openAdd(){
+  document.getElementById('add-ov').classList.add('on');
+  document.getElementById('add-sh').classList.add('on');
+}
+function closeAdd(){
+  document.getElementById('add-ov').classList.remove('on');
+  document.getElementById('add-sh').classList.remove('on');
+}
+
+// ── Dark mode ──
+function toggleDark(){
+  dark=!dark;
+  document.documentElement.classList.toggle('dark',dark);
+  const sw=document.getElementById('thsw');if(sw)sw.classList.toggle('on',dark);
 }
 
 // ── Clock ──
-function tick() {
-  const el = document.getElementById('clock');
-  if (!el) return;
-  const now = new Date();
-  el.textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+function tick(){
+  const e=document.getElementById('clock');if(!e)return;
+  const n=new Date();
+  e.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
 }
-tick();
-setInterval(tick, 1000);
+tick();setInterval(tick,1000);
 
-// AI chip toggles
-document.querySelectorAll('.ai-chip').forEach(c => {
-  c.addEventListener('click', () => c.classList.toggle('on'));
-});
-// filter chips
-document.querySelectorAll('.chip').forEach(c => {
-  c.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
-    c.classList.add('on');
-  });
-});
+// ── Chip toggles ──
+document.querySelectorAll('.aichip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+document.querySelectorAll('.chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.chips .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');
+}));
 </script>
 </body>
 </html>
