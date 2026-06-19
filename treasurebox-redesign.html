@@ -3,30 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>宝盒 · UI 原型 v2</title>
+<title>宝盒 · UI 原型 v3</title>
 <style>
 /* ══════════════════════════════════════════════════
-   Design Tokens
-   Palette: 暖纸 × 墨绿 × 琥珀
+   Design Tokens — 暖纸 × 墨绿 × 琥珀（v2 原色保持）
 ══════════════════════════════════════════════════ */
 :root {
   --bg:       #f2ede5;
   --bg-card:  #faf8f4;
-  --bg-dark:  #1a2f28;   /* 深墨绿 — featured tool */
-  --accent:   #3d6b5a;   /* 暗苔绿 */
-  --amber:    #c07838;   /* 琥珀 — 唯一 CTA 色 */
-  --amber-s:  #f5efe6;   /* 琥珀浅底 */
+  --bg-dark:  #1a2f28;
+  --accent:   #3d6b5a;
+  --amber:    #c07838;
+  --amber-s:  rgba(192,120,56,.09);
   --text:     #1e1b16;
   --text-s:   #7a7068;
   --text-xs:  #aba39a;
-  --text-inv: #d6e8e1;   /* on --bg-dark */
+  --text-inv: #d6e8e1;
   --border:   #ddd8ce;
-  --sh:       0 2px 14px rgba(30,27,22,.07);
-  --sh-lg:    0 8px 32px rgba(30,27,22,.12);
-  --r:  12px;
-  --r2: 20px;
-  --r3: 28px;
-  --nav: 64px;
+  --sh:       0 2px 12px rgba(30,27,22,.07);
+  --sh-md:    0 6px 24px rgba(30,27,22,.10);
+  --sh-lg:    0 12px 40px rgba(30,27,22,.13);
+  --r: 12px; --r2: 20px; --r3: 28px;
+  --nav: 66px;
+
+  /* AI brand colors */
+  --ai-claude:  #7c5af0;
+  --ai-gpt:     #19c37d;
+  --ai-gemini:  #4285f4;
+  --ai-wenxin:  #e66c2c;
+  --ai-doubao:  #e02c7d;
 }
 html.dark {
   --bg:       #141210;
@@ -36,556 +41,362 @@ html.dark {
   --text-s:   #8a8278;
   --text-xs:  #5a5450;
   --border:   #2c2924;
-  --amber-s:  #241e16;
+  --amber-s:  rgba(192,120,56,.12);
 }
 
-/* ── Reset ──────────────────────────────────────── */
+/* ── Reset ─────────────────────────────────────── */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 button { font-family:inherit; }
 body {
-  font-family: -apple-system,"PingFang SC","Hiragino Sans GB",
-               "Noto Serif SC",serif;
-  background: #1e1c1a;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 16px 40px;
-  gap: 14px;
+  font-family:-apple-system,"PingFang SC","Hiragino Sans GB",sans-serif;
+  background:#1e1c1a;
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; padding:20px 16px 40px; gap:14px;
 }
 
-/* ── Proto bar ───────────────────────────────────── */
+/* ── Proto controls ──────────────────────────────── */
 .pbar {
-  display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
-  background: #0e0d0c;
-  padding: 10px 16px;
-  border-radius: 100px;
-  border: 1px solid #2a2826;
+  display:flex; gap:6px; flex-wrap:wrap; justify-content:center;
+  background:#0e0d0c; padding:10px 16px; border-radius:100px;
+  border:1px solid #2a2826;
 }
 .pbar button {
-  padding: 5px 13px;
-  border-radius: 100px;
-  border: 1px solid #383430;
-  background: transparent;
-  color: #888;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all .15s;
-  letter-spacing: .3px;
+  padding:5px 13px; border-radius:100px; border:1px solid #383430;
+  background:transparent; color:#888; font-size:12px;
+  cursor:pointer; transition:all .15s; letter-spacing:.3px;
 }
-.pbar button.on, .pbar button:hover {
-  background: var(--amber);
-  border-color: var(--amber);
-  color: #fff;
-}
-.hint { font-size: 11px; color: #555; font-family: monospace; }
+.pbar button.on,.pbar button:hover { background:var(--amber); border-color:var(--amber); color:#fff; }
+.hint { font-size:11px; color:#555; font-family:monospace; }
 .theme-row { display:flex; align-items:center; gap:8px; font-size:12px; color:#666; }
-.sw {
-  width: 38px; height: 20px;
-  background: #333;
-  border-radius: 10px;
-  position: relative; cursor: pointer; border: none;
-  transition: background .25s;
-}
-.sw.on { background: var(--accent); }
-.sw::after {
-  content:''; position:absolute;
-  width:14px; height:14px; border-radius:50%;
-  background:#fff; top:3px; left:3px;
-  transition:transform .25s;
-  box-shadow:0 1px 3px rgba(0,0,0,.25);
-}
+.sw { width:38px; height:20px; background:#333; border-radius:10px; position:relative; cursor:pointer; border:none; transition:background .25s; }
+.sw.on { background:var(--accent); }
+.sw::after { content:''; position:absolute; width:14px; height:14px; border-radius:50%; background:#fff; top:3px; left:3px; transition:transform .25s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
 .sw.on::after { transform:translateX(18px); }
 
-/* ── Phone shell ─────────────────────────────────── */
+/* ── Phone ──────────────────────────────────────── */
 .phone {
-  width: 375px;
-  min-height: 780px;
-  background: var(--bg);
-  border-radius: 44px;
-  overflow: hidden;
-  position: relative;
-  box-shadow:
-    0 0 0 8px #0e0d0c,
-    0 0 0 10px #2a2826,
-    0 24px 64px rgba(0,0,0,.7);
-  display: flex;
-  flex-direction: column;
-  transition: background .3s;
+  width:375px; min-height:780px; background:var(--bg);
+  border-radius:44px; overflow:hidden; position:relative;
+  box-shadow: 0 0 0 8px #0e0d0c, 0 0 0 10px #2a2826, 0 24px 64px rgba(0,0,0,.7);
+  display:flex; flex-direction:column; transition:background .3s;
 }
 .phone::before {
-  content:''; position:absolute;
-  top:0; left:50%; transform:translateX(-50%);
-  width:110px; height:24px;
-  background:#0e0d0c;
-  border-radius: 0 0 16px 16px;
-  z-index:20; pointer-events:none;
+  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:110px; height:24px; background:#0e0d0c;
+  border-radius:0 0 16px 16px; z-index:20; pointer-events:none;
 }
 
-/* ── Screen system ──────────────────────────────── */
+/* ── Screen system ───────────────────────────────── */
 .scr { display:none; flex-direction:column; flex:1; overflow:hidden; }
 .scr.on { display:flex; }
 
 /* ── Status bar ─────────────────────────────────── */
-.sb {
-  height:44px; padding:14px 24px 0;
-  display:flex; justify-content:space-between; align-items:center;
-  flex-shrink:0; position:relative; z-index:10;
-}
+.sb { height:44px; padding:14px 24px 0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; position:relative; z-index:10; }
 .sb-t { font-size:15px; font-weight:600; color:var(--text); }
 .sb-i { font-size:13px; color:var(--text); }
-/* Inverted status bar (for onboarding) */
-.sb-inv .sb-t, .sb-inv .sb-i { color:#d6e8e1; }
 
-/* ── Scroll area ─────────────────────────────────── */
-.scroll {
-  flex:1; overflow-y:auto; overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-}
+/* ── Scroll ─────────────────────────────────────── */
+.scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
 .scroll::-webkit-scrollbar { display:none; }
 
-/* ── Bottom nav (3 tabs only) ───────────────────── */
+/* ── Bottom nav — 3 tabs ─────────────────────────── */
 .bnav {
-  height: var(--nav);
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 8px 10px;
-  flex-shrink: 0;
-  transition: background .3s, border-color .3s;
+  height:var(--nav); background:var(--bg-card); border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-around;
+  padding:0 8px 10px; flex-shrink:0; transition:background .3s, border-color .3s;
 }
-.ni {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 8px 24px;
-  border: none; background: transparent; cursor: pointer;
-  border-radius: 12px; transition: background .15s;
-}
-.ni:hover { background: rgba(61,107,90,.08); }
-.ni .ico { font-size: 20px; color: var(--text-xs); transition: color .2s; }
-.ni .lbl { font-size: 10px; color: var(--text-xs); transition: color .2s; letter-spacing: .3px; }
-.ni.on .ico { color: var(--accent); }
-.ni.on .lbl { color: var(--accent); font-weight: 700; }
+.ni { display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 28px; border:none; background:transparent; cursor:pointer; border-radius:12px; transition:background .15s; }
+.ni:hover { background:rgba(61,107,90,.08); }
+.ni .ico { font-size:22px; color:var(--text-xs); transition:color .2s; }
+.ni .lbl { font-size:10px; color:var(--text-xs); transition:color .2s; letter-spacing:.3px; }
+.ni.on .ico { color:var(--accent); }
+.ni.on .lbl { color:var(--accent); font-weight:700; }
 
 /* ── Toast ──────────────────────────────────────── */
-.toast {
-  position: absolute; bottom: calc(var(--nav) + 12px); left:50%;
-  transform: translateX(-50%);
-  background: var(--text); color: var(--bg);
-  padding: 8px 18px; border-radius: 100px;
-  font-size: 13px; z-index:200;
-  opacity:0; pointer-events:none; white-space:nowrap;
-  transition: opacity .25s;
-  box-shadow: var(--sh-lg);
-}
+.toast { position:absolute; bottom:calc(var(--nav)+12px); left:50%; transform:translateX(-50%); background:var(--text); color:var(--bg); padding:8px 18px; border-radius:100px; font-size:13px; z-index:200; opacity:0; pointer-events:none; white-space:nowrap; transition:opacity .25s; box-shadow:var(--sh-lg); }
 .toast.on { opacity:1; }
 
-/* ── Divider dot row ─────────────────────────────── */
-.dots { text-align:center; color:var(--text-xs); letter-spacing:6px; font-size:10px; padding: 4px 0; }
-
-/* ═══════════════════════════════════════════════════
-   ① ONBOARDING
-   暖墨绿底色，文字驱动，无多余装饰
-═══════════════════════════════════════════════════ */
-#scr-ob {
-  background: var(--bg-dark);
-}
-.ob {
-  flex:1; display:flex; flex-direction:column;
-  justify-content:center; padding: 40px 32px 56px;
-  gap: 0;
-  animation: fadeUp .6s ease both;
-}
-.ob-brand {
-  font-size: 13px; font-weight: 400;
-  letter-spacing: 4px; color: rgba(214,232,225,.45);
-  text-transform: uppercase; margin-bottom: 48px;
-}
-.ob-q {
-  font-size: 28px; font-weight: 300;
-  color: var(--text-inv);
-  line-height: 1.45;
-  margin-bottom: 36px;
-  letter-spacing: .5px;
-}
-.ob-q em { font-style:normal; color: rgba(214,232,225,.6); }
-/* underline-style input */
-.ob-input-wrap { border-bottom: 1.5px solid rgba(214,232,225,.35); padding-bottom: 10px; margin-bottom: 48px; transition: border-color .2s; }
-.ob-input-wrap:focus-within { border-color: rgba(214,232,225,.7); }
-.ob-in {
-  width: 100%; border: none; outline: none;
-  background: transparent;
-  font-size: 26px; font-weight: 300;
-  color: var(--text-inv); letter-spacing: .5px;
-  font-family: inherit;
-}
-.ob-in::placeholder { color: rgba(214,232,225,.3); }
-.ob-btn {
-  align-self: flex-start;
-  padding: 12px 28px;
-  background: var(--amber);
-  color: #fff;
-  border: none; border-radius: 100px;
-  font-size: 15px; font-weight: 600;
-  cursor: pointer; transition: all .2s;
-  box-shadow: 0 4px 16px rgba(192,120,56,.4);
-  letter-spacing: .3px;
-}
-.ob-btn:hover { filter:brightness(1.08); }
-.ob-btn:active { transform:scale(.96); }
-.ob-foot {
-  margin-top: auto;
-  font-size: 12px; color: rgba(214,232,225,.3);
-  display: flex; align-items: center; gap: 8px;
-}
-
-/* ═══════════════════════════════════════════════════
-   ② HOME
-   大字排版 + 工具嵌入首页（无 Inventory tab）
-═══════════════════════════════════════════════════ */
-.home-inner { padding: 8px 24px 24px; display:flex; flex-direction:column; gap:0; }
-
-/* 时钟区 — 页面视觉锚 */
-.clock-hero {
-  padding: 20px 0 4px;
-}
-.clock-big {
-  font-size: 76px; font-weight: 100;
-  color: var(--text); letter-spacing: -3px;
-  line-height: 1; font-variant-numeric: tabular-nums;
-}
-.clock-date {
-  font-size: 13px; color: var(--text-s);
-  letter-spacing: 1px; margin-top: 6px;
-  display: flex; gap: 12px; align-items: center;
-}
-.clock-date .sep { color: var(--border); }
-
-/* 问候 + 天气行 */
-.info-line {
-  padding: 20px 0 0;
-  display: flex; flex-direction: column; gap: 5px;
-}
-.greet-name-text {
-  font-size: 16px; color: var(--text);
-  font-weight: 500; letter-spacing: .3px;
-}
-.weather-line {
-  font-size: 13px; color: var(--text-s);
-  display: flex; align-items: center; gap: 6px;
-  letter-spacing: .2px;
-}
-.weather-line .wdot { color: var(--border); font-size: 8px; }
-.lunar { font-size: 12px; color: var(--text-xs); letter-spacing: .5px; }
-
-/* 分隔 */
-.divider { height: 1px; background: var(--border); margin: 24px 0; }
-
-/* 工具区标题行 */
-.sec-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 14px;
-}
-.sec-lbl {
-  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--text-xs);
-}
-.sec-link {
-  font-size: 12px; color: var(--accent); cursor: pointer;
-  letter-spacing: .3px;
-}
-.sec-link:hover { text-decoration: underline; }
-
-/* 主打工具 — 深色反白卡 */
-.tool-featured {
-  background: var(--bg-dark);
-  border-radius: var(--r2);
-  padding: 22px;
-  display: flex; flex-direction: column;
-  gap: 10px; cursor: pointer;
-  transition: all .2s; position: relative; overflow: hidden;
-  margin-bottom: 10px;
-}
-.tool-featured::after {
-  content:''; position:absolute;
-  right:-20px; bottom:-20px;
-  width:80px; height:80px;
-  border-radius:50%; background:rgba(61,107,90,.25);
-  pointer-events:none;
-}
-.tool-featured:hover { transform:translateY(-2px); box-shadow: var(--sh-lg); }
-.tool-featured:active { transform:scale(.98); }
-.tf-head { display:flex; justify-content:space-between; align-items:flex-start; }
-.tf-icon { font-size:28px; }
-.tf-open {
-  font-size:12px; padding:5px 14px;
-  background: var(--amber); color:#fff;
-  border-radius:100px; font-weight:600; letter-spacing:.3px;
-  box-shadow:0 2px 8px rgba(192,120,56,.4);
-}
-.tf-name { font-size:18px; font-weight:600; color:var(--text-inv); letter-spacing:.3px; }
-.tf-desc { font-size:12px; color:rgba(214,232,225,.6); line-height:1.6; }
-
-/* 未来工具列表 — 文字行，不用卡片 */
-.tool-list { display:flex; flex-direction:column; }
-.tool-row {
-  display: flex; align-items: center;
-  padding: 13px 0;
-  border-top: 1px solid var(--border);
-  gap: 12px; cursor: default;
-}
-.tool-row-ico { font-size: 20px; width: 28px; flex-shrink:0; }
-.tool-row-info { flex:1; }
-.tool-row-name { font-size: 14px; color: var(--text-s); letter-spacing:.2px; }
-.tool-row-desc { font-size: 11px; color: var(--text-xs); margin-top:2px; }
-.tool-row-tag {
-  font-size: 10px; font-weight:600; letter-spacing:.4px;
-  color: var(--text-xs); background: var(--border);
-  padding: 3px 9px; border-radius:100px;
-  flex-shrink:0;
-}
-
-/* 语录 — 行内文字，极简 */
-.quote-area {
-  padding: 20px 0 8px;
-  display: flex; align-items: flex-start; gap: 10px;
-}
-.q-mark { color: var(--text-xs); font-size: 18px; line-height:1; margin-top:3px; flex-shrink:0; }
-.q-body { flex:1; }
-.q-text { font-size:14px; color:var(--text-s); line-height:1.75; font-style:italic; letter-spacing:.3px; }
-.q-refresh { font-size:16px; color:var(--text-xs); cursor:pointer; transition:transform .3s; flex-shrink:0; margin-top:3px; }
-.q-refresh:hover { transform:rotate(180deg); color:var(--accent); }
-
-/* ═══════════════════════════════════════════════════
-   ③ INVENTORY (tool detail, not a tab)
-═══════════════════════════════════════════════════ */
-.tool-header {
-  padding: 12px 20px 10px;
-  display: flex; align-items: center; gap: 12px; flex-shrink:0;
-}
-.back-btn {
-  width:34px; height:34px; border-radius:50%;
-  border:1px solid var(--border); background:var(--bg-card);
-  display:flex; align-items:center; justify-content:center;
-  font-size:16px; cursor:pointer; flex-shrink:0;
-  transition:all .15s; box-shadow:var(--sh);
-}
-.back-btn:hover { border-color:var(--accent); color:var(--accent); }
-.tool-header h2 { font-size:20px; font-weight:700; color:var(--text); flex:1; }
-.ico-btn {
-  width:34px; height:34px; border-radius:50%;
-  border:1px solid var(--border); background:var(--bg-card);
-  display:flex; align-items:center; justify-content:center;
-  font-size:15px; cursor:pointer; box-shadow:var(--sh); transition:all .15s;
-}
+/* ── Shared: page title + back btn ──────────────── */
+.page-hd { padding:10px 20px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.page-hd h2 { font-size:20px; font-weight:700; color:var(--text); flex:1; }
+.back { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--bg-card); display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; flex-shrink:0; transition:all .15s; box-shadow:var(--sh); }
+.back:hover { border-color:var(--accent); color:var(--accent); }
+.ico-btn { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--bg-card); display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; box-shadow:var(--sh); transition:all .15s; }
 .ico-btn:hover { border-color:var(--accent); }
 
-/* Search */
-.search {
-  margin:0 20px 10px;
-  background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--r); display:flex; align-items:center;
-  gap:8px; padding:9px 13px; flex-shrink:0; transition:background .3s;
+/* ─────────────────────────────────────────────────
+   ① ONBOARDING  (v1 UX 结构 + v2 色调)
+───────────────────────────────────────────────── */
+.ob-scr { background:var(--bg); justify-content:center; align-items:center; padding:48px 28px; }
+.ob-wrap { display:flex; flex-direction:column; align-items:center; gap:28px; width:100%; animation:fadeUp .6s ease both; }
+.ob-logo { width:80px; height:80px; background:linear-gradient(135deg,var(--accent),var(--bg-dark)); border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:40px; box-shadow:0 8px 24px rgba(61,107,90,.35); }
+.ob-dots { display:flex; gap:6px; }
+.dot { width:6px; height:6px; border-radius:3px; background:var(--border); transition:all .3s; }
+.dot.on { background:var(--accent); width:18px; }
+.ob-head { text-align:center; display:flex; flex-direction:column; gap:8px; }
+.ob-head h1 { font-size:24px; font-weight:700; color:var(--text); letter-spacing:.3px; }
+.ob-head p { font-size:14px; color:var(--text-s); line-height:1.7; }
+.ob-form { width:100%; display:flex; flex-direction:column; gap:14px; }
+.fl { font-size:12px; font-weight:700; color:var(--text-s); letter-spacing:.5px; margin-bottom:4px; }
+.fi {
+  width:100%; padding:13px 15px; border:1.5px solid var(--border);
+  border-radius:var(--r); background:var(--bg-card);
+  font-size:16px; color:var(--text); font-family:inherit; outline:none; transition:border-color .2s,background .3s;
 }
-.search input {
-  flex:1; border:none; outline:none; background:transparent;
-  font-size:14px; color:var(--text); font-family:inherit;
-}
-.search input::placeholder { color:var(--text-xs); }
-.s-ico { color:var(--text-xs); font-size:14px; }
+.fi:focus { border-color:var(--accent); }
+.fi::placeholder { color:var(--text-xs); }
+.btn-a { width:100%; padding:15px; background:var(--amber); color:#fff; border:none; border-radius:var(--r); font-size:16px; font-weight:600; font-family:inherit; cursor:pointer; transition:all .2s; box-shadow:0 4px 16px rgba(192,120,56,.35); }
+.btn-a:hover { filter:brightness(1.07); }
+.btn-a:active { transform:scale(.97); }
+.ob-hint { font-size:12px; color:var(--text-xs); text-align:center; line-height:1.7; display:flex; align-items:center; gap:6px; }
 
-/* Category chips */
-.chips {
-  display:flex; gap:6px; padding:0 20px 12px;
-  overflow-x:auto; flex-shrink:0;
+/* ─────────────────────────────────────────────────
+   ② HOME  大字排版 + 工具卡片 + 工具包
+───────────────────────────────────────────────── */
+.home-inner { padding:6px 22px 28px; display:flex; flex-direction:column; gap:0; }
+
+/* Clock hero */
+.clock-hero { padding:18px 0 2px; }
+.clock-big { font-size:76px; font-weight:100; color:var(--text); letter-spacing:-3px; line-height:1; font-variant-numeric:tabular-nums; }
+.clock-date { font-size:13px; color:var(--text-s); letter-spacing:.8px; margin-top:5px; }
+
+/* Info lines */
+.info-line { padding:18px 0 0; display:flex; flex-direction:column; gap:5px; }
+.greet-nm { font-size:16px; font-weight:500; color:var(--text); letter-spacing:.2px; }
+.wline { font-size:13px; color:var(--text-s); display:flex; align-items:center; gap:5px; }
+.wdot { color:var(--border); font-size:8px; }
+.lunar { font-size:12px; color:var(--text-xs); letter-spacing:.5px; }
+
+.divider { height:1px; background:var(--border); margin:22px 0; }
+
+/* Section row */
+.sec-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; }
+.sec-lbl { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-xs); }
+.sec-link { font-size:12px; color:var(--accent); cursor:pointer; }
+.sec-link:hover { text-decoration:underline; }
+
+/* Featured tool — dark inverted card */
+.tf {
+  background:var(--bg-dark); border-radius:var(--r2); padding:20px;
+  display:flex; flex-direction:column; gap:10px; cursor:pointer;
+  transition:all .2s; position:relative; overflow:hidden; margin-bottom:10px;
 }
+.tf::after { content:''; position:absolute; right:-20px; bottom:-20px; width:90px; height:90px; border-radius:50%; background:rgba(61,107,90,.2); pointer-events:none; }
+.tf:hover { transform:translateY(-2px); box-shadow:var(--sh-lg); }
+.tf:active { transform:scale(.98); }
+.tf-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.tf-ico { font-size:28px; }
+.tf-open { font-size:11px; padding:5px 13px; background:var(--amber); color:#fff; border-radius:100px; font-weight:700; letter-spacing:.3px; box-shadow:0 2px 8px rgba(192,120,56,.4); }
+.tf-name { font-size:18px; font-weight:700; color:var(--text-inv); letter-spacing:.3px; }
+.tf-desc { font-size:12px; color:rgba(214,232,225,.6); line-height:1.6; }
+
+/* Secondary tool grid (2 col) */
+.tool-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.tc {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r2);
+  padding:16px 14px; display:flex; flex-direction:column; gap:8px;
+  cursor:pointer; transition:all .2s; box-shadow:var(--sh);
+}
+.tc:hover { box-shadow:var(--sh-md); transform:translateY(-1px); }
+.tc:active { transform:scale(.97); }
+.tc-ico { font-size:24px; }
+.tc-name { font-size:13px; font-weight:600; color:var(--text); }
+.tc-desc { font-size:11px; color:var(--text-s); line-height:1.4; }
+
+/* Tool packages */
+.pkg-row { display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; }
+.pkg-row::-webkit-scrollbar { display:none; }
+.pkg {
+  flex-shrink:0; background:var(--bg-card); border:1.5px solid var(--border);
+  border-radius:var(--r2); padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px; min-width:140px;
+  cursor:pointer; transition:all .2s; box-shadow:var(--sh);
+}
+.pkg:hover { border-color:var(--accent); box-shadow:var(--sh-md); }
+.pkg-title { font-size:13px; font-weight:700; color:var(--text); }
+.pkg-icons { font-size:16px; letter-spacing:2px; }
+.pkg-count { font-size:11px; color:var(--text-xs); }
+.pkg-add {
+  flex-shrink:0; background:transparent; border:1.5px dashed var(--border);
+  border-radius:var(--r2); padding:14px 16px; min-width:80px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; cursor:pointer; transition:all .2s;
+}
+.pkg-add:hover { border-color:var(--accent); }
+.pkg-add-ico { font-size:22px; color:var(--text-xs); }
+.pkg-add-lbl { font-size:11px; color:var(--text-xs); }
+
+/* Quote */
+.quote-area { padding:18px 0 6px; display:flex; align-items:flex-start; gap:10px; }
+.q-mark { color:var(--text-xs); font-size:16px; line-height:1; margin-top:3px; flex-shrink:0; }
+.q-text { flex:1; font-size:13px; color:var(--text-s); line-height:1.8; font-style:italic; letter-spacing:.3px; }
+.q-refresh { font-size:16px; color:var(--text-xs); cursor:pointer; transition:transform .3s; flex-shrink:0; margin-top:2px; }
+.q-refresh:hover { transform:rotate(180deg); color:var(--accent); }
+
+/* ─────────────────────────────────────────────────
+   ③ 智友 AI HUB  —  The killer feature
+───────────────────────────────────────────────── */
+.ai-header { padding:10px 20px 0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+.ai-title { font-size:22px; font-weight:700; color:var(--text); }
+.ai-sub { font-size:12px; color:var(--text-xs); margin-top:2px; }
+.add-ai-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:100px; background:var(--bg-card); font-size:12px; color:var(--text-s); cursor:pointer; transition:all .15s; box-shadow:var(--sh); }
+.add-ai-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+/* AI roster row */
+.ai-roster { display:flex; gap:12px; padding:16px 20px 0; overflow-x:auto; flex-shrink:0; }
+.ai-roster::-webkit-scrollbar { display:none; }
+.ai-card {
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:5px;
+  cursor:pointer; padding:2px;
+}
+.ai-avatar-wrap { position:relative; }
+.ai-avatar {
+  width:52px; height:52px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; border:2.5px solid transparent;
+  transition:all .2s; position:relative;
+}
+.ai-card.on .ai-avatar { border-color:var(--amber); box-shadow:0 0 0 3px rgba(192,120,56,.2); }
+.ai-card:not(.on) .ai-avatar { opacity:.55; }
+.ai-dot { width:10px; height:10px; border-radius:50%; border:2px solid var(--bg-card); position:absolute; bottom:2px; right:2px; }
+.ai-name { font-size:11px; color:var(--text-s); letter-spacing:.3px; }
+.ai-card.on .ai-name { color:var(--text); font-weight:600; }
+
+/* Group chat toggle */
+.group-toggle-row {
+  display:flex; align-items:center; justify-content:space-between;
+  margin:14px 20px 0; padding:12px 16px;
+  background:var(--bg-card); border-radius:var(--r2); border:1px solid var(--border);
+  flex-shrink:0; transition:background .3s;
+}
+.gt-left { display:flex; flex-direction:column; gap:2px; }
+.gt-title { font-size:13px; font-weight:700; color:var(--text); }
+.gt-sub { font-size:11px; color:var(--text-xs); }
+.toggle-sw { width:44px; height:24px; border-radius:12px; background:var(--border); position:relative; cursor:pointer; border:none; transition:background .25s; flex-shrink:0; }
+.toggle-sw.on { background:var(--accent); }
+.toggle-sw::after { content:''; position:absolute; width:18px; height:18px; border-radius:50%; background:#fff; top:3px; left:3px; transition:transform .25s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.toggle-sw.on::after { transform:translateX(20px); }
+
+/* Chat area */
+.chat-area { display:flex; flex-direction:column; gap:16px; padding:16px 20px 20px; }
+
+/* User bubble */
+.chat-you { display:flex; justify-content:flex-end; }
+.bubble-you { background:var(--amber); color:#fff; padding:11px 14px; border-radius:18px 18px 4px 18px; max-width:76%; font-size:14px; line-height:1.6; box-shadow:0 2px 8px rgba(192,120,56,.3); }
+
+/* AI bubbles */
+.chat-ai { display:flex; flex-direction:column; gap:2px; }
+.ai-from { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+.ai-from-dot { width:8px; height:8px; border-radius:50%; }
+.ai-from-name { font-size:11px; font-weight:700; color:var(--text-s); letter-spacing:.4px; }
+.bubble-ai {
+  background:var(--bg-card); color:var(--text); padding:11px 14px;
+  border-radius:4px 18px 18px 18px; max-width:82%; font-size:13px;
+  line-height:1.7; border:1px solid var(--border); box-shadow:var(--sh);
+  border-left-width:3px;
+}
+
+/* Chat input */
+.chat-input-row {
+  display:flex; align-items:flex-end; gap:8px;
+  margin:0 20px; padding:10px 14px;
+  background:var(--bg-card); border:1.5px solid var(--border);
+  border-radius:var(--r2); flex-shrink:0; box-shadow:var(--sh);
+  transition:border-color .2s, background .3s;
+}
+.chat-input-row:focus-within { border-color:var(--accent); }
+.chat-ta { flex:1; border:none; outline:none; background:transparent; font-size:14px; color:var(--text); font-family:inherit; resize:none; min-height:22px; max-height:80px; line-height:1.5; }
+.chat-ta::placeholder { color:var(--text-xs); }
+.chat-tools { display:flex; gap:6px; align-items:center; padding-bottom:2px; }
+.ctb { width:28px; height:28px; border-radius:8px; border:none; background:transparent; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text-s); transition:all .15s; }
+.ctb:hover { background:var(--amber-s); color:var(--amber); }
+.send-btn { width:32px; height:32px; border-radius:50%; background:var(--accent); border:none; color:#fff; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s; flex-shrink:0; }
+.send-btn:hover { background:var(--bg-dark); }
+
+/* ─────────────────────────────────────────────────
+   ④ INVENTORY TOOL
+───────────────────────────────────────────────── */
+.search { margin:0 20px 10px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r); display:flex; align-items:center; gap:8px; padding:9px 13px; flex-shrink:0; transition:background .3s; }
+.search input { flex:1; border:none; outline:none; background:transparent; font-size:14px; color:var(--text); font-family:inherit; }
+.search input::placeholder { color:var(--text-xs); }
+.chips { display:flex; gap:6px; padding:0 20px 12px; overflow-x:auto; flex-shrink:0; }
 .chips::-webkit-scrollbar { display:none; }
-.chip {
-  flex-shrink:0; padding:5px 12px; border-radius:100px;
-  font-size:12px; border:1px solid var(--border);
-  background:var(--bg-card); color:var(--text-s);
-  cursor:pointer; transition:all .15s;
-}
+.chip { flex-shrink:0; padding:5px 12px; border-radius:100px; font-size:12px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-s); cursor:pointer; transition:all .15s; }
 .chip.on { background:var(--accent); border-color:var(--accent); color:#fff; }
 .chip:hover:not(.on) { border-color:var(--accent); color:var(--accent); }
 
-/* Item list */
-.ilist { padding:0 20px; display:flex; flex-direction:column; gap:0; }
-.irow {
-  display:flex; align-items:center; gap:14px;
-  padding:14px 0; border-bottom:1px solid var(--border);
-  cursor:pointer; transition:background .15s; animation:fadeUp .3s ease both;
-}
+.ilist { padding:0 20px; display:flex; flex-direction:column; }
+.irow { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:all .15s; animation:fadeUp .3s ease both; }
 .irow:last-child { border-bottom:none; }
-.irow:hover { background:var(--amber-s); margin:0 -20px; padding:14px 20px; border-radius:var(--r); border-bottom-color:transparent; }
+.irow:hover { padding-left:8px; padding-right:8px; margin:0 -8px; background:var(--amber-s); border-radius:var(--r); border-bottom-color:transparent; }
 .i-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 .i-info { flex:1; min-width:0; }
 .i-name { font-size:14px; font-weight:600; color:var(--text); }
 .i-where { font-size:12px; color:var(--text-xs); margin-top:2px; }
-.i-right { text-align:right; flex-shrink:0; }
-.i-price { font-size:14px; font-weight:600; color:var(--text); }
+.i-r { text-align:right; flex-shrink:0; }
+.i-price { font-size:14px; font-weight:700; color:var(--text); }
 .i-date { font-size:11px; color:var(--text-xs); margin-top:2px; }
 
-/* FAB */
-.fab {
-  position:absolute; bottom:calc(var(--nav)+14px); right:20px;
-  width:48px; height:48px; border-radius:50%;
-  background:var(--amber); border:none; color:#fff;
-  font-size:24px; display:flex; align-items:center; justify-content:center;
-  cursor:pointer; box-shadow:0 4px 16px rgba(192,120,56,.45);
-  transition:all .2s; z-index:5;
-}
+.fab { position:absolute; bottom:calc(var(--nav)+14px); right:20px; width:48px; height:48px; border-radius:50%; background:var(--amber); border:none; color:#fff; font-size:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 16px rgba(192,120,56,.45); transition:all .2s; z-index:5; }
 .fab:hover { transform:scale(1.08); }
 .fab:active { transform:scale(.93); }
 
-/* ④ ADD ITEM — bottom sheet */
-.overlay {
-  position:absolute; inset:0;
-  background:rgba(30,27,22,.5); backdrop-filter:blur(3px);
-  z-index:30; display:flex; flex-direction:column;
-  justify-content:flex-end; animation:fade .2s ease;
+/* ─────────────────────────────────────────────────
+   ⑤ 笔记连接器选择
+───────────────────────────────────────────────── */
+.note-intro { padding:20px 22px 8px; }
+.note-intro-title { font-size:22px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.note-intro-sub { font-size:13px; color:var(--text-s); line-height:1.7; }
+
+.app-list { padding:0 20px; display:flex; flex-direction:column; gap:0; }
+.app-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 0; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:all .15s;
 }
-.sheet {
-  background:var(--bg-card); border-radius:var(--r3) var(--r3) 0 0;
-  padding:16px 22px 38px; display:flex; flex-direction:column;
-  gap:14px; animation:slideup .3s cubic-bezier(.16,1,.3,1);
-  transition:background .3s;
-}
+.app-row:last-child { border-bottom:none; }
+.app-row:hover { padding-left:8px; padding-right:8px; margin:0 -8px; background:var(--amber-s); border-radius:var(--r); border-bottom-color:transparent; }
+.app-ico { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.app-info { flex:1; }
+.app-name { font-size:15px; font-weight:600; color:var(--text); }
+.app-desc { font-size:12px; color:var(--text-xs); margin-top:2px; }
+.app-status { font-size:11px; font-weight:700; letter-spacing:.4px; padding:4px 10px; border-radius:100px; flex-shrink:0; }
+.status-connected { background:rgba(61,107,90,.12); color:var(--accent); }
+.status-connect { background:var(--border); color:var(--text-s); }
+.status-builtin { background:rgba(192,120,56,.12); color:var(--amber); }
+
+.note-tip { margin:16px 20px 0; padding:12px 14px; background:var(--amber-s); border-radius:var(--r); border-left:3px solid var(--amber); }
+.note-tip-txt { font-size:12px; color:var(--text-s); line-height:1.7; }
+
+/* ─────────────────────────────────────────────────
+   ⑥ 添加物品 (bottom sheet)
+───────────────────────────────────────────────── */
+.overlay { position:absolute; inset:0; background:rgba(30,27,22,.5); backdrop-filter:blur(3px); z-index:30; display:flex; flex-direction:column; justify-content:flex-end; animation:fade .2s ease; }
+.sheet { background:var(--bg-card); border-radius:var(--r3) var(--r3) 0 0; padding:16px 22px 38px; display:flex; flex-direction:column; gap:14px; animation:slideup .3s cubic-bezier(.16,1,.3,1); transition:background .3s; }
 .handle { width:32px; height:3px; background:var(--border); border-radius:2px; align-self:center; margin-bottom:2px; }
 .sh-title { font-size:17px; font-weight:700; color:var(--text); }
 .fg { display:flex; flex-direction:column; gap:5px; }
-.fl { font-size:11px; font-weight:700; letter-spacing:.5px; color:var(--text-s); text-transform:uppercase; }
-.fi {
-  padding:11px 0; border:none; border-bottom:1.5px solid var(--border);
-  background:transparent; font-size:16px; color:var(--text);
-  font-family:inherit; outline:none; transition:border-color .2s;
-}
-.fi:focus { border-color:var(--accent); }
-.fi::placeholder { color:var(--text-xs); }
-.frow { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.frow { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .erow { display:flex; gap:8px; flex-wrap:wrap; }
-.eo {
-  width:40px; height:40px; border-radius:10px;
-  border:1.5px solid var(--border); background:var(--bg);
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; cursor:pointer; transition:all .15s;
-}
+.eo { width:40px; height:40px; border-radius:10px; border:1.5px solid var(--border); background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; transition:all .15s; }
 .eo.on,.eo:hover { border-color:var(--accent); background:rgba(61,107,90,.1); }
 .macts { display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-top:4px; }
-.btn-s {
-  padding:13px; border:1.5px solid var(--border);
-  border-radius:var(--r); background:transparent;
-  font-size:14px; font-weight:600; color:var(--text-s);
-  cursor:pointer; transition:all .15s;
-}
+.btn-s { padding:13px; border:1.5px solid var(--border); border-radius:var(--r); background:transparent; font-size:14px; font-weight:600; color:var(--text-s); cursor:pointer; transition:all .15s; }
 .btn-s:hover { border-color:var(--text-s); }
-.btn-a {
-  padding:13px; background:var(--amber); color:#fff;
-  border:none; border-radius:var(--r);
-  font-size:14px; font-weight:700; cursor:pointer;
-  box-shadow:0 4px 14px rgba(192,120,56,.35); transition:all .2s;
-}
-.btn-a:hover { filter:brightness(1.07); }
+.btn-a2 { padding:13px; background:var(--amber); color:#fff; border:none; border-radius:var(--r); font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 3px 12px rgba(192,120,56,.35); transition:all .2s; }
+.btn-a2:hover { filter:brightness(1.07); }
 
-/* ═══════════════════════════════════════════════════
-   ⑤ NOTES — 日记风格，无重边框卡片
-═══════════════════════════════════════════════════ */
-.note-inner { padding:0 24px 24px; display:flex; flex-direction:column; gap:0; }
-.page-title { font-size:26px; font-weight:700; color:var(--text); padding:12px 0 20px; letter-spacing:.3px; }
-
-.compose {
-  border:1.5px solid var(--accent);
-  border-radius:var(--r2);
-  padding:14px; display:flex; flex-direction:column; gap:10px;
-  box-shadow:0 0 0 4px rgba(61,107,90,.08);
-  flex-shrink:0; transition:background .3s;
-}
-.c-ta {
-  border:none; outline:none; background:transparent;
-  font-size:14px; color:var(--text);
-  font-family:inherit; resize:none; min-height:70px; line-height:1.7;
-}
-.c-ta::placeholder { color:var(--text-xs); }
-.c-foot { display:flex; align-items:center; justify-content:space-between; }
-.c-tools { display:flex; gap:6px; }
-.tb {
-  width:28px; height:28px; border-radius:8px;
-  border:none; background:var(--bg); font-size:13px;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--text-s); cursor:pointer; transition:all .15s;
-}
-.tb:hover { background:rgba(61,107,90,.12); color:var(--accent); }
-.cc { font-size:11px; color:var(--text-xs); }
-.sb2 {
-  padding:8px 16px; background:var(--accent); color:#fff;
-  border:none; border-radius:100px; font-size:13px; font-weight:600;
-  font-family:inherit; cursor:pointer; transition:all .15s;
-}
-.sb2:hover { background:#2d5443; }
-
-/* 标签行 */
-.tag-row {
-  display:flex; gap:6px; padding:16px 0 4px;
-  overflow-x:auto; flex-shrink:0;
-}
-.tag-row::-webkit-scrollbar { display:none; }
-.tg {
-  flex-shrink:0; padding:4px 11px; border-radius:100px;
-  font-size:12px; border:1px solid var(--border);
-  color:var(--text-s); cursor:pointer; transition:all .15s;
-}
-.tg.on { background:var(--accent); border-color:var(--accent); color:#fff; }
-.tg:hover:not(.on) { border-color:var(--accent); color:var(--accent); }
-
-/* 日期分组 */
-.day-sep {
-  font-size:11px; font-weight:700; letter-spacing:1.5px;
-  color:var(--text-xs); text-transform:uppercase;
-  padding:20px 0 10px; border-top:1px solid var(--border); margin-top:4px;
-}
-.day-sep:first-of-type { border-top:none; padding-top:16px; }
-
-/* Memo 条目 — 无卡片，纯文字 */
-.memo { padding:0 0 16px; animation:fadeUp .3s ease both; }
-.memo-txt { font-size:14px; color:var(--text); line-height:1.8; }
-.memo-meta {
-  display:flex; align-items:center; gap:10px; margin-top:6px;
-}
-.memo-time { font-size:11px; color:var(--text-xs); }
-.memo-tags { display:flex; gap:6px; }
-.m-tag { font-size:11px; color:var(--accent); }
-
-/* ═══════════════════════════════════════════════════
-   ⑥ SETTINGS
-═══════════════════════════════════════════════════ */
+/* ─────────────────────────────────────────────────
+   ⑦ SETTINGS
+───────────────────────────────────────────────── */
 .cfg-inner { padding:0 22px 32px; display:flex; flex-direction:column; gap:20px; }
-.av-sec {
-  display:flex; flex-direction:column; align-items:center;
-  padding:20px 0 4px; gap:10px;
-}
-.av-ring {
-  width:72px; height:72px; border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--bg-dark));
-  display:flex; align-items:center; justify-content:center;
-  font-size:32px; position:relative; cursor:pointer;
-  box-shadow:0 4px 20px rgba(61,107,90,.3);
-}
-.av-edit {
-  position:absolute; bottom:0; right:0;
-  width:22px; height:22px; background:var(--bg-card);
-  border-radius:50%; display:flex; align-items:center; justify-content:center;
-  font-size:11px; box-shadow:var(--sh);
-  border:2px solid var(--bg);
-}
+.av-sec { display:flex; flex-direction:column; align-items:center; padding:18px 0 4px; gap:10px; }
+.av-ring { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--bg-dark)); display:flex; align-items:center; justify-content:center; font-size:32px; position:relative; cursor:pointer; box-shadow:0 4px 20px rgba(61,107,90,.3); }
+.av-edit { position:absolute; bottom:0; right:0; width:22px; height:22px; background:var(--bg-card); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; box-shadow:var(--sh); border:2px solid var(--bg); }
 .av-nm { font-size:19px; font-weight:700; color:var(--text); }
-
 .sg { background:var(--bg-card); border-radius:var(--r2); border:1px solid var(--border); overflow:hidden; transition:background .3s,border-color .3s; }
 .sg-h { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--text-xs); padding:12px 16px 6px; }
-.sr {
-  display:flex; align-items:center; padding:13px 16px;
-  border-top:1px solid var(--border); cursor:pointer; gap:10px; transition:background .15s;
-}
+.sr { display:flex; align-items:center; padding:13px 16px; border-top:1px solid var(--border); cursor:pointer; gap:10px; transition:background .15s; }
 .sr:hover { background:var(--bg); }
 .sr-ico { font-size:17px; width:26px; flex-shrink:0; }
 .sr-lbl { flex:1; font-size:14px; color:var(--text); }
@@ -594,13 +405,7 @@ body {
 .lt { display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
 .lo { padding:5px 12px; font-size:12px; border:none; background:transparent; color:var(--text-s); cursor:pointer; transition:all .15s; }
 .lo.on { background:var(--accent); color:#fff; }
-
-.dbtn {
-  padding:13px 16px; border-top:1px solid var(--border);
-  background:transparent; font-size:14px; color:var(--text);
-  font-family:inherit; cursor:pointer;
-  display:flex; align-items:center; gap:10px; width:100%; text-align:left; transition:background .15s;
-}
+.dbtn { padding:13px 16px; border-top:1px solid var(--border); background:transparent; font-size:14px; color:var(--text); font-family:inherit; cursor:pointer; display:flex; align-items:center; gap:10px; width:100%; text-align:left; transition:background .15s; }
 .dbtn:hover { background:var(--bg); }
 .dbtn.red { color:#c0442e; }
 .dbtn.red:hover { background:#fff5f3; }
@@ -616,153 +421,268 @@ html.dark .dbtn.red:hover { background:#1f1210; }
 <body>
 
 <div class="pbar">
-  <button id="pb-ob"   onclick="go('ob')"   class="on">① 引导</button>
-  <button id="pb-home" onclick="go('home')">② 首页</button>
-  <button id="pb-inv"  onclick="go('inv')">③ 物品库</button>
-  <button id="pb-add"  onclick="go('add')">④ 添加</button>
-  <button id="pb-note" onclick="go('note')">⑤ 笔记</button>
-  <button id="pb-cfg"  onclick="go('cfg')">⑥ 设置</button>
+  <button id="pb-ob"    onclick="go('ob')"   class="on">① 引导</button>
+  <button id="pb-home"  onclick="go('home')">② 首页</button>
+  <button id="pb-ai"    onclick="go('ai')">③ 智友</button>
+  <button id="pb-inv"   onclick="go('inv')">④ 物品库</button>
+  <button id="pb-note"  onclick="go('note')">⑤ 笔记入口</button>
+  <button id="pb-add"   onclick="go('add')">⑥ 添加物品</button>
+  <button id="pb-cfg"   onclick="go('cfg')">⑦ 设置</button>
 </div>
-<div class="hint">点击切换屏幕 · 手机内所有元素均可交互</div>
-<div class="theme-row">
-  暗色 <button class="sw" id="thsw" onclick="toggleTheme()"></button>
-</div>
+<div class="hint">切换屏幕 · 手机内可交互 · 智友「群聊模式」开关可点</div>
+<div class="theme-row">暗色 <button class="sw" id="thsw" onclick="toggleTheme()"></button></div>
 
-<!-- ════════ PHONE ════════ -->
+<!-- ═══════════ PHONE ═══════════ -->
 <div class="phone">
 
-<!-- ① ONBOARDING ──────────────────────────────── -->
-<div class="scr on" id="scr-ob">
-  <div class="sb sb-inv">
-    <span class="sb-t" id="t-ob" style="color:rgba(214,232,225,.5)">9:41</span>
-    <span class="sb-i" style="color:rgba(214,232,225,.3)">···</span>
+<!-- ① ONBOARDING ─────────────────────────────── -->
+<div class="scr on ob-scr" id="scr-ob">
+  <div class="sb">
+    <span class="sb-t" id="t-ob">9:41</span>
+    <span class="sb-i">☀ 100%</span>
   </div>
-  <div class="ob">
-    <div class="ob-brand">宝盒 · Baohe</div>
-    <div class="ob-q">你好，<br>我应该叫你<br><em>什么名字？</em></div>
-    <div class="ob-input-wrap">
-      <input class="ob-in" id="nameIn" type="text" placeholder="输入你的称呼" maxlength="10" autocomplete="off">
+  <div class="ob-wrap">
+    <div class="ob-logo">🪷</div>
+    <div class="ob-dots">
+      <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
     </div>
-    <button class="ob-btn" onclick="finishOb()">进入宝盒 →</button>
-    <div class="ob-foot">
-      <span>🔒</span>
-      <span>完全本地 · 无需账号 · 数据仅在这台设备</span>
+    <div class="ob-head">
+      <h1>你好，欢迎来到宝盒</h1>
+      <p>先告诉我你的名字<br>我会用它来问候你</p>
     </div>
+    <div class="ob-form">
+      <div>
+        <div class="fl">你的称呼</div>
+        <input class="fi" id="nameIn" type="text" placeholder="输入你常用的名字" maxlength="10" autocomplete="off">
+      </div>
+      <button class="btn-a" onclick="finishOb()">进入宝盒 →</button>
+    </div>
+    <div class="ob-hint"><span>🔒</span><span>完全本地运行 · 无需账号 · 数据只存在这台设备上</span></div>
   </div>
 </div>
 
-<!-- ② HOME ─────────────────────────────────────── -->
+<!-- ② HOME ──────────────────────────────────── -->
 <div class="scr" id="scr-home">
-  <div class="sb">
-    <span class="sb-t" id="t-home">9:41</span>
-    <span class="sb-i">☀ 100%</span>
-  </div>
+  <div class="sb"><span class="sb-t" id="t-home">9:41</span><span class="sb-i">☀ 100%</span></div>
   <div class="scroll">
     <div class="home-inner">
 
-      <!-- 大时钟 -->
       <div class="clock-hero">
         <div class="clock-big" id="home-clock">09:41</div>
-        <div class="clock-date">
-          <span>2026年6月19日</span>
-          <span class="sep">·</span>
-          <span>星期五</span>
-        </div>
+        <div class="clock-date">2026年6月19日 &nbsp;·&nbsp; 星期五</div>
       </div>
 
-      <!-- 问候 + 天气 + 农历 （全部文字行，无卡片） -->
       <div class="info-line">
-        <div class="greet-name-text" id="greet-nm">晴晴，早上好</div>
-        <div class="weather-line">
-          <span>⛅</span>
-          <span>24° 多云</span>
-          <span class="wdot">●</span>
-          <span>上海</span>
-          <span class="wdot">●</span>
-          <span>18° — 27°</span>
+        <div class="greet-nm" id="greet-nm">晴晴，早上好</div>
+        <div class="wline">
+          <span>⛅</span><span>24° 多云</span>
+          <span class="wdot">●</span><span>上海</span>
+          <span class="wdot">●</span><span>18°—27°</span>
         </div>
         <div class="lunar">丙午年 · 五月初四</div>
       </div>
 
       <div class="divider"></div>
 
-      <!-- 工具区：主打 + 列表 -->
+      <!-- Tools section -->
       <div class="sec-row">
-        <span class="sec-lbl">工具</span>
-        <span class="sec-link">全部工具</span>
+        <span class="sec-lbl">我的工具</span>
+        <span class="sec-link" onclick="toast('工具管理 — 即将推出')">管理</span>
       </div>
 
-      <!-- Featured: Inventory -->
-      <div class="tool-featured" onclick="go('inv')">
-        <div class="tf-head">
-          <div class="tf-icon">📦</div>
-          <div class="tf-open">打开</div>
+      <!-- Featured: 物品库 (only open tool) -->
+      <div class="tf" onclick="go('inv')">
+        <div class="tf-top">
+          <div class="tf-ico">📦</div>
+          <div class="tf-open">已开放</div>
         </div>
         <div class="tf-name">物品库</div>
-        <div class="tf-desc">记住每样东西购于何处、存于何地</div>
+        <div class="tf-desc">记住每样东西购于何处、存于何地，不再翻箱倒柜</div>
       </div>
 
-      <!-- Coming soon tools — text rows, no cards -->
-      <div class="tool-list">
-        <div class="tool-row">
-          <div class="tool-row-ico">🧠</div>
-          <div class="tool-row-info">
-            <div class="tool-row-name">秘书</div>
-            <div class="tool-row-desc">智能助手与日程管理</div>
-          </div>
-          <div class="tool-row-tag">即将推出</div>
+      <!-- Secondary: 笔记入口 + 日历入口 -->
+      <div class="tool-grid">
+        <div class="tc" onclick="go('note')">
+          <div class="tc-ico">📝</div>
+          <div class="tc-name">笔记</div>
+          <div class="tc-desc">连接你常用的笔记工具</div>
         </div>
-        <div class="tool-row">
-          <div class="tool-row-ico">🧘</div>
-          <div class="tool-row-info">
-            <div class="tool-row-name">冥想</div>
-            <div class="tool-row-desc">内在觉察与呼吸练习</div>
-          </div>
-          <div class="tool-row-tag">即将推出</div>
-        </div>
-        <div class="tool-row">
-          <div class="tool-row-ico">📚</div>
-          <div class="tool-row-info">
-            <div class="tool-row-name">阅读</div>
-            <div class="tool-row-desc">书单与阅读记录</div>
-          </div>
-          <div class="tool-row-tag">即将推出</div>
+        <div class="tc" onclick="toast('日历连接 — 即将推出')">
+          <div class="tc-ico">📅</div>
+          <div class="tc-name">日历</div>
+          <div class="tc-desc">Google / Apple 日历</div>
         </div>
       </div>
 
-      <div class="dots">· · ·</div>
+      <div class="divider"></div>
 
-      <!-- 语录 — 行内，极简 -->
+      <!-- Tool packages -->
+      <div class="sec-row">
+        <span class="sec-lbl">工具包</span>
+        <span class="sec-link" onclick="toast('全部工具包')">全部</span>
+      </div>
+      <div class="pkg-row">
+        <div class="pkg" onclick="toast('效率日常 — 3个工具')">
+          <div class="pkg-icons">📦 📝 📅</div>
+          <div class="pkg-title">效率日常</div>
+          <div class="pkg-count">3 个工具</div>
+        </div>
+        <div class="pkg" onclick="go('ai')">
+          <div class="pkg-icons">🤖 💬 ✨</div>
+          <div class="pkg-title">AI 助理</div>
+          <div class="pkg-count">接入 4 个 AI</div>
+        </div>
+        <div class="pkg-add" onclick="toast('自定义工具包 — 即将推出')">
+          <div class="pkg-add-ico">＋</div>
+          <div class="pkg-add-lbl">自定义</div>
+        </div>
+      </div>
+
+      <!-- Quote -->
       <div class="quote-area">
         <div class="q-mark">✦</div>
-        <div class="q-body">
-          <div class="q-text">心之所向，身之所往。</div>
-        </div>
-        <div class="q-refresh" title="换一条">↺</div>
+        <div class="q-text">心之所向，身之所往。</div>
+        <div class="q-refresh">↺</div>
       </div>
 
     </div>
   </div>
   <div class="bnav">
     <button class="ni on" onclick="go('home')"><span class="ico">⌂</span><span class="lbl">首页</span></button>
-    <button class="ni"    onclick="go('note')"><span class="ico">✎</span><span class="lbl">笔记</span></button>
+    <button class="ni"    onclick="go('ai')"><span class="ico">✦</span><span class="lbl">智友</span></button>
     <button class="ni"    onclick="go('cfg')"><span class="ico">◉</span><span class="lbl">我的</span></button>
   </div>
 </div>
 
-<!-- ③ INVENTORY ─────────────────────────────────── -->
-<div class="scr" id="scr-inv">
-  <div class="sb">
-    <span class="sb-t" id="t-inv">9:41</span>
-    <span class="sb-i">📶 100%</span>
+<!-- ③ 智友 AI HUB ─────────────────────────────── -->
+<div class="scr" id="scr-ai">
+  <div class="sb"><span class="sb-t" id="t-ai">9:41</span><span class="sb-i">📶 100%</span></div>
+
+  <div class="ai-header">
+    <div>
+      <div class="ai-title">智友</div>
+      <div class="ai-sub">4 个 AI 已接入 · 群聊模式</div>
+    </div>
+    <button class="add-ai-btn" onclick="toast('添加 AI 助手')">＋ 添加 AI</button>
   </div>
-  <div class="tool-header">
-    <div class="back-btn" onclick="go('home')">←</div>
+
+  <!-- AI roster -->
+  <div class="ai-roster">
+    <div class="ai-card on" onclick="toggleAI(this)">
+      <div class="ai-avatar-wrap">
+        <div class="ai-avatar" style="background:rgba(124,90,240,.12);">🟣</div>
+        <div class="ai-dot" style="background:var(--ai-claude)"></div>
+      </div>
+      <div class="ai-name">Claude</div>
+    </div>
+    <div class="ai-card on" onclick="toggleAI(this)">
+      <div class="ai-avatar-wrap">
+        <div class="ai-avatar" style="background:rgba(25,195,125,.12);">🟢</div>
+        <div class="ai-dot" style="background:var(--ai-gpt)"></div>
+      </div>
+      <div class="ai-name">ChatGPT</div>
+    </div>
+    <div class="ai-card on" onclick="toggleAI(this)">
+      <div class="ai-avatar-wrap">
+        <div class="ai-avatar" style="background:rgba(66,133,244,.12);">🔵</div>
+        <div class="ai-dot" style="background:var(--ai-gemini)"></div>
+      </div>
+      <div class="ai-name">Gemini</div>
+    </div>
+    <div class="ai-card on" onclick="toggleAI(this)">
+      <div class="ai-avatar-wrap">
+        <div class="ai-avatar" style="background:rgba(230,108,44,.12);">🟠</div>
+        <div class="ai-dot" style="background:var(--ai-wenxin)"></div>
+      </div>
+      <div class="ai-name">文心</div>
+    </div>
+    <div class="ai-card" onclick="toast('+ 接入豆包')">
+      <div class="ai-avatar-wrap">
+        <div class="ai-avatar" style="background:var(--border); opacity:.5">＋</div>
+      </div>
+      <div class="ai-name" style="color:var(--text-xs)">添加</div>
+    </div>
+  </div>
+
+  <!-- Group chat toggle -->
+  <div class="group-toggle-row">
+    <div class="gt-left">
+      <div class="gt-title">群聊模式</div>
+      <div class="gt-sub">一条消息 → 所有选中 AI 同时回复</div>
+    </div>
+    <button class="toggle-sw on" id="groupToggle" onclick="toggleGroup()"></button>
+  </div>
+
+  <!-- Chat -->
+  <div class="scroll">
+    <div class="chat-area">
+
+      <div class="chat-you">
+        <div class="bubble-you">帮我分析一下宝盒这个产品方向是否可行？</div>
+      </div>
+
+      <div class="chat-ai">
+        <div class="ai-from">
+          <div class="ai-from-dot" style="background:var(--ai-claude)"></div>
+          <div class="ai-from-name">CLAUDE</div>
+        </div>
+        <div class="bubble-ai" style="border-left-color:var(--ai-claude)">
+          产品方向很清晰。用户不需要在多个 AI 间切换，降低了认知负担。本地优先也解决了数据隐私的核心顾虑。建议尽早打磨「群聊模式」这个差异点，这是目前市场上少见的功能。
+        </div>
+      </div>
+
+      <div class="chat-ai">
+        <div class="ai-from">
+          <div class="ai-from-dot" style="background:var(--ai-gpt)"></div>
+          <div class="ai-from-name">CHATGPT</div>
+        </div>
+        <div class="bubble-ai" style="border-left-color:var(--ai-gpt)">
+          切入点很有意思。现在一个用户可能同时订阅 3-5 个 AI 服务，管理成本高、对话碎片化。宝盒作为统一入口的价值是真实的。建议从「重度 AI 用户」做冷启动，他们痛点最深也最愿意尝新。
+        </div>
+      </div>
+
+      <div class="chat-ai">
+        <div class="ai-from">
+          <div class="ai-from-dot" style="background:var(--ai-gemini)"></div>
+          <div class="ai-from-name">GEMINI</div>
+        </div>
+        <div class="bubble-ai" style="border-left-color:var(--ai-gemini)">
+          补充竞争壁垒角度：高度个性化 + 工具包组合是护城河，因为每个人的「宝盒」配置不同，迁移成本高。类似 Notion 的「搭积木」体验。
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Chat input -->
+  <div style="padding-bottom:12px;flex-shrink:0;">
+    <div class="chat-input-row">
+      <textarea class="chat-ta" placeholder="输入消息，发给所有 AI…" rows="1"></textarea>
+      <div class="chat-tools">
+        <button class="ctb">📎</button>
+        <button class="ctb">🎤</button>
+      </div>
+      <button class="send-btn" onclick="toast('消息已发送给 4 个 AI')">↑</button>
+    </div>
+  </div>
+
+  <div class="bnav">
+    <button class="ni"    onclick="go('home')"><span class="ico">⌂</span><span class="lbl">首页</span></button>
+    <button class="ni on" onclick="go('ai')"><span class="ico">✦</span><span class="lbl">智友</span></button>
+    <button class="ni"    onclick="go('cfg')"><span class="ico">◉</span><span class="lbl">我的</span></button>
+  </div>
+</div>
+
+<!-- ④ INVENTORY ─────────────────────────────────── -->
+<div class="scr" id="scr-inv">
+  <div class="sb"><span class="sb-t" id="t-inv">9:41</span><span class="sb-i">📶 100%</span></div>
+  <div class="page-hd">
+    <div class="back" onclick="go('home')">←</div>
     <h2>物品库</h2>
     <div class="ico-btn">⋯</div>
   </div>
   <div class="search">
-    <span class="s-ico">🔍</span>
+    <span style="color:var(--text-xs)">🔍</span>
     <input type="text" placeholder="搜索名称、地点、分类…">
   </div>
   <div class="chips">
@@ -774,185 +694,119 @@ html.dark .dbtn.red:hover { background:#1f1210; }
   </div>
   <div class="scroll">
     <div class="ilist">
-      <div class="irow" style="animation-delay:.04s">
-        <div class="i-dot" style="background:#5b8dd9"></div>
-        <div class="i-info"><div class="i-name">AirPods Pro 2</div><div class="i-where">📍 床头抽屉右侧</div></div>
-        <div class="i-right"><div class="i-price">¥1,799</div><div class="i-date">2025-11-03</div></div>
-      </div>
-      <div class="irow" style="animation-delay:.08s">
-        <div class="i-dot" style="background:#8b6f5e"></div>
-        <div class="i-info"><div class="i-name">置身事内</div><div class="i-where">📍 书架第三层左边</div></div>
-        <div class="i-right"><div class="i-price">¥58</div><div class="i-date">2024-08-17</div></div>
-      </div>
-      <div class="irow" style="animation-delay:.12s">
-        <div class="i-dot" style="background:#6aaa8c"></div>
-        <div class="i-info"><div class="i-name">资生堂防晒霜 SPF50+</div><div class="i-where">📍 浴室镜柜第一层</div></div>
-        <div class="i-right"><div class="i-price">¥230</div><div class="i-date">2026-04-20</div></div>
-      </div>
-      <div class="irow" style="animation-delay:.16s">
-        <div class="i-dot" style="background:#5b8dd9"></div>
-        <div class="i-info"><div class="i-name">LG 显示器 27UK850</div><div class="i-where">📍 书桌上</div></div>
-        <div class="i-right"><div class="i-price">¥2,499</div><div class="i-date">2023-06-11</div></div>
-      </div>
-      <div class="irow" style="animation-delay:.20s">
-        <div class="i-dot" style="background:#c07838"></div>
-        <div class="i-info"><div class="i-name">New Balance 993</div><div class="i-where">📍 鞋柜第二格</div></div>
-        <div class="i-right"><div class="i-price">¥1,200</div><div class="i-date">2026-01-08</div></div>
-      </div>
+      <div class="irow" style="animation-delay:.04s"><div class="i-dot" style="background:#5b8dd9"></div><div class="i-info"><div class="i-name">AirPods Pro 2</div><div class="i-where">📍 床头抽屉右侧</div></div><div class="i-r"><div class="i-price">¥1,799</div><div class="i-date">2025-11-03</div></div></div>
+      <div class="irow" style="animation-delay:.08s"><div class="i-dot" style="background:#8b6f5e"></div><div class="i-info"><div class="i-name">置身事内</div><div class="i-where">📍 书架第三层左边</div></div><div class="i-r"><div class="i-price">¥58</div><div class="i-date">2024-08-17</div></div></div>
+      <div class="irow" style="animation-delay:.12s"><div class="i-dot" style="background:#6aaa8c"></div><div class="i-info"><div class="i-name">资生堂防晒霜 SPF50+</div><div class="i-where">📍 浴室镜柜第一层</div></div><div class="i-r"><div class="i-price">¥230</div><div class="i-date">2026-04-20</div></div></div>
+      <div class="irow" style="animation-delay:.16s"><div class="i-dot" style="background:#5b8dd9"></div><div class="i-info"><div class="i-name">LG 显示器 27UK850</div><div class="i-where">📍 书桌上</div></div><div class="i-r"><div class="i-price">¥2,499</div><div class="i-date">2023-06-11</div></div></div>
+      <div class="irow" style="animation-delay:.20s"><div class="i-dot" style="background:#c07838"></div><div class="i-info"><div class="i-name">New Balance 993</div><div class="i-where">📍 鞋柜第二格</div></div><div class="i-r"><div class="i-price">¥1,200</div><div class="i-date">2026-01-08</div></div></div>
     </div>
   </div>
   <button class="fab" onclick="go('add')">＋</button>
   <div class="bnav">
     <button class="ni" onclick="go('home')"><span class="ico">⌂</span><span class="lbl">首页</span></button>
-    <button class="ni" onclick="go('note')"><span class="ico">✎</span><span class="lbl">笔记</span></button>
+    <button class="ni" onclick="go('ai')"><span class="ico">✦</span><span class="lbl">智友</span></button>
     <button class="ni" onclick="go('cfg')"><span class="ico">◉</span><span class="lbl">我的</span></button>
   </div>
 </div>
 
-<!-- ④ ADD ITEM ──────────────────────────────────── -->
+<!-- ⑤ 笔记连接器 ─────────────────────────────────── -->
+<div class="scr" id="scr-note">
+  <div class="sb"><span class="sb-t" id="t-note">9:41</span><span class="sb-i">📶 100%</span></div>
+  <div class="page-hd">
+    <div class="back" onclick="go('home')">←</div>
+    <h2>笔记</h2>
+  </div>
+  <div class="scroll">
+    <div class="note-intro">
+      <div class="note-intro-sub">选择你常用的笔记工具，或使用宝盒内置笔记。连接后可直接在宝盒内记录，无需切换 App。</div>
+    </div>
+    <div class="app-list">
+      <div class="app-row" onclick="toast('已打开 Flomo')">
+        <div class="app-ico" style="background:rgba(25,195,125,.12)">🌿</div>
+        <div class="app-info"><div class="app-name">Flomo</div><div class="app-desc">极简卡片笔记</div></div>
+        <div class="app-status status-connected">已连接 ✓</div>
+      </div>
+      <div class="app-row" onclick="toast('连接 Notion…')">
+        <div class="app-ico" style="background:#f0f0f0">⬛</div>
+        <div class="app-info"><div class="app-name">Notion</div><div class="app-desc">文档与知识库</div></div>
+        <div class="app-status status-connect">连接</div>
+      </div>
+      <div class="app-row" onclick="toast('连接 Obsidian…')">
+        <div class="app-ico" style="background:rgba(124,90,240,.1)">💎</div>
+        <div class="app-info"><div class="app-name">Obsidian</div><div class="app-desc">本地 Markdown 笔记</div></div>
+        <div class="app-status status-connect">连接</div>
+      </div>
+      <div class="app-row" onclick="toast('连接 Apple Notes…')">
+        <div class="app-ico" style="background:rgba(255,220,50,.15)">🍎</div>
+        <div class="app-info"><div class="app-name">Apple Notes</div><div class="app-desc">系统原生笔记</div></div>
+        <div class="app-status status-connect">连接</div>
+      </div>
+      <div class="app-row" onclick="toast('使用宝盒内置笔记')">
+        <div class="app-ico" style="background:var(--amber-s)">📝</div>
+        <div class="app-info"><div class="app-name">宝盒笔记</div><div class="app-desc">内置轻量笔记，离线可用</div></div>
+        <div class="app-status status-builtin">内置</div>
+      </div>
+    </div>
+    <div class="note-tip">
+      <div class="note-tip-txt">💡 宝盒不强制你换工具。你用什么，就连接什么。数据还是在你自己的账号里。</div>
+    </div>
+  </div>
+  <div class="bnav">
+    <button class="ni" onclick="go('home')"><span class="ico">⌂</span><span class="lbl">首页</span></button>
+    <button class="ni" onclick="go('ai')"><span class="ico">✦</span><span class="lbl">智友</span></button>
+    <button class="ni" onclick="go('cfg')"><span class="ico">◉</span><span class="lbl">我的</span></button>
+  </div>
+</div>
+
+<!-- ⑥ ADD ITEM ──────────────────────────────────── -->
 <div class="scr" id="scr-add">
   <div class="overlay" onclick="if(event.target===this)go('inv')">
     <div class="sheet">
       <div class="handle"></div>
       <div class="sh-title">记录一件物品</div>
-      <div class="fg">
-        <div class="fl">图标</div>
+      <div class="fg"><div class="fl" style="font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-s);text-transform:uppercase;">图标</div>
         <div class="erow">
-          <div class="eo on" onclick="pickEmo(this)">📦</div>
-          <div class="eo" onclick="pickEmo(this)">🎧</div>
-          <div class="eo" onclick="pickEmo(this)">👟</div>
-          <div class="eo" onclick="pickEmo(this)">📖</div>
-          <div class="eo" onclick="pickEmo(this)">🧴</div>
-          <div class="eo" onclick="pickEmo(this)">🖥️</div>
-          <div class="eo" onclick="pickEmo(this)">🎮</div>
-          <div class="eo" onclick="pickEmo(this)">🍳</div>
+          <div class="eo on" onclick="pickEmo(this)">📦</div><div class="eo" onclick="pickEmo(this)">🎧</div>
+          <div class="eo" onclick="pickEmo(this)">👟</div><div class="eo" onclick="pickEmo(this)">📖</div>
+          <div class="eo" onclick="pickEmo(this)">🧴</div><div class="eo" onclick="pickEmo(this)">🖥️</div>
+          <div class="eo" onclick="pickEmo(this)">🎮</div><div class="eo" onclick="pickEmo(this)">🍳</div>
         </div>
       </div>
-      <div class="fg">
-        <div class="fl">名称</div>
-        <input class="fi" type="text" placeholder="比如：索尼 WH-1000XM5">
-      </div>
+      <div class="fg"><div class="fl" style="font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-s);text-transform:uppercase;">名称</div><input class="fi" type="text" placeholder="比如：索尼 WH-1000XM5" style="padding:11px 0;border:none;border-bottom:1.5px solid var(--border);border-radius:0;background:transparent;font-size:16px;"></div>
       <div class="frow">
-        <div class="fg"><div class="fl">金额</div><input class="fi" type="number" placeholder="0"></div>
-        <div class="fg"><div class="fl">日期</div><input class="fi" type="date" value="2026-06-19"></div>
+        <div class="fg"><div class="fl" style="font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-s);text-transform:uppercase;">金额</div><input class="fi" type="number" placeholder="0" style="padding:11px 0;border:none;border-bottom:1.5px solid var(--border);border-radius:0;background:transparent;font-size:16px;"></div>
+        <div class="fg"><div class="fl" style="font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-s);text-transform:uppercase;">日期</div><input class="fi" type="date" value="2026-06-19" style="padding:11px 0;border:none;border-bottom:1.5px solid var(--border);border-radius:0;background:transparent;font-size:14px;"></div>
       </div>
-      <div class="fg">
-        <div class="fl">存放位置</div>
-        <input class="fi" type="text" placeholder="比如：书桌右侧抽屉">
-      </div>
+      <div class="fg"><div class="fl" style="font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-s);text-transform:uppercase;">存放位置</div><input class="fi" type="text" placeholder="比如：书桌右侧抽屉" style="padding:11px 0;border:none;border-bottom:1.5px solid var(--border);border-radius:0;background:transparent;font-size:16px;"></div>
       <div class="macts">
         <button class="btn-s" onclick="go('inv')">取消</button>
-        <button class="btn-a" onclick="saveItem()">保存记录</button>
+        <button class="btn-a2" onclick="saveItem()">保存记录</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ⑤ NOTES ────────────────────────────────────── -->
-<div class="scr" id="scr-note">
-  <div class="sb">
-    <span class="sb-t" id="t-note">9:41</span>
-    <span class="sb-i">📶 100%</span>
-  </div>
-  <div class="scroll">
-    <div class="note-inner">
-      <div class="page-title">笔记</div>
-
-      <!-- Compose -->
-      <div class="compose">
-        <textarea class="c-ta" id="noteTa" placeholder="记下此刻…  #标签 可分类"></textarea>
-        <div class="c-foot">
-          <div class="c-tools">
-            <button class="tb">𝗕</button>
-            <button class="tb">#</button>
-            <button class="tb">•</button>
-            <button class="tb">🎤</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="cc" id="cc">0 / 5000</span>
-            <button class="sb2" onclick="sendNote()">发送</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tag filter -->
-      <div class="tag-row">
-        <div class="tg on"># 全部 12</div>
-        <div class="tg"># 读书 4</div>
-        <div class="tg"># 想法 5</div>
-        <div class="tg"># 工作 2</div>
-        <div class="tg"># 生活 1</div>
-      </div>
-
-      <!-- 今天 -->
-      <div class="day-sep">今天</div>
-      <div class="memo" style="animation-delay:.04s">
-        <div class="memo-txt">今天读完了《置身事内》，兰小欢对土地财政的分析很通透。地方政府的激励结构决定了很多现象的根源。</div>
-        <div class="memo-meta">
-          <span class="memo-time">08:23</span>
-          <div class="memo-tags"><span class="m-tag">#读书</span><span class="m-tag">#想法</span></div>
-        </div>
-      </div>
-      <div class="memo" style="animation-delay:.07s">
-        <div class="memo-txt">晨跑 5 公里，天气很好，适合做决定的一天。</div>
-        <div class="memo-meta">
-          <span class="memo-time">07:10</span>
-          <div class="memo-tags"><span class="m-tag">#生活</span></div>
-        </div>
-      </div>
-
-      <!-- 昨天 -->
-      <div class="day-sep">昨天</div>
-      <div class="memo" style="animation-delay:.10s">
-        <div class="memo-txt">宝盒的设计原则：克制比堆砌更难。每加一个功能，都要问自己"去掉它用户会在意吗"。</div>
-        <div class="memo-meta">
-          <span class="memo-time">22:47</span>
-          <div class="memo-tags"><span class="m-tag">#想法</span><span class="m-tag">#工作</span></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <div class="bnav">
-    <button class="ni"    onclick="go('home')"><span class="ico">⌂</span><span class="lbl">首页</span></button>
-    <button class="ni on" onclick="go('note')"><span class="ico">✎</span><span class="lbl">笔记</span></button>
-    <button class="ni"    onclick="go('cfg')"><span class="ico">◉</span><span class="lbl">我的</span></button>
-  </div>
-</div>
-
-<!-- ⑥ SETTINGS ──────────────────────────────────── -->
+<!-- ⑦ SETTINGS ──────────────────────────────────── -->
 <div class="scr" id="scr-cfg">
-  <div class="sb">
-    <span class="sb-t" id="t-cfg">9:41</span>
-    <span class="sb-i">📶 100%</span>
-  </div>
+  <div class="sb"><span class="sb-t" id="t-cfg">9:41</span><span class="sb-i">📶 100%</span></div>
+  <div class="page-hd"><h2>我的</h2></div>
   <div class="scroll">
     <div class="cfg-inner">
-      <div class="page-title" style="padding-bottom:4px">我的</div>
       <div class="av-sec">
         <div class="av-ring">🧑<div class="av-edit">✏️</div></div>
         <div class="av-nm" id="cfg-nm">晴晴</div>
       </div>
       <div class="sg">
         <div class="sg-h">个人资料</div>
-        <div class="sr">
-          <span class="sr-ico">✏️</span><span class="sr-lbl">显示名称</span>
-          <span class="sr-val" id="cfg-nm2">晴晴</span><span class="sr-arr">›</span>
-        </div>
-        <div class="sr">
-          <span class="sr-ico">🌐</span><span class="sr-lbl">语言</span>
-          <div class="lt">
-            <button class="lo on">中文</button>
-            <button class="lo">English</button>
-          </div>
-        </div>
-        <div class="sr">
-          <span class="sr-ico">🎨</span><span class="sr-lbl">外观</span>
-          <div class="lt">
-            <button class="lo on" id="lo-l" onclick="setTheme(false)">浅色</button>
-            <button class="lo"    id="lo-d" onclick="setTheme(true)">深色</button>
-          </div>
-        </div>
+        <div class="sr"><span class="sr-ico">✏️</span><span class="sr-lbl">显示名称</span><span class="sr-val" id="cfg-nm2">晴晴</span><span class="sr-arr">›</span></div>
+        <div class="sr"><span class="sr-ico">🌐</span><span class="sr-lbl">语言</span><div class="lt"><button class="lo on">中文</button><button class="lo">English</button></div></div>
+        <div class="sr"><span class="sr-ico">🎨</span><span class="sr-lbl">外观</span><div class="lt"><button class="lo on" id="lo-l" onclick="setTheme(false)">浅色</button><button class="lo" id="lo-d" onclick="setTheme(true)">深色</button></div></div>
+      </div>
+      <div class="sg">
+        <div class="sg-h">已连接的工具</div>
+        <div class="sr"><span class="sr-ico">🌿</span><span class="sr-lbl">Flomo</span><span class="sr-val" style="color:var(--accent)">已连接</span><span class="sr-arr">›</span></div>
+        <div class="sr"><span class="sr-ico">🤖</span><span class="sr-lbl">AI 接入管理</span><span class="sr-val">4 个</span><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="toast('添加工具连接')"><span class="sr-ico">＋</span><span class="sr-lbl" style="color:var(--accent)">添加连接</span></div>
       </div>
       <div class="sg">
         <div class="sg-h">数据</div>
@@ -970,7 +824,7 @@ html.dark .dbtn.red:hover { background:#1f1210; }
   </div>
   <div class="bnav">
     <button class="ni"    onclick="go('home')"><span class="ico">⌂</span><span class="lbl">首页</span></button>
-    <button class="ni"    onclick="go('note')"><span class="ico">✎</span><span class="lbl">笔记</span></button>
+    <button class="ni"    onclick="go('ai')"><span class="ico">✦</span><span class="lbl">智友</span></button>
     <button class="ni on" onclick="go('cfg')"><span class="ico">◉</span><span class="lbl">我的</span></button>
   </div>
 </div>
@@ -979,7 +833,7 @@ html.dark .dbtn.red:hover { background:#1f1210; }
 </div><!-- /phone -->
 
 <script>
-const SCRIDS = ['ob','home','inv','add','note','cfg'];
+const SCRIDS = ['ob','home','ai','inv','note','add','cfg'];
 
 function go(id) {
   SCRIDS.forEach(s => {
@@ -994,8 +848,21 @@ function finishOb() {
   document.getElementById('greet-nm').textContent = n + '，早上好';
   document.getElementById('cfg-nm').textContent = n;
   document.getElementById('cfg-nm2').textContent = n;
-  toast('欢迎回来，' + n);
+  toast('欢迎，' + n + ' 👋');
   setTimeout(() => go('home'), 500);
+}
+
+function toggleAI(card) {
+  card.classList.toggle('on');
+  const on = document.querySelectorAll('#scr-ai .ai-card.on').length;
+  document.querySelector('.ai-sub').textContent = on + ' 个 AI 已接入 · 群聊模式';
+}
+
+let groupOn = true;
+function toggleGroup() {
+  groupOn = !groupOn;
+  document.getElementById('groupToggle').classList.toggle('on', groupOn);
+  toast(groupOn ? '群聊模式已开启' : '单独对话模式');
 }
 
 function pickEmo(el) {
@@ -1005,13 +872,6 @@ function pickEmo(el) {
 
 function saveItem() { go('inv'); toast('✓ 物品已记录'); }
 
-function sendNote() {
-  const ta = document.getElementById('noteTa');
-  const txt = ta.value.trim();
-  if (txt) { toast('✓ 已发送到 Flomo'); ta.value=''; document.getElementById('cc').textContent='0 / 5000'; }
-  else toast('请先写点什么…');
-}
-
 // Theme
 let dark = false;
 function toggleTheme() { setTheme(!dark); }
@@ -1019,8 +879,7 @@ function setTheme(d) {
   dark = d;
   document.documentElement.classList.toggle('dark', d);
   document.getElementById('thsw').classList.toggle('on', d);
-  const ll = document.getElementById('lo-l');
-  const ld = document.getElementById('lo-d');
+  const ll = document.getElementById('lo-l'), ld = document.getElementById('lo-d');
   if (ll) { ll.classList.toggle('on',!d); ld.classList.toggle('on',d); }
 }
 
@@ -1028,12 +887,10 @@ function setTheme(d) {
 function tick() {
   const d = new Date();
   const s = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  ['ob','home','inv','note','cfg'].forEach(id => {
-    const el = document.getElementById('t-'+id); if (el) el.textContent = s;
-  });
-  const hc = document.getElementById('home-clock'); if (hc) hc.textContent = s;
+  ['ob','home','ai','inv','note','cfg'].forEach(id => { const el=document.getElementById('t-'+id); if(el) el.textContent=s; });
+  const hc = document.getElementById('home-clock'); if(hc) hc.textContent=s;
 }
-tick(); setInterval(tick, 15000);
+tick(); setInterval(tick,15000);
 
 // Toast
 let tt;
@@ -1045,18 +902,12 @@ function toast(msg) {
 
 // Interactive pills
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.tg').forEach(t => t.addEventListener('click', () => {
-    document.querySelectorAll('.tg').forEach(x => x.classList.remove('on')); t.classList.add('on');
-  }));
-  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(x => x.classList.remove('on')); c.classList.add('on');
-  }));
+  document.querySelectorAll('.chips').forEach(g => g.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    g.querySelectorAll('.chip').forEach(x => x.classList.remove('on')); c.classList.add('on');
+  })));
   document.querySelectorAll('.lt').forEach(g => g.querySelectorAll('.lo').forEach(b => b.addEventListener('click', () => {
     g.querySelectorAll('.lo').forEach(x => x.classList.remove('on')); b.classList.add('on');
   })));
-  const ta = document.getElementById('noteTa');
-  const cc = document.getElementById('cc');
-  if (ta) ta.addEventListener('input', () => cc.textContent = ta.value.length + ' / 5000');
 });
 </script>
 </body>
