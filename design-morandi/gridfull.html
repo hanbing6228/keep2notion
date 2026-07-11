@@ -1,0 +1,123 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{font-family:"PingFang SC","Hiragino Sans GB",system-ui,sans-serif;background:#e9e9e8;padding:28px}
+.wrap{max-width:1160px;margin:0 auto}
+.rowlbl{font-size:20px;font-weight:800;color:#2c2f36;margin:14px 4px 14px}
+.rowlbl small{font-weight:600;color:#9a9ca3;font-size:13px;margin-left:8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-bottom:22px}
+.cell .cap{font-size:14px;font-weight:700;color:#54575e;margin:0 0 8px 4px}
+.phone{border-radius:32px;overflow:hidden;position:relative;height:740px;padding:0 18px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:14px 3px 2px;font-size:12px;font-weight:700}
+.pgtitle{font-size:24px;font-weight:800;margin:16px 2px 0}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+.cube{width:40px;height:40px}.avatar{width:40px;height:40px;border-radius:50%}
+.h1{margin-top:16px;font-size:20px;line-height:1.4;font-weight:800}
+.card{border-radius:18px;padding:14px;backdrop-filter:blur(12px)}
+.mt15{margin-top:15px}.mt12{margin-top:12px}.mt10{margin-top:10px}
+.rmd{display:flex;gap:10px}.rmd-t{font-size:14px;font-weight:800;margin-bottom:4px}.rmd-b{font-size:12px;line-height:1.45;font-weight:500}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:18px 3px 10px}
+.sec-t{font-size:15px;font-weight:800}.sec-a{font-size:12px;font-weight:600}
+.fc-top{display:flex;align-items:center;gap:8px}.fc-t{font-size:14px;font-weight:700;flex:1;display:flex;align-items:center;gap:8px}
+.tag{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:7px}.fc-time{font-size:13px;font-weight:600;margin-left:6px}
+.fc-div{height:1px;margin:12px -3px}.fc-more{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600}
+.inp{border-radius:15px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px)}
+.inp span{font-size:12.5px;font-weight:500}
+/* memory */
+.chips{display:flex;gap:7px;margin:13px 2px}
+.chip{font-size:12px;font-weight:700;padding:5px 13px;border-radius:12px}
+.mcard{display:flex;align-items:center;gap:11px;padding:12px 13px}
+.mdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.mc-body{flex:1;min-width:0}
+.mc-t{font-size:13.5px;font-weight:700}.mc-s{font-size:11.5px;margin-top:2px;font-weight:500}
+.mc-r{font-size:11px;font-weight:600;flex-shrink:0}
+.daylbl{font-size:12px;font-weight:800;margin:15px 4px 8px}
+/* insights */
+.ins-lead{font-size:14px;line-height:1.55;font-weight:600}
+.bars{display:flex;align-items:flex-end;gap:9px;height:88px;margin-top:6px}
+.bar{flex:1;border-radius:5px 5px 0 0}
+.barx{display:flex;gap:9px;margin-top:6px}.barx span{flex:1;text-align:center;font-size:9.5px;font-weight:600}
+.dist{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.dist-row{display:flex;align-items:center;gap:9px}
+.dist-n{font-size:11.5px;font-weight:600;width:44px;flex-shrink:0}
+.dist-tk{flex:1;height:7px;border-radius:4px}.dist-f{height:7px;border-radius:4px}
+.dist-p{font-size:10.5px;font-weight:700;width:26px;text-align:right}
+.nav{position:absolute;left:18px;right:18px;bottom:15px;height:56px;border-radius:20px;backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-around}
+.nav-i{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:700}
+.nav-c{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:-20px}
+</style></head><body>
+<div class="wrap" id="wrap"></div>
+<script>
+function hx(h){h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function mix(a,b,t){const A=hx(a),B=hx(b);return`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`;}
+const cube=b=>`<svg class="cube" viewBox="0 0 40 40"><path d="M20 4 35 12.5 20 21 5 12.5Z" fill="${b}" fill-opacity=".85"/><path d="M5 12.5 20 21 20 37 5 28.5Z" fill="${b}" fill-opacity=".47"/><path d="M35 12.5 20 21 20 37 35 28.5Z" fill="${b}" fill-opacity=".64"/></svg>`;
+const glass='background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.65)';
+const glass2='background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.6)';
+function nav(t){const {brand,muted,deep}=t;return `<div class="nav" style="${glass}">
+ <div class="nav-i" style="color:${deep}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>今天</div>
+ <div class="nav-c" style="background:${brand};box-shadow:0 8px 18px ${mix(brand,'#fff',.3)}"><svg width="21" height="21" viewBox="0 0 26 26"><path d="M13 4 22 9 13 14 4 9Z" fill="#fff" fill-opacity=".95"/><path d="M4 9 13 14 13 23 4 18Z" fill="#fff" fill-opacity=".7"/><path d="M22 9 13 14 13 23 22 18Z" fill="#fff" fill-opacity=".82"/></svg></div>
+ <div class="nav-i" style="color:${muted}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 20 7.5 12 12 4 7.5Z"/><path d="M4 7.5V16.5L12 21 20 16.5V7.5"/><path d="M12 12v9"/></svg>记忆</div></div>`;}
+function today(t){const {bg1,bg2,brand,tagbg,ink,body,muted,deep}=t;
+ return `<div class="phone" style="background:linear-gradient(162deg,${bg1} 0%,${bg2} 122%)">
+  <div class="sb" style="color:${ink}"><span>4:01</span><span>5G+ ▪</span></div>
+  <div class="hd">${cube(brand)}<div class="avatar" style="background:radial-gradient(circle at 60% 35%,#fff9,${bg1})"></div></div>
+  <div class="h1" style="color:${ink}">下午好。最近的一件事:明天·核心科目突围。</div>
+  <div class="card rmd mt15" style="${glass}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="${ink}" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+   <div><div class="rmd-t" style="color:${ink}">牛奶快到期啦</div><div class="rmd-b" style="color:${body}">这盒牛奶明天就过期了,今天赶紧把它喝完吧!</div></div></div>
+  <div class="sec"><span class="sec-t" style="color:${ink}">今日焦点</span><span class="sec-a" style="color:${muted}">全部 ›</span></div>
+  <div class="card" style="${glass}"><div class="fc-top"><div class="fc-t" style="color:${ink}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="${ink}" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>咨询</div>
+    <span class="tag" style="background:${tagbg};color:${deep}">明天</span><span class="fc-time" style="color:${ink}">20:15</span></div>
+   <div class="fc-div" style="background:rgba(0,0,0,.07)"></div>
+   <div class="fc-more" style="color:${body}"><span>还有 4 项</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${muted}" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div></div>
+  <div class="inp mt12" style="${glass2}"><span style="color:${muted}">想到什么,记下来…</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="${muted}" stroke-width="1.8"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></div>
+  ${nav(t)}</div>`;}
+function memory(t){const {bg1,bg2,brand,tagbg,ink,body,muted,deep}=t;
+ const soft=mix(bg1,bg2,.35);
+ const M=(dot,ti,su,ri)=>`<div class="card mcard mt10" style="${glass}"><span class="mdot" style="background:${dot}"></span><div class="mc-body"><div class="mc-t" style="color:${ink}">${ti}</div><div class="mc-s" style="color:${body}">${su}</div></div><span class="mc-r" style="color:${muted}">${ri}</span></div>`;
+ const chip=(x,on)=>`<span class="chip" style="${on?`background:${brand};color:#fff`:`background:rgba(255,255,255,.5);color:${body}`}">${x}</span>`;
+ return `<div class="phone" style="background:linear-gradient(180deg,${bg1} 0%,${soft} 100%)">
+  <div class="sb" style="color:${ink}"><span>4:01</span><span>5G+ ▪</span></div>
+  <div class="pgtitle" style="color:${ink}">记忆</div>
+  <div class="inp mt12" style="${glass2}"><span style="color:${muted}">搜索你记过的一切…</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="${muted}" stroke-width="1.9"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div>
+  <div class="chips">${chip('全部',1)}${chip('待办',0)}${chip('灵感',0)}${chip('物品',0)}${chip('情绪',0)}</div>
+  <div class="daylbl" style="color:${muted}">今天</div>
+  ${M(brand,'给妈妈订生日蛋糕','待办 · 5 天后妈妈生日','09:12')}
+  ${M(mix(brand,'#888',.4),'把洞察页做成一封信','灵感 · 你上次提到','08:40')}
+  ${M(mix(bg2,'#5a5',.3),'牛奶 · 冰箱','物品 · 明天过期','昨晚')}
+  <div class="daylbl" style="color:${muted}">昨天</div>
+  ${M(brand,'和 Alex 聊了合伙的事','关系 · 记一下他的顾虑','22:10')}
+  ${M(mix(brand,'#888',.4),'今天有点累,但还行','情绪 · 近两周在回暖','21:30')}
+  ${nav(t)}</div>`;}
+function insights(t){const {bg1,bg2,brand,tagbg,ink,body,muted,deep}=t;
+ const soft=mix(bg1,bg2,.35);
+ const vals=[46,62,55,70,84,52,60];
+ const bars=vals.map(v=>`<div class="bar" style="height:${v}%;background:${brand};opacity:${.55+v/260}"></div>`).join('');
+ const bx=['一','二','三','四','五','六','日'].map(d=>`<span style="color:${muted}">${d}</span>`).join('');
+ const D=(n,p,c)=>`<div class="dist-row"><span class="dist-n" style="color:${body}">${n}</span><div class="dist-tk" style="background:rgba(0,0,0,.06)"><div class="dist-f" style="width:${p}%;background:${c}"></div></div><span class="dist-p" style="color:${muted}">${p}%</span></div>`;
+ return `<div class="phone" style="background:linear-gradient(180deg,${bg1} 0%,${soft} 100%)">
+  <div class="sb" style="color:${ink}"><span>4:01</span><span>5G+ ▪</span></div>
+  <div class="pgtitle" style="color:${ink}">洞察</div>
+  <div class="card mt12" style="${glass}"><div class="rmd-t" style="color:${ink};margin-bottom:6px">这个月宝盒发现</div>
+   <div class="ins-lead" style="color:${body}">你在<b style="color:${deep}">周五下午</b>最专注,情绪也从月初的低点慢慢回暖。记得最多的是<b style="color:${deep}">「家人」</b>。</div></div>
+  <div class="card mt12" style="${glass}"><div class="sec-t" style="color:${ink};font-size:14px">一周能量</div>
+   <div class="bars">${bars}</div><div class="barx">${bx}</div></div>
+  <div class="card mt12" style="${glass}"><div class="sec-t" style="color:${ink};font-size:14px;margin-bottom:10px">记忆都关于什么</div>
+   <div class="dist">${D('家人',72,brand)}${D('工作',58,mix(brand,'#888',.35))}${D('灵感',44,mix(bg2,'#5a5',.35))}${D('物品',30,mix(brand,'#fff',.35))}</div></div>
+  <div class="card mt12" style="${glass};border:1px dashed ${mix(brand,'#fff',.4)}"><div class="fc-more" style="color:${deep}"><span style="font-weight:800">✦ 多面镜 · 换个视角看你</span><span style="font-size:11px;color:${muted}">Pro</span></div></div>
+  ${nav(t)}</div>`;}
+
+const THEMES=[
+ {name:'方向① 蓝灰底 + 灰粉点睛',tk:{bg1:'#f9faf5',bg2:'#ccd1d7',brand:'#cf8f89',tagbg:'#f2ddd9',ink:'#3a3c43',body:'#71737b',muted:'#a2a3ab',deep:'#b06f68'}},
+ {name:'方向② 沙米 / 奶茶暖调',tk:{bg1:'#f2ece0',bg2:'#d9ccb5',brand:'#a98f66',tagbg:'#eae0cf',ink:'#3c3a35',body:'#74716a',muted:'#a5a29a',deep:'#8a6f48'}},
+];
+const wrap=document.getElementById('wrap');
+THEMES.forEach(({name,tk})=>{
+ const t=tk;
+ wrap.insertAdjacentHTML('beforeend',`<div class="rowlbl">${name}<small>今天 / 记忆 / 洞察 — 首页满渐变,内页浅底</small></div>
+  <div class="grid">
+   <div class="cell"><div class="cap">今天</div>${today(t)}</div>
+   <div class="cell"><div class="cap">记忆</div>${memory(t)}</div>
+   <div class="cell"><div class="cap">洞察</div>${insights(t)}</div>
+  </div>`);
+});
+</script></body></html>
